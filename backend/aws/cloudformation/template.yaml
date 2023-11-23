@@ -1,0 +1,137 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: "AWS::Serverless-2016-10-31"
+Description: gotron deployment cloudformation script
+    
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+      Timeout: 30  # in seconds
+Parameters:
+  Project:
+    Type: String
+  TargetEnvr:
+    Type: String
+Conditions: 
+  IsProd: !Equals [ !Ref TargetEnvr, prod ]
+Resources:
+  ##########################################
+  ##### AWS IAM Role to execute lambda #####
+  ##########################################
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      RoleName: !Sub ${Project}-${TargetEnvr}-lambda-execution-role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSLambda_FullAccess
+        - arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess
+  ##############################################
+  ##### RESTful API and associated Lambdas #####
+  ##############################################
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Sub ${TargetEnvr}
+      EndpointConfiguration: REGIONAL
+      DefinitionBody: {
+          "openapi": "3.0.1",
+          "info": {
+            "version": "2020-01-06T07:45:41Z",
+            "title": !Sub "${Project}-${TargetEnvr}-api"
+          },
+          "paths": {
+            "/api/hello": {
+              "get": {
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Origin": {
+                        "schema": {"type": "string"}
+                      }
+                    },
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Empty"
+                        }
+                      }
+                    }
+                  }
+                },
+                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-integration": {
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Project}-${TargetEnvr}-lambda/invocations",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Origin": "'*'"
+                      }
+                    }
+                  },
+                  "passthroughBehavior": "when_no_match",
+                  "contentHandling": "CONVERT_TO_TEXT"
+                }
+              }
+            }
+          },
+          "definitions": {
+            "Empty": {
+              "type": "object",
+              "title": "Empty Schema"
+            }
+          },
+          "x-amazon-apigateway-request-validators" : {
+            "Validate body, query string parameters, and headers" : {
+              "validateRequestParameters" : true,
+              "validateRequestBody" : true
+            },
+            "Validate query string parameters and headers" : {
+              "validateRequestParameters" : true,
+              "validateRequestBody" : false
+            }
+          }
+        }
+  LambdaApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures: [arm64]
+      Handler: index.api
+      Runtime: nodejs18.x
+      FunctionName: !Sub ${Project}-${TargetEnvr}-lambda
+      Role: !GetAtt ExecutionRole.Arn
+      CodeUri: ../../lib/src
+      MemorySize: 256
+      Layers: [!Ref LambdaLayer]
+      Environment:
+        Variables:
+          PROJECT: !Sub ${Project}
+          ENVR: !Sub ${TargetEnvr}
+  InvokePermissionLambdaApi:
+    Type: AWS::Lambda::Permission
+    DependsOn: [ServerlessApi, LambdaApiFunction]
+    Properties:
+      FunctionName: !Sub ${Project}-${TargetEnvr}-lambda
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ServerlessApi}/*
+  LambdaLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub ${Project}-${TargetEnvr}-layer
+      CompatibleArchitectures: [arm64]
+      CompatibleRuntimes: [nodejs18.x]
+      ContentUri: ../../dist
+      RetentionPolicy: Delete
