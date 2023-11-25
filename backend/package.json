@@ -16,6 +16,10 @@
   "author": "Yue Chang",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1502.0",
+    "axios": "^1.6.2",
+    "inversify": "^6.0.2",
+    "reflect-metadata": "^0.1.13",
     "tslib": "^2.6.2"
   },
   "devDependencies": {

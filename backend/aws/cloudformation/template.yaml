@@ -49,8 +49,18 @@ Resources:
             "title": !Sub "${Project}-${TargetEnvr}-api"
           },
           "paths": {
-            "/api/hello": {
-              "get": {
+            "/api/tarot": {
+              "post": {
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/postTarot"
+                      }
+                    }
+                  },
+                  "required": true
+                },
                 "responses": {
                   "200": {
                     "description": "200 response",
@@ -68,7 +78,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -91,7 +101,22 @@ Resources:
             "Empty": {
               "type": "object",
               "title": "Empty Schema"
-            }
+            },
+            "postTarot": {
+              "type": "object",
+              "properties": {
+                "description":{"type": "string"},
+                "type": {"type": "string"},
+                "card": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                  }
+                },
+                "deviceId": {"type": "string"},
+              },
+              "required": ["description","type","card","deviceId"]
+            },
           },
           "x-amazon-apigateway-request-validators" : {
             "Validate body, query string parameters, and headers" : {
@@ -113,7 +138,7 @@ Resources:
       FunctionName: !Sub ${Project}-${TargetEnvr}-lambda
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
-      MemorySize: 256
+      MemorySize: 128
       Layers: [!Ref LambdaLayer]
       Environment:
         Variables:
@@ -127,6 +152,22 @@ Resources:
       Action: 'lambda:InvokeFunction'
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ServerlessApi}/*
+  LambdaChatFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures: [arm64]
+      Handler: index.chat
+      Runtime: nodejs18.x
+      FunctionName: !Sub ${Project}-${TargetEnvr}-chat
+      Role: !GetAtt ExecutionRole.Arn
+      CodeUri: ../../lib/src
+      MemorySize: 128
+      Layers: [!Ref LambdaLayer]
+      Environment:
+        Variables:
+          PROJECT: !Sub ${Project}
+          ENVR: !Sub ${TargetEnvr}
+          OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai:1}}'
   LambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
