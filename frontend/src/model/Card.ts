@@ -50,8 +50,16 @@ export const TAROT_CARDS: Card[] = [
     name: '女祭司',
     image: '/src/assets/card/major-2.jpg',
     interpretation: {
-      upright: [],
-      reversed: [],
+      upright: [
+        '嗨！親愛的，你抽到了正位的女祭司，這是一張非常好的牌卡。女祭司代表著智慧、直覺和靈性。她提醒你，在這個時刻，你應該要專注於內在的心靈對話，聆聽你內心深處的聲音。這是一個探索內在世界、自我反省和自我發現的好時機。\n\n女祭司也象徵著知識和學習，她鼓勵你繼續追求知識，尋求精神成長和進步。無論你是在學校學習、尋求新的技能，還是深入研究某個主題，她都願意指引你。\n\n同時，女祭司也提醒你要保持平衡和和諧。她暗示著，在做決策時，你應該要平衡分析和直覺。利用你內在的智慧和直覺來獲得更深層的洞察力。她鼓勵你相信自己的直覺，它能幫助你做出正確的選擇。\n\n這張牌顯示出你現在正處於一個充滿智慧、靈性和直覺的狀態。這是一個非常好的時機，讓你專注於自我成長和探索更深層的層面。相信你的本能，享受這段自我發現的旅程吧！\n\n加油，親愛的！讓女祭司的智慧和直覺引導你，她相信你能夠達到更高的層次。祝福你！',
+        '親愛的，你抽到了正位的女祭司，這是一張象徵智慧、靈性與直覺力的牌卡。這張牌代表著你在這段時間內將會有機會運用你的直覺和內在智慧做出重要的抉擇。\n\n女祭司象徵著內在的力量和洞察力，她提醒著你在面對重要問題時要學會聆聽自己的內心聲音，相信你的直覺和第六感。你應該尋求答案於你自己的心靈深處，並且以平靜和冷靜的態度來面對生活中的挑戰。\n\n女祭司的存在還代表著你正處於收集資訊和學習的階段，你可能需要更多的時間和空間來思考並做出明智的抉擇。這是一個優秀的時機來進行內省，冥想或學習新的知識。\n\n最重要的是，女祭司提醒著你要相信自己的能力和知識，不要輕易被他人的意見所左右。堅持你的信念，並且相信你內在的智慧將引導你走向成功。\n\n祝福你，親愛的，願女祭司的智慧和平靜的能量為你帶來著無盡的啟示與力量！',
+        '親愛的，當你抽到正位的女祭司，這代表著你現在正處於一個充滿智慧和靈性的階段。你正在以冷靜和思考的態度面對生活中的種種情況。這張牌也代表著你對自己內在的直覺和直覺力的信任。女祭司給予你的建議是要將這種內在的智慧和洞察力運用到你的生活當中。\n\n這個時候，你可能會感到自己對於一個特定情況的答案已經在心中了然，女祭司告訴你要相信自己的感受並以此為指導。她也提醒你在這段旅程中保持平靜和優雅，並以冷靜的態度處理任何情況。\n\n這是一張非常正面的牌，它代表著你現在正走在一個充滿智慧和洞察力的道路上。對於你的問題，女祭司的出現是要告訴你相信自己的知識和直覺，並運用這些智慧來解決你所面臨的挑戰或問題。她也提醒你要保持冷靜和平衡，並在遇到抉擇時依據自己的內心指引。這是一張強而有力的牌，代表著你現在正處於非常有智慧和能力的狀態。\n\n所以，在面對任何困難時，提醒自己相信自己的內在智慧，保持冷靜並從內心找到答案。加油，我相信你能克服一切！',
+      ],
+      reversed: [
+        '哎呦，親愛的，你抽到了逆位的女祭司牌啊。別擔心，這只是一個小小的挑戰，我們一起度過。\n\n逆位的女祭司可能暗示著你目前可能感到直覺和靈性方面有些受阻。或許你感到自己在某些事情上缺乏直覺，或者內在的平靜被打破了。\n\n別擔心，這只是一個瞬間的狀態。或許你需要花一些時間冷靜下來，重新連結內在的智慧。這也可能是提醒你要注意不要被外在的干擾所影響，要保持內心的平靜。\n\n無論如何，相信你內在的智慧和直覺力量。這只是一個小小的坎坷，你有能力克服的。調整一下心態，重新聆聽自己的內在聲音，你將會找到方向的。加油！',
+        '唔，親愛的，你抽到了逆位的女祭司牌呢。別擔心，這只是一個小小的挑戰，我們一起來看看這張牌的意義吧。\n\n逆位的女祭司可能意味著你現在可能有點忽略了自己的直覺，或者在某些情況下，缺乏對內在智慧的聆聽。這也可能代表著信息的混淆或者缺乏清晰度。\n\n別擔心，這只是一個短暫的狀態。現在是時候重新連結內在的直覺，可能需要更多的冥想和靜心。也許有一些事情需要你更仔細地思考，不要輕忽自己的感覺。\n\n提醒你要放輕鬆，相信自己的內在智慧。重新聆聽直覺，找回內在的平衡，你將能夠更清晰地面對目前的處境。相信自己，一切都會走向更好的方向。加油！',
+        '哎呀呀，親愛的，你抽到了逆位的女祭司牌呢。別擔心，這只是一點小小的挑戰，我們可以一起面對的。\n\n逆位的女祭司可能顯示出你現在可能感到內在的平靜和直覺力量受到了一些干擾。或許你正在經歷一段時間，內心感受到一些混亂或困擾。\n\n不要擔心，這只是一個短暫的狀態，可能是一些外部因素影響了你的平靜。這是提醒你要注意自己的情緒狀態，也許需要一些時間來冷靜思考，或者尋找恢復平靜的方法。\n\n別忘了，你依然擁有充沛的內在力量，即便女祭司逆位，你的直覺和智慧依然存在。努力保持冷靜，找到平衡，內心的神聖之地將會再度顯現。相信自己，這只是一個瞬間的波動，你一定能夠度過的。加油！',
+      ],
     },
   },
   {
@@ -59,678 +67,686 @@ export const TAROT_CARDS: Card[] = [
     name: '皇后',
     image: '/src/assets/card/major-3.jpg',
     interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'IV_THE_EMPEROR',
-    name: '皇帝',
-    image: '/src/assets/card/major-4.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'V_THE_HIEROPHANT',
-    name: '教皇',
-    image: '/src/assets/card/major-5.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'VI_THE_LOVERS',
-    name: '戀人',
-    image: '/src/assets/card/major-6.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'VII_THE_CHARIOT',
-    name: '戰車',
-    image: '/src/assets/card/major-7.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'VIII_STRENGTH',
-    name: '力量',
-    image: '/src/assets/card/major-8.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'IX_THE_HERMIT',
-    name: '隱者',
-    image: '/src/assets/card/major-9.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'X_WHEEL_OF_FORTUNE',
-    name: '命運之輪',
-    image: '/src/assets/card/major-10.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XI_JUSTICE',
-    name: '正義',
-    image: '/src/assets/card/major-11.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XII_THE_HANGED_MAN',
-    name: '倒吊人',
-    image: '/src/assets/card/major-12.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XIII_DEATH',
-    name: '死神',
-    image: '/src/assets/card/major-13.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XIV_TEMPERANCE',
-    name: '節制',
-    image: '/src/assets/card/major-14.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XV_THE_DEVIL',
-    name: '惡魔',
-    image: '/src/assets/card/major-15.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XVI_THE_TOWER',
-    name: '高塔',
-    image: '/src/assets/card/major-16.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XVII_THE_STAR',
-    name: '星星',
-    image: '/src/assets/card/major-17.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XVIII_THE_MOON',
-    name: '月亮',
-    image: '/src/assets/card/major-18.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XIX_THE_SUN',
-    name: '太陽',
-    image: '/src/assets/card/major-19.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XX_JUDGEMENT',
-    name: '審判',
-    image: '/src/assets/card/major-20.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'XXI_THE_WORLD',
-    name: '世界',
-    image: '/src/assets/card/major-21.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  // Wands
-  {
-    id: 'ACE_OF_WANDS',
-    name: '權杖王牌',
-    image: '/src/assets/card/wands-ace.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'TWO_OF_WANDS',
-    name: '權杖二',
-    image: '/src/assets/card/wands-2.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'THREE_OF_WANDS',
-    name: '權杖三',
-    image: '/src/assets/card/wands-3.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'FOUR_OF_WANDS',
-    name: '權杖四',
-    image: '/src/assets/card/wands-4.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'FIVE_OF_WANDS',
-    name: '權杖五',
-    image: '/src/assets/card/wands-5.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'SIX_OF_WANDS',
-    name: '權杖六',
-    image: '/src/assets/card/wands-6.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'SEVEN_OF_WANDS',
-    name: '權杖七',
-    image: '/src/assets/card/wands-7.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'EIGHT_OF_WANDS',
-    name: '權杖八',
-    image: '/src/assets/card/wands-8.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'NINE_OF_WANDS',
-    name: '權杖九',
-    image: '/src/assets/card/wands-9.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'TEN_OF_WANDS',
-    name: '權杖十',
-    image: '/src/assets/card/wands-10.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'PAGE_OF_WANDS',
-    name: '權杖侍者',
-    image: '/src/assets/card/wands-page.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'KNIGHT_OF_WANDS',
-    name: '權杖騎士',
-    image: '/src/assets/card/wands-knight.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'QUEEN_OF_WANDS',
-    name: '權杖皇后',
-    image: '/src/assets/card/wands-queen.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'KING_OF_WANDS',
-    name: '權杖國王',
-    image: '/src/assets/card/wands-king.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  // Cups
-  {
-    id: 'ACE_OF_CUPS',
-    name: '聖杯王牌',
-    image: '/src/assets/card/cups-ace.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'TWO_OF_CUPS',
-    name: '聖杯二',
-    image: '/src/assets/card/cups-2.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'THREE_OF_CUPS',
-    name: '聖杯三',
-    image: '/src/assets/card/cups-3.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'FOUR_OF_CUPS',
-    name: '聖杯四',
-    image: '/src/assets/card/cups-4.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'FIVE_OF_CUPS',
-    name: '聖杯五',
-    image: '/src/assets/card/cups-5.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'SIX_OF_CUPS',
-    name: '聖杯六',
-    image: '/src/assets/card/cups-6.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'SEVEN_OF_CUPS',
-    name: '聖杯七',
-    image: '/src/assets/card/cups-7.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'EIGHT_OF_CUPS',
-    name: '聖杯八',
-    image: '/src/assets/card/cups-8.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'NINE_OF_CUPS',
-    name: '聖杯九',
-    image: '/src/assets/card/cups-9.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'TEN_OF_CUPS',
-    name: '聖杯十',
-    image: '/src/assets/card/cups-10.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'PAGE_OF_CUPS',
-    name: '聖杯侍者',
-    image: '/src/assets/card/cups-page.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'KNIGHT_OF_CUPS',
-    name: '聖杯騎士',
-    image: '/src/assets/card/cups-knight.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'QUEEN_OF_CUPS',
-    name: '聖杯皇后',
-    image: '/src/assets/card/cups-queen.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'KING_OF_CUPS',
-    name: '聖杯國王',
-    image: '/src/assets/card/cups-king.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  // Swords
-  {
-    id: 'ACE_OF_SWORDS',
-    name: '寶劍王牌',
-    image: '/src/assets/card/swords-ace.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'TWO_OF_SWORDS',
-    name: '寶劍二',
-    image: '/src/assets/card/swords-2.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'THREE_OF_SWORDS',
-    name: '寶劍三',
-    image: '/src/assets/card/swords-3.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'FOUR_OF_SWORDS',
-    name: '寶劍四',
-    image: '/src/assets/card/swords-4.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'FIVE_OF_SWORDS',
-    name: '寶劍五',
-    image: '/src/assets/card/swords-5.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'SIX_OF_SWORDS',
-    name: '寶劍六',
-    image: '/src/assets/card/swords-6.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'SEVEN_OF_SWORDS',
-    name: '寶劍七',
-    image: '/src/assets/card/swords-7.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'EIGHT_OF_SWORDS',
-    name: '寶劍八',
-    image: '/src/assets/card/swords-8.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'NINE_OF_SWORDS',
-    name: '寶劍九',
-    image: '/src/assets/card/swords-9.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'TEN_OF_SWORDS',
-    name: '寶劍十',
-    image: '/src/assets/card/swords-10.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'PAGE_OF_SWORDS',
-    name: '寶劍侍者',
-    image: '/src/assets/card/swords-page.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'KNIGHT_OF_SWORDS',
-    name: '寶劍騎士',
-    image: '/src/assets/card/swords-knight.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'QUEEN_OF_SWORDS',
-    name: '寶劍皇后',
-    image: '/src/assets/card/swords-queen.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'KING_OF_SWORDS',
-    name: '寶劍國王',
-    image: '/src/assets/card/swords-king.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  // Pentacles
-  {
-    id: 'ACE_OF_PENTACLES',
-    name: '錢幣王牌',
-    image: '/src/assets/card/pentacles-ace.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'TWO_OF_PENTACLES',
-    name: '錢幣二',
-    image: '/src/assets/card/pentacles-2.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'THREE_OF_PENTACLES',
-    name: '錢幣三',
-    image: '/src/assets/card/pentacles-3.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'FOUR_OF_PENTACLES',
-    name: '錢幣四',
-    image: '/src/assets/card/pentacles-4.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'FIVE_OF_PENTACLES',
-    name: '錢幣五',
-    image: '/src/assets/card/pentacles-5.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'SIX_OF_PENTACLES',
-    name: '錢幣六',
-    image: '/src/assets/card/pentacles-6.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'SEVEN_OF_PENTACLES',
-    name: '錢幣七',
-    image: '/src/assets/card/pentacles-7.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'EIGHT_OF_PENTACLES',
-    name: '錢幣八',
-    image: '/src/assets/card/pentacles-8.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'NINE_OF_PENTACLES',
-    name: '錢幣九',
-    image: '/src/assets/card/pentacles-9.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'TEN_OF_PENTACLES',
-    name: '錢幣十',
-    image: '/src/assets/card/pentacles-10.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'PAGE_OF_PENTACLES',
-    name: '錢幣侍者',
-    image: '/src/assets/card/pentacles-page.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'KNIGHT_OF_PENTACLES',
-    name: '錢幣騎士',
-    image: '/src/assets/card/pentacles-knight.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'QUEEN_OF_PENTACLES',
-    name: '錢幣皇后',
-    image: '/src/assets/card/pentacles-queen.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
-  {
-    id: 'KING_OF_PENTACLES',
-    name: '錢幣國王',
-    image: '/src/assets/card/pentacles-king.jpg',
-    interpretation: {
-      upright: [],
-      reversed: [],
-    },
-  },
+      upright: [
+        '哇，親愛的，你抽到了正位的皇后牌，真是令人振奮！這是一張充滿女性力量、智慧和成熟的牌卡。\n\n皇后象徵著女性的領導力、柔韌和智慧。你現在可能正處於一個能夠發揮自己女性特質的時刻，這不僅包括了柔軟的愛心，還有堅強的意志力。\n\n這張牌也可能暗示著你在某方面可能需要以皇后的智慧來處理事務，冷靜而果斷。同時，皇后也是一個保護者，提醒你要好好照顧自己，保持內心的平靜與安寧。\n\n你擁有無窮的潛力和智慧，這是一個展現你領導力的時刻。無論面對什麼挑戰，相信自己的力量，你一定能夠優雅而堅強地應對。加油！',
+        '哇塞，寶貝，你居然抽到了正位的皇后牌！這可是一張充滿女性力量、智慧和優雅的牌卡呢。\n\n皇后象徵著成熟、慈悲和冷靜，你現在可能正處於一個非常穩定且充實的狀態。這是一個提醒你要以溫柔和堅定的方式來處理事務的時刻，不論是工作還是人際關係。\n\n同時，皇后牌也代表著內在的平衡和直覺力量。你或許正能夠運用你的智慧來解決問題，同時在人際交往中展現出你的慈悲和關愛。\n\n保持這種優雅的態度，善用你的女性智慧，這將會使你在各個領域都更加的璀璨。你擁有的力量是無窮的，相信自己，繼續以溫柔而堅定的方式前進吧！加油！',
+        '哇哦，親愛的，你抽到了正位的皇后牌！這可是一張充滿女性力量、成熟和慈悲的牌卡喔。\n\n皇后代表著女性的智慧、耐心和愛心。現在可能是你展現關愛、理解和溫柔的時候。這也是一個鼓勵你用心聆聽他人需求，同時保護並照顧自己的時刻。\n\n這是一張代表豐富情感和深層理解的牌，也提醒你要保持內在的平靜和穩定。你的決策可能需要更多的感性和智慧，所以保持冷靜並以心態的柔軟面對。\n\n展現你女性的力量，像皇后一樣充滿自信，同時帶有慈悲與愛心。你擁有的力量將會帶來和諧和平衡。繼續發揮你的女性魅力，對待自己和他人，你會看到美好的變化。加油！',
+      ],
+      reversed: [
+        '哎呦，親愛的，你居然抽到逆位的皇后牌呢。別擔心，這只是一個小小的挑戰，我們可以一起克服的。\n\n逆位的皇后可能顯示出你目前可能感到一些失去平衡或者情緒上的困擾。或許你在照顧他人的同時，忽略了自己的需求，導致內外不和諧。\n\n別擔心，這只是一個提醒你要更注重自己的情感和需求的時刻。不要害怕表達自己的感受，也要給自己足夠的愛和關懷。\n\n別忘了，你是堂堂皇后，擁有無盡的愛和堅韌的品質。調整一下自己的心境，找到平衡，你會發現自己更能夠應對生活的種種挑戰。相信自己，你是堅不可摧的！加油！',
+        '哎呀呀，親愛的，你抽到了逆位的皇后牌啊。別擔心，我們可以一起來看看這張牌的意義。\n\n逆位的皇后可能顯示出你目前可能感到一些情感上的挑戰，或者你的內在女性能量受到了一些干擾。可能你感到在情感關係中有些不安或者情感表達上的困擾。\n\n別擔心，這只是一個過程，有時候我們需要面對情感上的困難，才能更好地成長。這是一個提醒你要關注自己的情感需求，並且勇敢地表達出來的時候。\n\n相信自己的情感直覺，也不要害怕與他人溝通，分享你的內心感受。逆位的皇后也可能是一個提醒你要更加關愛自己，不要讓外在的壓力影響到你的內在平衡。保持堅強，你有足夠的智慧和能量去克服這些挑戰。加油！',
+        '哎呀呀，寶貝，你居然抽到了逆位的皇后牌呢。別擔心，這只是生命中的一小段插曲，我們會一起走過的。\n\n逆位的皇后可能暗示著你目前可能感到情緒上的不穩定，或者在某方面缺乏安全感。這可能是一個需要特別關注自己情緒健康的時刻。\n\n不論是工作還是生活，都可能出現一些讓你感到壓力的情況。重要的是要正視自己的情感，找到釋放的方式，無論是藉由與朋友分享還是透過冥想來平復心靈。\n\n別忘了，你是堅強的皇后，擁有克服一切的力量。不論面對什麼困難，都可以以冷靜和毅力來克服。相信自己，這只是一個短暫的逆境，你一定能夠重新找回屬於你的穩定和自信。加油！',
+      ],
+    },
+  },
+  // {
+  //   id: 'IV_THE_EMPEROR',
+  //   name: '皇帝',
+  //   image: '/src/assets/card/major-4.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'V_THE_HIEROPHANT',
+  //   name: '教皇',
+  //   image: '/src/assets/card/major-5.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'VI_THE_LOVERS',
+  //   name: '戀人',
+  //   image: '/src/assets/card/major-6.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'VII_THE_CHARIOT',
+  //   name: '戰車',
+  //   image: '/src/assets/card/major-7.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'VIII_STRENGTH',
+  //   name: '力量',
+  //   image: '/src/assets/card/major-8.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'IX_THE_HERMIT',
+  //   name: '隱者',
+  //   image: '/src/assets/card/major-9.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'X_WHEEL_OF_FORTUNE',
+  //   name: '命運之輪',
+  //   image: '/src/assets/card/major-10.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XI_JUSTICE',
+  //   name: '正義',
+  //   image: '/src/assets/card/major-11.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XII_THE_HANGED_MAN',
+  //   name: '倒吊人',
+  //   image: '/src/assets/card/major-12.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XIII_DEATH',
+  //   name: '死神',
+  //   image: '/src/assets/card/major-13.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XIV_TEMPERANCE',
+  //   name: '節制',
+  //   image: '/src/assets/card/major-14.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XV_THE_DEVIL',
+  //   name: '惡魔',
+  //   image: '/src/assets/card/major-15.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XVI_THE_TOWER',
+  //   name: '高塔',
+  //   image: '/src/assets/card/major-16.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XVII_THE_STAR',
+  //   name: '星星',
+  //   image: '/src/assets/card/major-17.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XVIII_THE_MOON',
+  //   name: '月亮',
+  //   image: '/src/assets/card/major-18.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XIX_THE_SUN',
+  //   name: '太陽',
+  //   image: '/src/assets/card/major-19.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XX_JUDGEMENT',
+  //   name: '審判',
+  //   image: '/src/assets/card/major-20.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'XXI_THE_WORLD',
+  //   name: '世界',
+  //   image: '/src/assets/card/major-21.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // // Wands
+  // {
+  //   id: 'ACE_OF_WANDS',
+  //   name: '權杖王牌',
+  //   image: '/src/assets/card/wands-ace.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'TWO_OF_WANDS',
+  //   name: '權杖二',
+  //   image: '/src/assets/card/wands-2.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'THREE_OF_WANDS',
+  //   name: '權杖三',
+  //   image: '/src/assets/card/wands-3.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'FOUR_OF_WANDS',
+  //   name: '權杖四',
+  //   image: '/src/assets/card/wands-4.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'FIVE_OF_WANDS',
+  //   name: '權杖五',
+  //   image: '/src/assets/card/wands-5.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'SIX_OF_WANDS',
+  //   name: '權杖六',
+  //   image: '/src/assets/card/wands-6.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'SEVEN_OF_WANDS',
+  //   name: '權杖七',
+  //   image: '/src/assets/card/wands-7.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'EIGHT_OF_WANDS',
+  //   name: '權杖八',
+  //   image: '/src/assets/card/wands-8.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'NINE_OF_WANDS',
+  //   name: '權杖九',
+  //   image: '/src/assets/card/wands-9.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'TEN_OF_WANDS',
+  //   name: '權杖十',
+  //   image: '/src/assets/card/wands-10.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'PAGE_OF_WANDS',
+  //   name: '權杖侍者',
+  //   image: '/src/assets/card/wands-page.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'KNIGHT_OF_WANDS',
+  //   name: '權杖騎士',
+  //   image: '/src/assets/card/wands-knight.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'QUEEN_OF_WANDS',
+  //   name: '權杖皇后',
+  //   image: '/src/assets/card/wands-queen.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'KING_OF_WANDS',
+  //   name: '權杖國王',
+  //   image: '/src/assets/card/wands-king.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // // Cups
+  // {
+  //   id: 'ACE_OF_CUPS',
+  //   name: '聖杯王牌',
+  //   image: '/src/assets/card/cups-ace.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'TWO_OF_CUPS',
+  //   name: '聖杯二',
+  //   image: '/src/assets/card/cups-2.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'THREE_OF_CUPS',
+  //   name: '聖杯三',
+  //   image: '/src/assets/card/cups-3.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'FOUR_OF_CUPS',
+  //   name: '聖杯四',
+  //   image: '/src/assets/card/cups-4.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'FIVE_OF_CUPS',
+  //   name: '聖杯五',
+  //   image: '/src/assets/card/cups-5.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'SIX_OF_CUPS',
+  //   name: '聖杯六',
+  //   image: '/src/assets/card/cups-6.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'SEVEN_OF_CUPS',
+  //   name: '聖杯七',
+  //   image: '/src/assets/card/cups-7.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'EIGHT_OF_CUPS',
+  //   name: '聖杯八',
+  //   image: '/src/assets/card/cups-8.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'NINE_OF_CUPS',
+  //   name: '聖杯九',
+  //   image: '/src/assets/card/cups-9.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'TEN_OF_CUPS',
+  //   name: '聖杯十',
+  //   image: '/src/assets/card/cups-10.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'PAGE_OF_CUPS',
+  //   name: '聖杯侍者',
+  //   image: '/src/assets/card/cups-page.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'KNIGHT_OF_CUPS',
+  //   name: '聖杯騎士',
+  //   image: '/src/assets/card/cups-knight.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'QUEEN_OF_CUPS',
+  //   name: '聖杯皇后',
+  //   image: '/src/assets/card/cups-queen.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'KING_OF_CUPS',
+  //   name: '聖杯國王',
+  //   image: '/src/assets/card/cups-king.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // // Swords
+  // {
+  //   id: 'ACE_OF_SWORDS',
+  //   name: '寶劍王牌',
+  //   image: '/src/assets/card/swords-ace.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'TWO_OF_SWORDS',
+  //   name: '寶劍二',
+  //   image: '/src/assets/card/swords-2.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'THREE_OF_SWORDS',
+  //   name: '寶劍三',
+  //   image: '/src/assets/card/swords-3.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'FOUR_OF_SWORDS',
+  //   name: '寶劍四',
+  //   image: '/src/assets/card/swords-4.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'FIVE_OF_SWORDS',
+  //   name: '寶劍五',
+  //   image: '/src/assets/card/swords-5.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'SIX_OF_SWORDS',
+  //   name: '寶劍六',
+  //   image: '/src/assets/card/swords-6.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'SEVEN_OF_SWORDS',
+  //   name: '寶劍七',
+  //   image: '/src/assets/card/swords-7.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'EIGHT_OF_SWORDS',
+  //   name: '寶劍八',
+  //   image: '/src/assets/card/swords-8.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'NINE_OF_SWORDS',
+  //   name: '寶劍九',
+  //   image: '/src/assets/card/swords-9.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'TEN_OF_SWORDS',
+  //   name: '寶劍十',
+  //   image: '/src/assets/card/swords-10.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'PAGE_OF_SWORDS',
+  //   name: '寶劍侍者',
+  //   image: '/src/assets/card/swords-page.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'KNIGHT_OF_SWORDS',
+  //   name: '寶劍騎士',
+  //   image: '/src/assets/card/swords-knight.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'QUEEN_OF_SWORDS',
+  //   name: '寶劍皇后',
+  //   image: '/src/assets/card/swords-queen.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'KING_OF_SWORDS',
+  //   name: '寶劍國王',
+  //   image: '/src/assets/card/swords-king.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // // Pentacles
+  // {
+  //   id: 'ACE_OF_PENTACLES',
+  //   name: '錢幣王牌',
+  //   image: '/src/assets/card/pentacles-ace.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'TWO_OF_PENTACLES',
+  //   name: '錢幣二',
+  //   image: '/src/assets/card/pentacles-2.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'THREE_OF_PENTACLES',
+  //   name: '錢幣三',
+  //   image: '/src/assets/card/pentacles-3.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'FOUR_OF_PENTACLES',
+  //   name: '錢幣四',
+  //   image: '/src/assets/card/pentacles-4.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'FIVE_OF_PENTACLES',
+  //   name: '錢幣五',
+  //   image: '/src/assets/card/pentacles-5.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'SIX_OF_PENTACLES',
+  //   name: '錢幣六',
+  //   image: '/src/assets/card/pentacles-6.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'SEVEN_OF_PENTACLES',
+  //   name: '錢幣七',
+  //   image: '/src/assets/card/pentacles-7.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'EIGHT_OF_PENTACLES',
+  //   name: '錢幣八',
+  //   image: '/src/assets/card/pentacles-8.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'NINE_OF_PENTACLES',
+  //   name: '錢幣九',
+  //   image: '/src/assets/card/pentacles-9.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'TEN_OF_PENTACLES',
+  //   name: '錢幣十',
+  //   image: '/src/assets/card/pentacles-10.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'PAGE_OF_PENTACLES',
+  //   name: '錢幣侍者',
+  //   image: '/src/assets/card/pentacles-page.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'KNIGHT_OF_PENTACLES',
+  //   name: '錢幣騎士',
+  //   image: '/src/assets/card/pentacles-knight.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'QUEEN_OF_PENTACLES',
+  //   name: '錢幣皇后',
+  //   image: '/src/assets/card/pentacles-queen.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
+  // {
+  //   id: 'KING_OF_PENTACLES',
+  //   name: '錢幣國王',
+  //   image: '/src/assets/card/pentacles-king.jpg',
+  //   interpretation: {
+  //     upright: [],
+  //     reversed: [],
+  //   },
+  // },
 ];
