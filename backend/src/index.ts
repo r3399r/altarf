@@ -3,10 +3,13 @@ import { TarotService } from './logic/TarotService';
 import { TarotEvent } from './model/api/Tarot';
 import { LambdaContext, LambdaEvent } from './model/Lambda';
 import tarot from './routes/tarot';
-import { errorOutput, successOutput } from './utils/LambdaHelper';
+import user from './routes/user';
+import { errorOutput, initLambda, successOutput } from './utils/LambdaHelper';
 
 export const api = async (event: LambdaEvent, _context: LambdaContext) => {
   console.log(event);
+
+  initLambda(event);
 
   try {
     let res: any;
@@ -15,6 +18,9 @@ export const api = async (event: LambdaEvent, _context: LambdaContext) => {
     switch (resource) {
       case 'tarot':
         res = await tarot(event);
+        break;
+      case 'user':
+        res = await user(event);
         break;
     }
 

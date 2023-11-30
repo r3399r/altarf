@@ -2,7 +2,6 @@
 import { TAROT_CARDS } from '@/model/Card';
 import { TAROT_SPREADS } from '@/model/Spread';
 import { computed, ref } from 'vue';
-import { googleTokenLogin } from 'vue3-google-login';
 import { shuffle as shuffleArray } from '@/utils/array';
 import { sleep } from '@/utils/timer';
 import TheTransitionGroup from '@/components/TheTransitionGroup.vue';
@@ -13,12 +12,6 @@ type Card = {
   name: string;
   image: string;
   isReversed: boolean | null;
-};
-
-const login = () => {
-  googleTokenLogin().then((response) => {
-    console.log('Handle the response', response);
-  });
 };
 
 const spread = ref('');
@@ -116,9 +109,6 @@ const isCovered = ref(true);
   <div>敘述你的問題:(50字以內)</div>
   <div>
     <textarea v-model="description" class="border border-gray-700" maxlength="50"></textarea>
-  </div>
-  <div>
-    <button class="rounded-xl bg-green-200 px-2 py-1" @click="login">以 Google 帳號登入</button>
   </div>
   <div>
     <button class="rounded-xl bg-yellow-200 px-2 py-1" @click="shuffle">洗牌</button>
