@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS tarot (
 	id UUID NOT NULL,
 	description STRING NOT NULL,
-    formation STRING NOT NULL,
+    spread STRING NOT NULL,
     card STRING NOT NULL,
     response STRING NULL,
     has_file BOOLEAN NOT NULL,

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { TAROT_CARDS } from '@/model/Card';
+import { getImageUrl } from '@/utils/image';
 import { useDailyStore } from '@/stores/daily';
 import { storeToRefs } from 'pinia';
 
@@ -19,8 +20,6 @@ const draw = () => {
     date: new Date().toISOString(),
   });
 };
-
-const imageUrl = (src: string) => new URL(src, import.meta.url).href;
 </script>
 
 <template>
@@ -29,7 +28,7 @@ const imageUrl = (src: string) => new URL(src, import.meta.url).href;
   <div v-if="!canDraw && lastResult">
     <div>{{ lastResult.name }}</div>
     <img
-      :src="imageUrl(lastResult.image)"
+      :src="getImageUrl(lastResult.image)"
       :alt="lastResult.name"
       :class="[{ 'rotate-180': lastResult.isReversed }, 'w-40']"
     />
