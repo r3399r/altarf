@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS balance_detail (
-	id UUID NOT NULL,
+	id UUID NOT NULL DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL,
     recorded_at TIMESTAMP NOT NULL,
     income FLOAT NULL,

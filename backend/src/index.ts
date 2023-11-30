@@ -1,3 +1,4 @@
+import { DbAccess } from './access/DbAccess';
 import { bindings } from './bindings';
 import { TarotService } from './logic/TarotService';
 import { TarotEvent } from './model/api/Tarot';
@@ -9,6 +10,8 @@ import { errorOutput, initLambda, successOutput } from './utils/LambdaHelper';
 export const api = async (event: LambdaEvent, _context: LambdaContext) => {
   console.log(event);
 
+  const db = bindings.get(DbAccess);
+  await db.startTransaction();
   initLambda(event);
 
   try {
@@ -25,10 +28,16 @@ export const api = async (event: LambdaEvent, _context: LambdaContext) => {
     }
 
     const output = successOutput(res);
+    await db.commitTransaction();
 
     return output;
   } catch (e) {
+    console.log(e);
+    await db.rollbackTransaction();
+
     return errorOutput(e);
+  } finally {
+    await db.cleanup();
   }
 };
 
