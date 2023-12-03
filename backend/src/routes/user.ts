@@ -21,7 +21,7 @@ export default async (lambdaEvent: LambdaEvent) => {
 const tarotUser = async () => {
   switch (event.httpMethod) {
     case 'GET':
-      return await service.getUser();
+      return await service.getUserDetail();
   }
 
   throw new Error('unexpected httpMethod');

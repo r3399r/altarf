@@ -158,17 +158,20 @@ Resources:
             "postTarot": {
               "type": "object",
               "properties": {
+                "spread":{"type": "string"},
                 "description":{"type": "string"},
-                "type": {"type": "string"},
+                "type": {
+                  "type": "string",
+                  "enum": [ "ai", "human"]
+                },
                 "card": {
                   "type": "array",
                   "items": {
                     "type": "string",
                   }
-                },
-                "deviceId": {"type": "string"},
+                }
               },
-              "required": ["description","type","card","deviceId"]
+              "required": ["spread","description","type","card"]
             },
           },
           "x-amazon-apigateway-request-validators" : {
@@ -220,11 +223,16 @@ Resources:
       CodeUri: ../../lib/src
       MemorySize: 128
       Layers: [!Ref LambdaLayer]
+      Timeout: 900
       Environment:
         Variables:
           PROJECT: !Sub ${Project}
           ENVR: !Sub ${TargetEnvr}
           OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai:1}}'
+          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
+          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
+          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
+          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
   LambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:

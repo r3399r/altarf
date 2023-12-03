@@ -1,11 +1,10 @@
 export type PostTarotRequest = {
+  spread: string;
   description: string;
-  type: string;
+  type: 'ai' | 'human';
   card: string[];
-  deviceId: string;
 };
 
 export type TarotEvent = {
   id: string;
-  description: string;
 };

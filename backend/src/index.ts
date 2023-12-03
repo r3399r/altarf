@@ -42,7 +42,22 @@ export const api = async (event: LambdaEvent, _context: LambdaContext) => {
 };
 
 export const chat = async (event: TarotEvent, _context: LambdaContext) => {
-  const service = bindings.get(TarotService);
+  console.log(event);
+  const db = bindings.get(DbAccess);
+  await db.startTransaction();
+  initLambda();
+  try {
+    const service = bindings.get(TarotService);
 
-  await service.readCard(event);
+    await service.readCard(event);
+
+    return;
+  } catch (e) {
+    console.log(e);
+    await db.rollbackTransaction();
+
+    return errorOutput(e);
+  } finally {
+    await db.cleanup();
+  }
 };

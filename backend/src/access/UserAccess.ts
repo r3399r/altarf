@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { FindOneOptions } from 'typeorm';
 import { User, UserEntity } from 'src/model/entity/UserEntity';
 import { Database } from 'src/utils/Database';
 
@@ -19,18 +19,18 @@ export class UserAccess {
     return await qr.manager.save(entity);
   }
 
-  public async findOneOrFail(options?: FindOneOptions<User>) {
+  public async findOne(options?: FindOneOptions<User>) {
     const qr = await this.database.getQueryRunner();
 
-    return await qr.manager.findOneOrFail<User>(UserEntity.name, {
+    return await qr.manager.findOne<User>(UserEntity.name, {
       ...options,
     });
   }
 
-  public async find(options?: FindManyOptions<User>) {
+  public async findOneOrFail(options?: FindOneOptions<User>) {
     const qr = await this.database.getQueryRunner();
 
-    return await qr.manager.find<User>(UserEntity.name, {
+    return await qr.manager.findOneOrFail<User>(UserEntity.name, {
       ...options,
     });
   }
