@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { inject, injectable } from 'inversify';
 import { UnauthorizedError } from 'src/model/error';
 import { UserInfo } from 'src/model/Google';

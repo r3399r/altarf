@@ -1,7 +1,10 @@
 import { Lambda } from 'aws-sdk';
 import axios from 'axios';
+import { addDays, isBefore } from 'date-fns';
 import { inject, injectable } from 'inversify';
+import { FreeTarotAccess } from 'src/access/FreeTarotAccess';
 import { TarotAccess } from 'src/access/TarotAccess';
+import { UserAccess } from 'src/access/UserAccess';
 import {
   GetTarotIdResponse,
   PostTarotRequest,
@@ -9,7 +12,11 @@ import {
   TarotEvent,
 } from 'src/model/api/Tarot';
 import { Completion } from 'src/model/ChatGPT';
-import { TarotEntity } from 'src/model/entity/TarotEntity';
+import { Cost, QUOTA } from 'src/model/constant';
+import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
+import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
+import { User } from 'src/model/entity/UserEntity';
+import { BadRequestError } from 'src/model/error';
 import { UserService } from './UserService';
 
 /**
@@ -26,12 +33,63 @@ export class TarotService {
   @inject(UserService)
   private readonly userService!: UserService;
 
+  @inject(UserAccess)
+  private readonly userAccess!: UserAccess;
+
+  @inject(FreeTarotAccess)
+  private readonly freeTarotAccess!: FreeTarotAccess;
+
+  private async checkQuota(user: User, tarot: Tarot) {
+    const free = await this.freeTarotAccess.find({
+      where: {
+        tarot: {
+          userId: user.id,
+        },
+      },
+      order: { createdAt: 'desc' },
+    });
+
+    const last = free.length > 0 ? free[0] : null;
+    if (tarot.type === 'ai')
+      if (
+        last === null ||
+        (last.createdAt &&
+          isBefore(addDays(new Date(last.createdAt), 1), new Date()) &&
+          free.length < QUOTA)
+      ) {
+        const freeTarot = new FreeTarotEntity();
+        freeTarot.tarotId = tarot.id;
+        await this.freeTarotAccess.save(freeTarot);
+
+        return;
+      }
+    let cost = 0;
+    if (tarot.type === 'ai') cost = Cost.Ai;
+    else if (tarot.type === 'human-voice') cost = Cost.HumanVoice;
+    else if (tarot.type === 'human-connect') cost = Cost.HumanConnect;
+    if (user.balance >= cost) {
+      user.balance = user.balance - cost;
+      await this.userAccess.save(user);
+
+      return;
+    }
+
+    let error = '';
+    if (free.length >= QUOTA) error = `每月 ${QUOTA} 次的免費額度已用畢，`;
+    else if (
+      last?.createdAt &&
+      !isBefore(addDays(new Date(last.createdAt), 1), new Date())
+    )
+      error = '每 24 小時 1 次的免費額度已用畢，';
+    else error = '餘額不足，';
+    throw new BadRequestError(error + '請充值以繼續');
+  }
+
   public async prepareReadingCard(
     data: PostTarotRequest
   ): Promise<PostTarotResponse> {
-    console.log(data);
-
     const user = await this.userService.getUserEntity();
+
     const tarot = new TarotEntity();
     tarot.description = data.description;
     tarot.type = data.type;
@@ -39,6 +97,9 @@ export class TarotService {
     tarot.card = data.card.join();
     tarot.userId = user.id;
     const newTarot = await this.tarotAccess.save(tarot);
+
+    // check quota and save
+    await this.checkQuota(user, newTarot);
 
     if (tarot.type === 'ai') {
       const statistics = await this.tarotAccess.findAvgAndStd();

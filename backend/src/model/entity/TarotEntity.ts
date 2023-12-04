@@ -12,7 +12,7 @@ import { User, UserEntity } from './UserEntity';
 export type Tarot = {
   id: string;
   description: string;
-  type: 'ai' | 'human';
+  type: 'ai' | 'human-voice' | 'human-connect';
   spread: string;
   card: string;
   response: string | null;
@@ -36,7 +36,7 @@ export class TarotEntity implements Tarot {
   description!: string;
 
   @Column({ type: 'text' })
-  type!: 'ai' | 'human';
+  type!: 'ai' | 'human-voice' | 'human-connect';
 
   @Column({ type: 'text' })
   spread!: string;
@@ -50,7 +50,7 @@ export class TarotEntity implements Tarot {
   @Column({ type: 'boolean', name: 'has_file', nullable: true })
   hasFile: boolean | null = null;
 
-  @Column({ type: 'text', name: 'user_id' })
+  @Column({ type: 'uuid', name: 'user_id' })
   userId!: string;
 
   @ManyToOne(() => UserEntity)

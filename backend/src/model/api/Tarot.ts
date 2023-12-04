@@ -7,7 +7,7 @@ export type TarotEvent = {
 export type PostTarotRequest = {
   spread: string;
   description: string;
-  type: 'ai' | 'human';
+  type: 'ai' | 'human-voice' | 'human-connect';
   card: string[];
 };
 
