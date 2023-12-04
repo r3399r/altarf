@@ -3,13 +3,13 @@ set -e
 
 env=$1
 project=altarf
-# subDomain=yoho
-# domain=celestialstudio.net
+subDomain=tarot
+domain=celestialstudio.net
 
 echo ====================================================================================
 echo env: $env
 echo project: $project
-# echo domain: $subDomain.$domain
+echo domain: $subDomain.$domain
 echo ====================================================================================
 
 # echo execute db scripts...
@@ -25,26 +25,17 @@ echo deploy backend AWS...
 cd ./backend
 npm run pre:deploy
 aws cloudformation package --template-file aws/cloudformation/template.yaml --output-template-file packaged.yaml --s3-bucket y-cf-midway-singapore
-aws cloudformation deploy --template-file packaged.yaml --stack-name $project-$env-stack --parameter-overrides TargetEnvr=$env Project=$project --no-fail-on-empty-changeset --s3-bucket y-cf-midway-singapore --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation deploy --template-file packaged.yaml --stack-name $project-$env-stack --parameter-overrides TargetEnvr=$env Project=$project SubDomain=$subDomain Domain=$domain --no-fail-on-empty-changeset --s3-bucket y-cf-midway-singapore --capabilities CAPABILITY_NAMED_IAM
 echo ====================================================================================
 
-# echo prepare frontend files...
-# rm -rf ../frontend/src/model/backend
-# cp -R lib/src/model ../frontend/src/model/backend
-# cp -R lib/src/constant ../frontend/src/constant/backend
-# echo ====================================================================================
+echo prepare frontend files...
+rm -rf ../frontend/src/model/backend
+cp -R lib/src/model ../frontend/src/model/backend
+echo ====================================================================================
 
-# echo prepare api document...
-# cd ../doc
-# # npm ci
-# npm run tsoa -- $env
-# echo ====================================================================================
-
-# echo deploy frontend to S3...
-# cd ../frontend
-# npm i
-# npm run build
-# mkdir -p ./dist/doc
-# cp -R ../doc/index.* ./dist/doc
-# aws s3 sync ./dist s3://$project-$env --delete --cache-control no-cache
-# echo ====================================================================================
+echo deploy frontend to S3...
+cd ../frontend
+npm i
+npm run build
+aws s3 sync ./dist s3://$project-$env --delete --cache-control no-cache
+echo ====================================================================================
