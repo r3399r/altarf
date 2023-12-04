@@ -14,8 +14,8 @@ type Card = {
   isReversed: boolean | null;
 };
 
+const step = ref(1);
 const spread = ref('');
-const type = ref('');
 const description = ref('');
 const count = computed(() => TAROT_SPREADS.find((v) => v.name === spread.value)?.count);
 
@@ -33,14 +33,14 @@ const shuffle = async () => {
 };
 const selected = ref<Card[]>([]);
 const onSelect = (card: Card) => {
-  if (selected.value.length === count.value) return;
   const isReversed = Math.random() < 0.5;
   if (selected.value.find((v) => v.id === card.id))
     selected.value = selected.value.filter((v) => v.id !== card.id);
-  else selected.value.push({ ...card, isReversed });
+  else {
+    if (selected.value.length === count.value) return;
+    selected.value.push({ ...card, isReversed });
+  }
 };
-
-const isCovered = ref(true);
 </script>
 
 <template>
@@ -88,57 +88,67 @@ const isCovered = ref(true);
   </div>
   <div>
     選擇牌陣:
-    <select v-model="spread">
+    <select v-model="spread" :disabled="step > 1">
       <option disabled value>請選擇</option>
       <option v-for="v of TAROT_SPREADS" :key="v.id">{{ v.name }}</option>
     </select>
   </div>
-  <div>
-    選擇類別:
-    <select v-model="type">
-      <option disabled selected value>請選擇</option>
-      <option>運勢</option>
-      <option>感情</option>
-      <option>事業</option>
-      <option>人際關係</option>
-      <option>財運</option>
-      <option>單一事件</option>
-      <option>其他</option>
-    </select>
-  </div>
   <div>敘述你的問題:(50字以內)</div>
   <div>
-    <textarea v-model="description" class="border border-gray-700" maxlength="50"></textarea>
+    <textarea
+      v-model="description"
+      class="border border-gray-700"
+      maxlength="50"
+      :disabled="step > 1"
+    ></textarea>
   </div>
-  <div>
-    <button class="rounded-xl bg-yellow-200 px-2 py-1" @click="shuffle">洗牌</button>
-  </div>
-  <TheTransitionGroup tag="div" class="flex flex-wrap gap-2">
-    <div
-      v-for="v of shuffled"
-      :key="v.id"
-      class="h-14 w-10 cursor-pointer border border-black"
-      @click="onSelect(v)"
+  <div v-if="step === 1">
+    <div>準備之後會鎖定牌陣及問題</div>
+    <button
+      class="rounded-xl bg-yellow-200 px-2 py-1"
+      @click="step = 2"
+      :disabled="spread.length === 0 || description.length === 0"
     >
-      {{ selected.find((o) => o.id === v.id) ? selected.findIndex((o) => o.id === v.id) + 1 : '' }}
-    </div>
-  </TheTransitionGroup>
-  <div v-if="count === selected.length">
-    <button class="rounded-xl bg-yellow-200 px-2 py-1" @click="isCovered = false">
-      抽好並翻牌
+      我準備好抽牌了
     </button>
   </div>
-  <div v-if="!isCovered" class="flex flex-wrap gap-2">
-    <div v-for="v of selected" :key="v.id">
-      <img
-        :src="getImageUrl(v.image)"
-        :alt="v.name"
-        :class="[{ 'rotate-180': v.isReversed }, 'w-20']"
-      />
-    </div>
+  <div v-if="step === 2">
+    <button class="rounded-xl bg-yellow-200 px-2 py-1" @click="shuffle">洗牌</button>
+    <div>請抽選 {{ count }} 張牌</div>
+    <TheTransitionGroup tag="div" class="flex flex-wrap gap-2">
+      <div
+        v-for="v of shuffled"
+        :key="v.id"
+        class="h-14 w-10 cursor-pointer border border-black"
+        @click="onSelect(v)"
+      >
+        {{
+          selected.find((o) => o.id === v.id) ? selected.findIndex((o) => o.id === v.id) + 1 : ''
+        }}
+      </div>
+    </TheTransitionGroup>
+    <button
+      class="rounded-xl bg-yellow-200 px-2 py-1"
+      @click="step = 3"
+      :disabled="count !== selected.length"
+    >
+      我抽好了，翻牌
+    </button>
   </div>
-  <div>
-    <button class="rounded-xl bg-yellow-200 px-2 py-1">AI解牌</button>
-    <button class="rounded-xl bg-yellow-200 px-2 py-1">真人翻牌</button>
+  <div v-if="step === 3">
+    <div class="flex gap-2">
+      <div v-for="(v, idx) of selected" :key="v.id" class="flex flex-col items-center">
+        <div>{{ idx + 1 }}</div>
+        <img
+          :src="getImageUrl(v.image)"
+          :alt="v.name"
+          :class="[{ 'rotate-180': v.isReversed }, 'w-20']"
+        />
+      </div>
+    </div>
+    <div>
+      <button class="rounded-xl bg-yellow-200 px-2 py-1">AI解牌</button>
+      <button class="rounded-xl bg-yellow-200 px-2 py-1">真人解牌</button>
+    </div>
   </div>
 </template>
