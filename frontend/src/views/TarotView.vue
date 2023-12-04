@@ -154,7 +154,7 @@ const onSelect = (card: Card) => {
       <div v-if="!isLogin">請先登入才能進行解牌</div>
       <div>
         <button class="rounded-xl bg-yellow-200 px-2 py-1" :disabled="!isLogin">AI解牌</button> 每次
-        xx 元。免費額度：每月 {{ QUOTA }} 次，每 24 小時 1 次
+        xx 元。免費額度：每月 xx 次，每 24 小時 1 次
       </div>
       <div>
         <button class="rounded-xl bg-yellow-200 px-2 py-1" :disabled="!isLogin">
