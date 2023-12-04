@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { FindOneOptions } from 'typeorm';
 import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
+import { InternalServerError } from 'src/model/error';
 import { Database } from 'src/utils/Database';
 
 /**
@@ -26,5 +27,22 @@ export class TarotAccess {
       relations: { user: true },
       ...options,
     });
+  }
+
+  public async findAvgAndStd() {
+    const qr = await this.database.getQueryRunner();
+    const queryBuilder = qr.manager
+      .createQueryBuilder(TarotEntity.name, 't')
+      .select('avg(t.elapsed_time)', 'avg')
+      .addSelect('stddev_pop(t.elapsed_time)', 'std')
+      .where('t.elapsed_time is not null');
+
+    const res = await queryBuilder.getRawOne<{
+      avg: number | null;
+      std: number | null;
+    }>();
+    if (res === undefined) throw new InternalServerError('unexpected db issue');
+
+    return res;
   }
 }

@@ -14,6 +14,8 @@ export default async (lambdaEvent: LambdaEvent) => {
   switch (event.resource) {
     case '/api/tarot':
       return await tarotDefault();
+    case '/api/tarot/{id}':
+      return await tarotId();
   }
 
   throw new BadRequestError('unexpected resource');
@@ -28,6 +30,16 @@ const tarotDefault = async () => {
       return await service.prepareReadingCard(
         JSON.parse(event.body) as PostTarotRequest
       );
+  }
+
+  throw new Error('unexpected httpMethod');
+};
+
+const tarotId = async () => {
+  if (!event.pathParameters) throw new Error('missing pathParameters');
+  switch (event.httpMethod) {
+    case 'GET':
+      return await service.getTarotById(event.pathParameters.id);
   }
 
   throw new Error('unexpected httpMethod');

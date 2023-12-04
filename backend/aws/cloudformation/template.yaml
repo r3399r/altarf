@@ -1,11 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: "AWS::Serverless-2016-10-31"
 Description: altarf deployment cloudformation script
-    
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-Globals:
-  Function:
-      Timeout: 30  # in seconds
+
 Parameters:
   Project:
     Type: String
@@ -87,6 +83,48 @@ Resources:
                   }
                 },
                 "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-integration": {
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Project}-${TargetEnvr}-lambda/invocations",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Origin": "'*'"
+                      }
+                    }
+                  },
+                  "passthroughBehavior": "when_no_match",
+                  "contentHandling": "CONVERT_TO_TEXT"
+                }
+              }
+            },
+            "/api/tarot/{id}": {
+              "get": {
+                "parameters": [{
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {"type": "string"}
+                }],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Origin": {
+                        "schema": {"type": "string"}
+                      }
+                    },
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Empty"
+                        }
+                      }
+                    }
+                  }
+                },
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -195,6 +233,7 @@ Resources:
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
       MemorySize: 128
+      Timeout: 30
       Layers: [!Ref LambdaLayer]
       Environment:
         Variables:
@@ -222,8 +261,8 @@ Resources:
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
       MemorySize: 128
-      Layers: [!Ref LambdaLayer]
       Timeout: 900
+      Layers: [!Ref LambdaLayer]
       Environment:
         Variables:
           PROJECT: !Sub ${Project}

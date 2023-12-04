@@ -2,7 +2,12 @@ import { Lambda } from 'aws-sdk';
 import axios from 'axios';
 import { inject, injectable } from 'inversify';
 import { TarotAccess } from 'src/access/TarotAccess';
-import { PostTarotRequest, TarotEvent } from 'src/model/api/Tarot';
+import {
+  GetTarotIdResponse,
+  PostTarotRequest,
+  PostTarotResponse,
+  TarotEvent,
+} from 'src/model/api/Tarot';
 import { Completion } from 'src/model/ChatGPT';
 import { TarotEntity } from 'src/model/entity/TarotEntity';
 import { UserService } from './UserService';
@@ -21,11 +26,12 @@ export class TarotService {
   @inject(UserService)
   private readonly userService!: UserService;
 
-  public async prepareReadingCard(data: PostTarotRequest) {
+  public async prepareReadingCard(
+    data: PostTarotRequest
+  ): Promise<PostTarotResponse> {
     console.log(data);
 
     const user = await this.userService.getUserEntity();
-    console.log(user);
     const tarot = new TarotEntity();
     tarot.description = data.description;
     tarot.type = data.type;
@@ -34,7 +40,8 @@ export class TarotService {
     tarot.userId = user.id;
     const newTarot = await this.tarotAccess.save(tarot);
 
-    if (tarot.type === 'ai')
+    if (tarot.type === 'ai') {
+      const statistics = await this.tarotAccess.findAvgAndStd();
       await this.lambda
         .invoke({
           FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-chat`,
@@ -44,6 +51,9 @@ export class TarotService {
           InvocationType: 'Event',
         })
         .promise();
+
+      return { ...newTarot, statistics };
+    }
 
     return newTarot;
   }
@@ -83,5 +93,16 @@ export class TarotService {
     tarot.completionTokens = chatCompletion.usage.completion_tokens;
     tarot.elapsedTime = elapsedTime;
     await this.tarotAccess.save(tarot);
+  }
+
+  public async getTarotById(id: string): Promise<GetTarotIdResponse> {
+    const tarot = await this.tarotAccess.findOneOrFail({ where: { id } });
+    if (tarot.type === 'ai' && tarot.response === null) {
+      const statistics = await this.tarotAccess.findAvgAndStd();
+
+      return { ...tarot, statistics };
+    }
+
+    return tarot;
   }
 }

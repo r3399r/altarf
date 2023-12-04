@@ -50,6 +50,7 @@ export const chat = async (event: TarotEvent, _context: LambdaContext) => {
     const service = bindings.get(TarotService);
 
     await service.readCard(event);
+    await db.commitTransaction();
 
     return;
   } catch (e) {
