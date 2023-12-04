@@ -18,7 +18,6 @@ export default defineConfig({
       "/api": {
         target: "https://tarot-test.celestialstudio.net",
         changeOrigin: true,
-        // rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   }

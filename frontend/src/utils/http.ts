@@ -59,7 +59,7 @@ const privateRequestConfig = <D = unknown, P = any>(
   headers: {
     ...defaultHeader,
     ...options?.headers,
-    ...({ ['x-credential']: localStorage.getItem('access-token') ?? '' } as RawAxiosRequestHeaders),
+    ...({ ['x-credential']: localStorage.getItem('token') ?? '' } as RawAxiosRequestHeaders),
   },
   data: options?.data,
   params: options?.params,
