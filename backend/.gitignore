@@ -2,3 +2,5 @@ node_modules
 dist
 lib
 packaged.yaml
+
+src/model/constant
