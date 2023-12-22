@@ -29,4 +29,3 @@ coverage
 
 .env
 src/model/backend
-src/model/constant

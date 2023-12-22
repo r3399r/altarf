@@ -21,13 +21,6 @@ echo ===========================================================================
 # psql postgresql://$user:$pwd@$host:26257/$cluster.$project -f deploy.sql
 # echo ====================================================================================
 
-echo prepare constant files...
-rm -rf backend/src/model/constant
-cp -R config/constant backend/src/model/constant
-rm -rf frontend/src/model/constant
-cp -R config/constant frontend/src/model/constant
-echo ====================================================================================
-
 echo deploy backend AWS...
 cd ./backend
 npm install

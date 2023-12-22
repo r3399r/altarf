@@ -1,12 +1,11 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import http from '@/utils/http';
-import type { User } from '@/model/backend/entity/UserEntity';
 import type { GetUserResponse } from '@/model/backend/api/User';
 
 export const useAuthStore = defineStore('auth', () => {
   const isLogin = ref(localStorage.getItem('token') !== null);
-  const user = ref<User>();
+  const user = ref<GetUserResponse>();
 
   function login(token: string) {
     localStorage.setItem('token', token);
@@ -18,8 +17,12 @@ export const useAuthStore = defineStore('auth', () => {
     isLogin.value = false;
   }
   async function loadUser() {
-    const res = await http.authGet<GetUserResponse>('/user');
-    user.value = res.data;
+    try {
+      const res = await http.authGet<GetUserResponse>('/user');
+      user.value = res.data;
+    } catch {
+      logout();
+    }
   }
 
   return { isLogin, user, login, logout, loadUser };

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { TAROT_CARDS } from '@/model/Card';
-import { TAROT_SPREADS } from '@/model/Spread';
 import { computed, ref } from 'vue';
 import { shuffle as shuffleArray } from '@/utils/array';
 import { sleep } from '@/utils/timer';
@@ -8,20 +6,29 @@ import TheTransitionGroup from '@/components/TheTransitionGroup.vue';
 import { getImageUrl } from '@/utils/image';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
+import { useTarotStore } from '@/stores/tarot';
+import { useRouter } from 'vue-router';
+import { TAROT_CARDS, type Card as CardType } from '@/model/backend/constant/Card';
+import { TAROT_SPREADS } from '@/model/backend/constant/Spread';
+import { Cost, QUOTA } from '@/model/backend/constant/Price';
 
-type Card = {
-  id: string;
-  name: string;
-  image: string;
+type Card = Omit<CardType, 'interpretation'> & {
   isReversed: boolean | null;
 };
+const router = useRouter();
 const authStore = useAuthStore();
-const { isLogin } = storeToRefs(authStore);
+const tarotStore = useTarotStore();
+const { isLogin, user } = storeToRefs(authStore);
+const { justSent } = storeToRefs(tarotStore);
 
-const step = ref(3);
+const canAiSolve = computed(
+  () => isLogin.value && user.value && (user.value.freeQuota > 0 || user.value.balance > Cost.Ai),
+);
+
+const step = ref(1);
 const spread = ref('');
 const description = ref('');
-const count = computed(() => TAROT_SPREADS.find((v) => v.name === spread.value)?.count);
+const count = computed(() => TAROT_SPREADS.find((v) => v.id === spread.value)?.count);
 
 const shuffled = ref<Card[]>(
   shuffleArray(
@@ -44,6 +51,19 @@ const onSelect = (card: Card) => {
     if (selected.value.length === count.value) return;
     selected.value.push({ ...card, isReversed });
   }
+};
+
+const onAiSolve = () => {
+  tarotStore
+    .aiSolve(
+      spread.value,
+      description.value,
+      selected.value.map((v) => ({ id: v.id, isReversed: v.isReversed ?? true })),
+    )
+    .then((id: string) => {
+      justSent.value = true;
+      router.push(`/tarot/${id}`);
+    });
 };
 </script>
 
@@ -94,7 +114,7 @@ const onSelect = (card: Card) => {
     選擇牌陣:
     <select v-model="spread" :disabled="step > 1">
       <option disabled value>請選擇</option>
-      <option v-for="v of TAROT_SPREADS" :key="v.id">{{ v.name }}</option>
+      <option v-for="v of TAROT_SPREADS" :key="v.id" :value="v.id">{{ v.name }}</option>
     </select>
   </div>
   <div>敘述你的問題:(50字以內)</div>
@@ -153,20 +173,26 @@ const onSelect = (card: Card) => {
     <div>
       <div v-if="!isLogin">請先登入才能進行解牌</div>
       <div>
-        <button class="rounded-xl bg-yellow-200 px-2 py-1" :disabled="!isLogin">AI解牌</button> 每次
-        xx 元。免費額度：每月 xx 次，每 24 小時 1 次
+        <button
+          class="rounded-xl bg-yellow-200 px-2 py-1"
+          :disabled="!canAiSolve"
+          @click="onAiSolve"
+        >
+          AI解牌
+        </button>
+        每次 {{ Cost.Ai }} 元。免費額度：每月 {{ QUOTA }} 次，每 24 小時 1 次
       </div>
       <div>
         <button class="rounded-xl bg-yellow-200 px-2 py-1" :disabled="!isLogin">
           真人語音解牌
         </button>
-        每次 xx 元
+        每次 {{ Cost.HumanVoice }} 元
       </div>
       <div>
         <button class="rounded-xl bg-yellow-200 px-2 py-1" :disabled="!isLogin">
           真人視訊解牌
         </button>
-        每次 xx 元
+        每次 {{ Cost.HumanConnect }} 元
       </div>
     </div>
   </div>

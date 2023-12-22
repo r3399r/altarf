@@ -8,7 +8,7 @@ export type PostTarotRequest = {
   spread: string;
   description: string;
   type: 'ai' | 'human-voice' | 'human-connect';
-  card: string[];
+  card: { id: string; side: 'upright' | 'reversed' }[];
 };
 
 export type PostTarotResponse = Tarot & {

@@ -16,7 +16,7 @@ const login = () => {
 <template>
   <div class="flex items-center justify-between bg-red-200 px-4 py-2">
     <div class="flex gap-4">
-      <RouterLink to="/">線上解牌</RouterLink>
+      <RouterLink to="/tarot">線上解牌</RouterLink>
       <RouterLink to="/daily">每日塔羅</RouterLink>
     </div>
     <div>
@@ -24,11 +24,9 @@ const login = () => {
         以 Google 帳號登入
       </button>
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2" v-if="isLogin">
       <div>餘額: {{ user?.balance }}</div>
-      <button v-if="isLogin" class="rounded-xl bg-yellow-200 px-2 py-1" @click="authStore.logout">
-        登出
-      </button>
+      <button class="rounded-xl bg-yellow-200 px-2 py-1" @click="authStore.logout">登出</button>
     </div>
   </div>
 </template>

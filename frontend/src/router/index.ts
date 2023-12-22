@@ -1,13 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import TarotView from '../views/TarotView.vue';
+import TarotDetailView from '../views/TarotDetailView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/tarot',
       name: 'tarot',
       component: TarotView,
+    },
+    {
+      path: '/tarot/:id',
+      name: 'tarot-detail',
+      component: TarotDetailView,
     },
     {
       path: '/daily',
@@ -19,7 +25,7 @@ const router = createRouter({
     },
     {
       path: '/:pathMatch(.*)*',
-      redirect: '/',
+      redirect: '/tarot',
     },
   ],
 });

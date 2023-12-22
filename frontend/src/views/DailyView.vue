@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { TAROT_CARDS } from '@/model/Card';
 import { getImageUrl } from '@/utils/image';
 import { useDailyStore } from '@/stores/daily';
 import { storeToRefs } from 'pinia';
+import { TAROT_CARDS } from '@/model/backend/constant/Card';
 
 const dailyStore = useDailyStore();
 const { lastResult, canDraw } = storeToRefs(dailyStore);

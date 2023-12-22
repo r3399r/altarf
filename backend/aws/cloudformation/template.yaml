@@ -209,7 +209,11 @@ Resources:
                 "card": {
                   "type": "array",
                   "items": {
-                    "type": "string",
+                    "type": "object",
+                    "properties": {
+                      "id": {"type": "string"},
+                      "side": {"type": "string"}
+                    }
                   }
                 }
               },

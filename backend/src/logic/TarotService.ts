@@ -12,7 +12,9 @@ import {
   TarotEvent,
 } from 'src/model/api/Tarot';
 import { Completion } from 'src/model/ChatGPT';
-import { Cost, QUOTA } from 'src/model/constant';
+import { TAROT_CARDS } from 'src/model/constant/Card';
+import { Cost, QUOTA } from 'src/model/constant/Price';
+import { TAROT_SPREADS } from 'src/model/constant/Spread';
 import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
 import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
 import { User } from 'src/model/entity/UserEntity';
@@ -96,6 +98,7 @@ export class TarotService {
     tarot.spread = data.spread;
     tarot.card = data.card.join();
     tarot.userId = user.id;
+    tarot.hasFile = false;
     const newTarot = await this.tarotAccess.save(tarot);
 
     // check quota and save
@@ -103,15 +106,15 @@ export class TarotService {
 
     if (tarot.type === 'ai') {
       const statistics = await this.tarotAccess.findAvgAndStd();
-      await this.lambda
-        .invoke({
-          FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-chat`,
-          Payload: JSON.stringify({
-            id: newTarot.id,
-          }),
-          InvocationType: 'Event',
-        })
-        .promise();
+      // await this.lambda
+      //   .invoke({
+      //     FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-chat`,
+      //     Payload: JSON.stringify({
+      //       id: newTarot.id,
+      //     }),
+      //     InvocationType: 'Event',
+      //   })
+      //   .promise();
 
       return { ...newTarot, statistics };
     }
@@ -128,12 +131,12 @@ export class TarotService {
 
     let content =
       '你現在是塔羅占卜師，我會給你問題，以及我抽到的牌卡，你會給我清晰的觀點，如果抽到負面的牌卡，你會為我加油打氣，並且提供我建議，不需要另外說明，以唐綺陽的語氣來回答我的問題。';
-    if (tarot.spread === '時間之流')
+    if (tarot.spread === TAROT_SPREADS[1].id)
       content += '三張牌分別代表「過去」、「現在」、「未來」，';
     content += `我想問「${tarot.description}」`;
     content += `我抽到${tarot.card
       .split(',')
-      .map((v) => `「${v}」`)
+      .map((v) => `「${TAROT_CARDS.find((o) => o.id === v)?.name}」`)
       .join('、')}`;
 
     const res = await axios.request<Completion>({
@@ -149,7 +152,6 @@ export class TarotService {
     const elapsedTime = new Date().getTime() - now;
 
     tarot.response = chatCompletion.choices[0].message.content;
-    tarot.hasFile = false;
     tarot.promptTokens = chatCompletion.usage.prompt_tokens;
     tarot.completionTokens = chatCompletion.usage.completion_tokens;
     tarot.elapsedTime = elapsedTime;
