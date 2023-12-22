@@ -96,7 +96,9 @@ export class TarotService {
     tarot.description = data.description;
     tarot.type = data.type;
     tarot.spread = data.spread;
-    tarot.card = data.card.join();
+    tarot.card = data.card
+      .map((v) => `${v.side === 'reversed' ? '-' : '+'}${v.id}`)
+      .join();
     tarot.userId = user.id;
     tarot.hasFile = false;
     const newTarot = await this.tarotAccess.save(tarot);
@@ -106,15 +108,15 @@ export class TarotService {
 
     if (tarot.type === 'ai') {
       const statistics = await this.tarotAccess.findAvgAndStd();
-      // await this.lambda
-      //   .invoke({
-      //     FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-chat`,
-      //     Payload: JSON.stringify({
-      //       id: newTarot.id,
-      //     }),
-      //     InvocationType: 'Event',
-      //   })
-      //   .promise();
+      await this.lambda
+        .invoke({
+          FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-chat`,
+          Payload: JSON.stringify({
+            id: newTarot.id,
+          }),
+          InvocationType: 'Event',
+        })
+        .promise();
 
       return { ...newTarot, statistics };
     }
@@ -129,15 +131,20 @@ export class TarotService {
 
     const now = new Date().getTime();
 
+    const translateCards = tarot.card
+      .split(',')
+      .map((v) =>
+        v.startsWith('+')
+          ? '正面'
+          : '反面' + TAROT_CARDS.find((o) => o.id === v.substring(1))?.name
+      );
+
     let content =
       '你現在是塔羅占卜師，我會給你問題，以及我抽到的牌卡，你會給我清晰的觀點，如果抽到負面的牌卡，你會為我加油打氣，並且提供我建議，不需要另外說明，以唐綺陽的語氣來回答我的問題。';
     if (tarot.spread === TAROT_SPREADS[1].id)
       content += '三張牌分別代表「過去」、「現在」、「未來」，';
     content += `我想問「${tarot.description}」`;
-    content += `我抽到${tarot.card
-      .split(',')
-      .map((v) => `「${TAROT_CARDS.find((o) => o.id === v)?.name}」`)
-      .join('、')}`;
+    content += `我抽到${translateCards.map((v) => `「${v}」`).join('、')}`;
 
     const res = await axios.request<Completion>({
       method: 'POST',
