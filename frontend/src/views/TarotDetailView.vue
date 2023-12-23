@@ -7,7 +7,6 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { bn } from '@/utils/bignumber';
 import { getImageUrl } from '@/utils/image';
-import { TAROT_CARDS } from '@/model/backend/constant/Card';
 
 const router = useRouter();
 const route = useRoute();
@@ -48,7 +47,7 @@ const max = computed(() =>
     <div v-for="(v, idx) of tarot.card.split(',')" :key="idx" class="flex flex-col items-center">
       <div>{{ idx + 1 }}</div>
       <img
-        :src="getImageUrl(TAROT_CARDS.find((o) => o.id === v.substring(1))?.image ?? '')"
+        :src="getImageUrl(`../assets/card/${tarot.id}.jpg`)"
         :alt="v.substring(1)"
         :class="[{ 'rotate-180': v.startsWith('-') }, 'w-20']"
       />

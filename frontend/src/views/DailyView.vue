@@ -14,7 +14,6 @@ const draw = () => {
   dailyStore.setLastResult({
     id: card.id,
     name: card.name,
-    image: card.image,
     interpretation: options[Math.floor(Math.random() * options.length)],
     isReversed,
     date: new Date().toISOString(),
@@ -28,7 +27,7 @@ const draw = () => {
   <div v-if="!canDraw && lastResult">
     <div>{{ lastResult.name }}</div>
     <img
-      :src="getImageUrl(lastResult.image)"
+      :src="getImageUrl(`../assets/card/${lastResult.id}.jpg`)"
       :alt="lastResult.name"
       :class="[{ 'rotate-180': lastResult.isReversed }, 'w-40']"
     />

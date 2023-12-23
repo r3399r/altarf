@@ -5,7 +5,6 @@ import { isBefore, startOfToday } from 'date-fns';
 type Result = {
   id: string;
   name: string;
-  image: string;
   interpretation: string;
   isReversed: boolean;
   date: string;

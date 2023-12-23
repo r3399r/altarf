@@ -11,6 +11,7 @@ import { useRouter } from 'vue-router';
 import { TAROT_CARDS, type Card as CardType } from '@/model/backend/constant/Card';
 import { TAROT_SPREADS } from '@/model/backend/constant/Spread';
 import { Cost, QUOTA } from '@/model/backend/constant/Price';
+import { format } from 'date-fns';
 
 type Card = Omit<CardType, 'interpretation'> & {
   isReversed: boolean | null;
@@ -31,13 +32,11 @@ const description = ref('');
 const count = computed(() => TAROT_SPREADS.find((v) => v.id === spread.value)?.count);
 
 const shuffled = ref<Card[]>(
-  shuffleArray(
-    TAROT_CARDS.map((v) => ({ id: v.id, name: v.name, image: v.image, isReversed: null })),
-  ),
+  shuffleArray(TAROT_CARDS.map((v) => ({ id: v.id, name: v.name, isReversed: null }))),
 );
 const shuffle = async () => {
   shuffled.value = shuffleArray(shuffled.value);
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 3; i++) {
     await sleep(400);
     shuffled.value = shuffleArray(shuffled.value);
   }
@@ -164,7 +163,7 @@ const onAiSolve = () => {
       <div v-for="(v, idx) of selected" :key="v.id" class="flex flex-col items-center">
         <div>{{ idx + 1 }}</div>
         <img
-          :src="getImageUrl(v.image)"
+          :src="getImageUrl(`../assets/card/${v.id}.jpg`)"
           :alt="v.name"
           :class="[{ 'rotate-180': v.isReversed }, 'w-20']"
         />
@@ -181,6 +180,10 @@ const onAiSolve = () => {
           AI解牌
         </button>
         每次 {{ Cost.Ai }} 元。免費額度：每月 {{ QUOTA }} 次，每 24 小時 1 次
+      </div>
+      <div>免費額度剩餘 {{ user?.freeQuota }} 次</div>
+      <div v-if="user?.lastFree">
+        上次免費 AI 解牌: {{ format(new Date(user.lastFree), 'yyyy-MM-dd HH:mm:ss') }}
       </div>
       <div>
         <button class="rounded-xl bg-yellow-200 px-2 py-1" :disabled="!isLogin">
