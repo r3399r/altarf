@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { shuffle as shuffleArray } from '@/utils/array';
 import { sleep } from '@/utils/timer';
 import TheTransitionGroup from '@/components/TheTransitionGroup.vue';
-import { getImageUrl } from '@/utils/image';
+import { getCardImageUrl } from '@/utils/image';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
 import { useTarotStore } from '@/stores/tarot';
@@ -163,7 +163,7 @@ const onAiSolve = () => {
       <div v-for="(v, idx) of selected" :key="v.id" class="flex flex-col items-center">
         <div>{{ idx + 1 }}</div>
         <img
-          :src="getImageUrl(`../assets/card/${v.id}.jpg`)"
+          :src="getCardImageUrl(v.id)"
           :alt="v.name"
           :class="[{ 'rotate-180': v.isReversed }, 'w-20']"
         />

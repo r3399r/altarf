@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getImageUrl } from '@/utils/image';
+import { getCardImageUrl } from '@/utils/image';
 import { useDailyStore } from '@/stores/daily';
 import { storeToRefs } from 'pinia';
 import { TAROT_CARDS } from '@/model/backend/constant/Card';
@@ -27,7 +27,7 @@ const draw = () => {
   <div v-if="!canDraw && lastResult">
     <div>{{ lastResult.name }}</div>
     <img
-      :src="getImageUrl(`../assets/card/${lastResult.id}.jpg`)"
+      :src="getCardImageUrl(lastResult.id)"
       :alt="lastResult.name"
       :class="[{ 'rotate-180': lastResult.isReversed }, 'w-40']"
     />

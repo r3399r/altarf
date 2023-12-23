@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { bn } from '@/utils/bignumber';
-import { getImageUrl } from '@/utils/image';
+import { getCardImageUrl } from '@/utils/image';
 
 const router = useRouter();
 const route = useRoute();
@@ -47,7 +47,7 @@ const max = computed(() =>
     <div v-for="(v, idx) of tarot.card.split(',')" :key="idx" class="flex flex-col items-center">
       <div>{{ idx + 1 }}</div>
       <img
-        :src="getImageUrl(`../assets/card/${tarot.id}.jpg`)"
+        :src="getCardImageUrl(v.substring(1))"
         :alt="v.substring(1)"
         :class="[{ 'rotate-180': v.startsWith('-') }, 'w-20']"
       />
