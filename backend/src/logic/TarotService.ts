@@ -135,8 +135,8 @@ export class TarotService {
       .split(',')
       .map((v) =>
         v.startsWith('+')
-          ? '正面'
-          : '反面' + TAROT_CARDS.find((o) => o.id === v.substring(1))?.name
+          ? '正位的'
+          : '逆位的' + TAROT_CARDS.find((o) => o.id === v.substring(1))?.name
       );
 
     let content =
