@@ -3,17 +3,18 @@ import type { Tarot } from '@/model/backend/entity/TarotEntity';
 import { TAROT_SPREADS } from '@/model/backend/constant/Spread';
 import { useTarotStore } from '@/stores/tarot';
 import { storeToRefs } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { bn } from '@/utils/bignumber';
 import { getCardImageUrl } from '@/utils/image';
+import { addMilliseconds } from 'date-fns';
 
 const router = useRouter();
 const route = useRoute();
 const tarotStore = useTarotStore();
 const { stat } = storeToRefs(tarotStore);
 const tarot = ref<Tarot>();
-const timeout = ref<number>(stat.value?.avg ?? 20000);
+const needHelp = ref<boolean>(false);
+let timer: number;
 
 tarotStore
   .getTarot(route.params.id as string)
@@ -21,24 +22,25 @@ tarotStore
     tarot.value = res;
   })
   .catch(() => router.push('/tarot'));
-const timer = setTimeout(() => {
-  tarotStore.getTarot(route.params.id as string, false).then((res) => {
-    tarot.value = res;
-  });
-}, timeout.value);
 
-watch(tarot, () => {
-  if (tarot.value?.response) clearTimeout(timer);
+watch([tarot, stat], () => {
+  if (!tarot.value?.response && timer === undefined) {
+    console.log('hi');
+    timer = setInterval(() => {
+      tarotStore.getTarot(route.params.id as string, false).then((res) => {
+        tarot.value = res;
+      });
+    }, 10000);
+  }
+  if (tarot.value?.response) clearInterval(timer);
+  if (tarot.value && stat.value && stat.value.avg && stat.value.std) {
+    const { avg, std } = stat.value;
+    if (addMilliseconds(new Date(tarot.value.createdAt ?? ''), avg + 4 * std)) {
+      clearInterval(timer);
+      needHelp.value = true;
+    }
+  }
 });
-
-const avg = computed(() => (stat.value?.avg ? bn(stat.value.avg) : null));
-const std2 = computed(() => (stat.value?.std ? bn(stat.value.std).times(2) : null));
-const min = computed(() =>
-  avg.value && std2.value ? avg.value.minus(std2.value).div(1000).toFormat(2) : null,
-);
-const max = computed(() =>
-  avg.value && std2.value ? avg.value.plus(std2.value).div(1000).toFormat(2) : null,
-);
 </script>
 
 <template>
@@ -53,11 +55,11 @@ const max = computed(() =>
       />
     </div>
   </div>
-  <div>敘述: {{ tarot?.description }}</div>
+  <div>您的提問: {{ tarot?.description }}</div>
   <div v-if="tarot?.response">
-    <div>AI 解牌結果:</div>
+    <div>解牌結果:</div>
     <div class="whitespace-pre-wrap text-blue-700">{{ tarot.response }}</div>
   </div>
-  <div v-else-if="min && max">解牌中... 95% 的結果會於 {{ min }} ~ {{ max }} 秒完成</div>
-  <div v-else>解牌中...</div>
+  <div v-else-if="!needHelp">解牌中... 請靜候結果，此頁面會自動重新整理</div>
+  <div v-else>解牌花費時間過久且尚未有結果，請洽客服人員</div>
 </template>
