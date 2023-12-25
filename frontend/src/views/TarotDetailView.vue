@@ -33,9 +33,9 @@ watch([tarot, stat], () => {
     }, 10000);
   }
   if (tarot.value?.response) clearInterval(timer);
-  if (tarot.value && stat.value && stat.value.avg && stat.value.std) {
+  if (!tarot.value?.response && stat.value && stat.value.avg && stat.value.std) {
     const { avg, std } = stat.value;
-    if (addMilliseconds(new Date(tarot.value.createdAt ?? ''), avg + 4 * std)) {
+    if (addMilliseconds(new Date(tarot.value?.createdAt ?? ''), avg + 4 * std)) {
       clearInterval(timer);
       needHelp.value = true;
     }
