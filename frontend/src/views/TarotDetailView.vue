@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getCardImageUrl } from '@/utils/image';
-import { addMilliseconds } from 'date-fns';
+import { addMilliseconds, compareDesc } from 'date-fns';
 
 const router = useRouter();
 const route = useRoute();
@@ -25,7 +25,6 @@ tarotStore
 
 watch([tarot, stat], () => {
   if (!tarot.value?.response && timer === undefined) {
-    console.log('hi');
     timer = setInterval(() => {
       tarotStore.getTarot(route.params.id as string, false).then((res) => {
         tarot.value = res;
@@ -35,7 +34,8 @@ watch([tarot, stat], () => {
   if (tarot.value?.response) clearInterval(timer);
   if (!tarot.value?.response && stat.value && stat.value.avg && stat.value.std) {
     const { avg, std } = stat.value;
-    if (addMilliseconds(new Date(tarot.value?.createdAt ?? ''), avg + 4 * std)) {
+    const expectMaximum = addMilliseconds(new Date(tarot.value?.createdAt ?? ''), avg + 4 * std);
+    if (compareDesc(expectMaximum, new Date()) === 1) {
       clearInterval(timer);
       needHelp.value = true;
     }
