@@ -13,8 +13,7 @@ import {
 } from 'src/model/api/Tarot';
 import { Completion } from 'src/model/ChatGPT';
 import { TAROT_CARDS } from 'src/model/constant/Card';
-import { Cost, QUOTA } from 'src/model/constant/Price';
-import { TAROT_SPREADS } from 'src/model/constant/Spread';
+import { FREE_QUOTA, TAROT_SPREADS, TarotType } from 'src/model/constant/Spread';
 import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
 import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
 import { User } from 'src/model/entity/UserEntity';
@@ -52,12 +51,14 @@ export class TarotService {
     });
 
     const last = free.length > 0 ? free[0] : null;
-    if (tarot.type === 'ai')
+
+    // free
+    if (tarot.type === TarotType.Ai)
       if (
         last === null ||
         (last.createdAt &&
           isBefore(addDays(new Date(last.createdAt), 1), new Date()) &&
-          free.length < QUOTA)
+          free.length < FREE_QUOTA)
       ) {
         const freeTarot = new FreeTarotEntity();
         freeTarot.tarotId = tarot.id;
@@ -65,19 +66,20 @@ export class TarotService {
 
         return;
       }
-    let cost = 0;
-    if (tarot.type === 'ai') cost = Cost.Ai;
-    else if (tarot.type === 'human-voice') cost = Cost.HumanVoice;
-    else if (tarot.type === 'human-connect') cost = Cost.HumanConnect;
-    if (user.balance >= cost) {
-      user.balance = user.balance - cost;
+
+    const spread = TAROT_SPREADS.find(v => v.id === tarot.spread)
+    const price = spread?.typePrice.find(v => v.type === tarot.type)?.price
+
+    if (price === undefined) throw new BadRequestError('wrong input')
+    if (user.balance >= price) {
+      user.balance = user.balance - price;
       await this.userAccess.save(user);
 
       return;
     }
 
     let error = '';
-    if (free.length >= QUOTA) error = `每月 ${QUOTA} 次的免費額度已用畢，`;
+    if (free.length >= FREE_QUOTA) error = `每月 ${FREE_QUOTA} 次的免費額度已用畢，`;
     else if (
       last?.createdAt &&
       !isBefore(addDays(new Date(last.createdAt), 1), new Date())

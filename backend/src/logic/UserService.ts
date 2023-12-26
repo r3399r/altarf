@@ -2,9 +2,9 @@ import { inject, injectable } from 'inversify';
 import { FreeTarotAccess } from 'src/access/FreeTarotAccess';
 import { UserAccess } from 'src/access/UserAccess';
 import { GetUserResponse } from 'src/model/api/User';
-import { QUOTA } from 'src/model/constant/Price';
 import { User, UserEntity } from 'src/model/entity/UserEntity';
 import { GoogleService } from './GoogleService';
+import { FREE_QUOTA } from 'src/model/constant/Spread';
 
 /**
  * Service class for User
@@ -43,7 +43,7 @@ export class UserService {
 
     return {
       ...user,
-      freeQuota: QUOTA - freeTarot.length,
+      freeQuota: FREE_QUOTA - freeTarot.length,
       lastFree: freeTarot.length > 0 ? freeTarot[0].createdAt : null,
     };
   }

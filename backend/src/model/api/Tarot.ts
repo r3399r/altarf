@@ -1,4 +1,5 @@
 import { Tarot } from 'src/model/entity/TarotEntity';
+import { TarotType } from 'src/model/constant/Spread';
 
 export type TarotEvent = {
   id: string;
@@ -7,7 +8,7 @@ export type TarotEvent = {
 export type PostTarotRequest = {
   spread: string;
   description: string;
-  type: 'ai' | 'human-voice' | 'human-connect';
+  type: TarotType;
   card: { id: string; side: 'upright' | 'reversed' }[];
 };
 

@@ -9,8 +9,7 @@ import { storeToRefs } from 'pinia';
 import { useTarotStore } from '@/stores/tarot';
 import { useRouter } from 'vue-router';
 import { TAROT_CARDS, type Card as CardType } from '@/model/backend/constant/Card';
-import { TAROT_SPREADS } from '@/model/backend/constant/Spread';
-import { Cost, QUOTA } from '@/model/backend/constant/Price';
+import { FREE_QUOTA, TAROT_SPREADS, TarotType } from '@/model/backend/constant/Spread';
 import { format } from 'date-fns';
 
 type Card = Omit<CardType, 'interpretation'> & {
@@ -23,13 +22,22 @@ const { isLogin, user } = storeToRefs(authStore);
 const { justSent } = storeToRefs(tarotStore);
 
 const canAiSolve = computed(
-  () => isLogin.value && user.value && (user.value.freeQuota > 0 || user.value.balance > Cost.Ai),
+  () => isLogin.value && user.value && (user.value.freeQuota > 0 || user.value.balance > 111),
 );
 
 const step = ref(1);
 const spread = ref('');
 const description = ref('');
-const count = computed(() => TAROT_SPREADS.find((v) => v.id === spread.value)?.count);
+const targetSpread = computed(() => TAROT_SPREADS.find((v) => v.id === spread.value));
+const aiPrice = computed(
+  () => targetSpread.value?.typePrice.find((v) => v.type === TarotType.Ai)?.price,
+);
+const humanVoicePrice = computed(
+  () => targetSpread.value?.typePrice.find((v) => v.type === TarotType.HumanVoice)?.price,
+);
+const humanVideoPrice = computed(
+  () => targetSpread.value?.typePrice.find((v) => v.type === TarotType.HumanVideo)?.price,
+);
 
 const shuffled = ref<Card[]>(
   shuffleArray(TAROT_CARDS.map((v) => ({ id: v.id, name: v.name, isReversed: null }))),
@@ -47,7 +55,7 @@ const onSelect = (card: Card) => {
   if (selected.value.find((v) => v.id === card.id))
     selected.value = selected.value.filter((v) => v.id !== card.id);
   else {
-    if (selected.value.length === count.value) return;
+    if (selected.value.length === targetSpread.value?.count) return;
     selected.value.push({ ...card, isReversed });
   }
 };
@@ -137,7 +145,7 @@ const onAiSolve = () => {
   </div>
   <div v-if="step === 2">
     <button class="rounded-xl bg-yellow-200 px-2 py-1" @click="shuffle">洗牌</button>
-    <div>請抽選 {{ count }} 張牌</div>
+    <div>請抽選 {{ targetSpread?.count }} 張牌</div>
     <TheTransitionGroup tag="div" class="flex flex-wrap gap-2">
       <div
         v-for="v of shuffled"
@@ -153,7 +161,7 @@ const onAiSolve = () => {
     <button
       class="rounded-xl bg-yellow-200 px-2 py-1"
       @click="step = 3"
-      :disabled="count !== selected.length"
+      :disabled="targetSpread?.count !== selected.length"
     >
       我抽好了，翻牌
     </button>
@@ -169,33 +177,35 @@ const onAiSolve = () => {
         />
       </div>
     </div>
-    <div>
+    <div v-if="aiPrice">
       <div v-if="!isLogin">請先登入才能進行解牌</div>
       <div>
-        <button
-          class="rounded-xl bg-yellow-200 px-2 py-1"
-          :disabled="!canAiSolve"
-          @click="onAiSolve"
-        >
-          AI解牌
-        </button>
-        每次 {{ Cost.Ai }} 元。免費額度：每月 {{ QUOTA }} 次，每 24 小時 1 次
+        <div>
+          <button
+            class="rounded-xl bg-yellow-200 px-2 py-1"
+            :disabled="!canAiSolve"
+            @click="onAiSolve"
+          >
+            AI解牌
+          </button>
+          每次 {{ aiPrice }} 元。免費額度：每月 {{ FREE_QUOTA }} 次，每 24 小時 1 次
+        </div>
+        <div>免費額度剩餘 {{ user?.freeQuota }} 次</div>
+        <div v-if="user?.lastFree">
+          上次免費 AI 解牌: {{ format(new Date(user.lastFree), 'yyyy-MM-dd HH:mm:ss') }}
+        </div>
       </div>
-      <div>免費額度剩餘 {{ user?.freeQuota }} 次</div>
-      <div v-if="user?.lastFree">
-        上次免費 AI 解牌: {{ format(new Date(user.lastFree), 'yyyy-MM-dd HH:mm:ss') }}
-      </div>
-      <div>
+      <div v-if="humanVoicePrice">
         <button class="rounded-xl bg-yellow-200 px-2 py-1" :disabled="!isLogin">
           真人語音解牌
         </button>
-        每次 {{ Cost.HumanVoice }} 元
+        每次 {{ humanVoicePrice }} 元
       </div>
-      <div>
+      <div v-if="humanVideoPrice">
         <button class="rounded-xl bg-yellow-200 px-2 py-1" :disabled="!isLogin">
           真人視訊解牌
         </button>
-        每次 {{ Cost.HumanConnect }} 元
+        每次 {{ humanVideoPrice }} 元
       </div>
     </div>
   </div>

@@ -8,11 +8,12 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { User, UserEntity } from './UserEntity';
+import { TarotType } from '../constant/Spread';
 
 export type Tarot = {
   id: string;
   description: string;
-  type: 'ai' | 'human-voice' | 'human-connect';
+  type: TarotType;
   spread: string;
   card: string;
   response: string | null;
@@ -36,7 +37,7 @@ export class TarotEntity implements Tarot {
   description!: string;
 
   @Column({ type: 'text' })
-  type!: 'ai' | 'human-voice' | 'human-connect';
+  type!: TarotType;
 
   @Column({ type: 'text' })
   spread!: string;
