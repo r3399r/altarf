@@ -7,6 +7,7 @@ import type {
   PostTarotResponse,
 } from '@/model/backend/api/Tarot';
 import type { Tarot } from '@/model/backend/entity/TarotEntity';
+import { TarotType } from '@/model/backend/constant/Spread';
 
 export const useTarotStore = defineStore('tarot', () => {
   const justSent = ref(false);
@@ -38,7 +39,7 @@ export const useTarotStore = defineStore('tarot', () => {
       data: {
         spread,
         description,
-        type: 'ai',
+        type: TarotType.Ai,
         card: card.map((v) => ({ id: v.id, side: v.isReversed ? 'reversed' : 'upright' })),
       },
     });

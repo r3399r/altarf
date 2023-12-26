@@ -1,5 +1,5 @@
-import { Tarot } from 'src/model/entity/TarotEntity';
 import { TarotType } from 'src/model/constant/Spread';
+import { Tarot } from 'src/model/entity/TarotEntity';
 
 export type TarotEvent = {
   id: string;

@@ -7,8 +7,8 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
+import { TarotType } from 'src/model/constant/Spread';
 import { User, UserEntity } from './UserEntity';
-import { TarotType } from '../constant/Spread';
 
 export type Tarot = {
   id: string;

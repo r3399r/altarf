@@ -13,7 +13,11 @@ import {
 } from 'src/model/api/Tarot';
 import { Completion } from 'src/model/ChatGPT';
 import { TAROT_CARDS } from 'src/model/constant/Card';
-import { FREE_QUOTA, TAROT_SPREADS, TarotType } from 'src/model/constant/Spread';
+import {
+  FREE_QUOTA,
+  TAROT_SPREADS,
+  TarotType,
+} from 'src/model/constant/Spread';
 import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
 import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
 import { User } from 'src/model/entity/UserEntity';
@@ -67,10 +71,10 @@ export class TarotService {
         return;
       }
 
-    const spread = TAROT_SPREADS.find(v => v.id === tarot.spread)
-    const price = spread?.typePrice.find(v => v.type === tarot.type)?.price
+    const spread = TAROT_SPREADS.find((v) => v.id === tarot.spread);
+    const price = spread?.typePrice.find((v) => v.type === tarot.type)?.price;
 
-    if (price === undefined) throw new BadRequestError('wrong input')
+    if (price === undefined) throw new BadRequestError('wrong input');
     if (user.balance >= price) {
       user.balance = user.balance - price;
       await this.userAccess.save(user);
@@ -79,7 +83,8 @@ export class TarotService {
     }
 
     let error = '';
-    if (free.length >= FREE_QUOTA) error = `每月 ${FREE_QUOTA} 次的免費額度已用畢，`;
+    if (free.length >= FREE_QUOTA)
+      error = `每月 ${FREE_QUOTA} 次的免費額度已用畢，`;
     else if (
       last?.createdAt &&
       !isBefore(addDays(new Date(last.createdAt), 1), new Date())
@@ -142,7 +147,7 @@ export class TarotService {
       );
 
     let content =
-      '你現在是塔羅占卜師，我會給你問題，以及我抽到的牌卡，你會給我清晰的觀點，如果抽到負面的牌卡，你會為我加油打氣，並且提供我建議，不需要另外說明，以唐綺陽的語氣來回答我的問題。';
+      '你現在是塔羅占卜師，我會給你問題，以及我抽到的牌卡，你會給我清晰的觀點，如果抽到負面的牌卡，你會為我加油打氣，並且提供我建議，不需要另外說明，以唐綺陽的語氣來回答我的問題，不要自稱唐綺陽。';
     if (tarot.spread === TAROT_SPREADS[1].id)
       content += '三張牌分別代表「過去」、「現在」、「未來」，';
     content += `我想問「${tarot.description}」`;
