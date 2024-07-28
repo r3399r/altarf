@@ -117,7 +117,7 @@ export class TarotService {
       const statistics = await this.tarotAccess.findAvgAndStd();
       await this.lambda
         .invoke({
-          FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-chat`,
+          FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-invoke`,
           Payload: JSON.stringify({
             id: newTarot.id,
           }),
