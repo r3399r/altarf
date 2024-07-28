@@ -1,9 +1,12 @@
 import { Outlet } from 'react-router-dom';
+import Bar from './component/Bar';
 
 const AppLayout = () => (
   <>
-    <div>bar</div>
-    <Outlet />
+    <Bar />
+    <div className="mx-4 sm:mx-10 md:mx-auto md:w-[900px]">
+      <Outlet />
+    </div>
   </>
 );
 
