@@ -30,12 +30,12 @@ aws cloudformation deploy --template-file packaged.yaml --stack-name $project-$e
 echo ====================================================================================
 
 echo prepare frontend files...
-rm -rf ../frontend/src/model/backend
-cp -R lib/src/model ../frontend/src/model/backend
+rm -rf ../webapp/src/model/backend
+cp -R lib/src/model ../webapp/src/model/backend
 echo ====================================================================================
 
 echo deploy frontend to S3...
-cd ../frontend
+cd ../webapp
 npm i
 npm run build
 aws s3 sync ./dist s3://$project-$env --delete --cache-control no-cache
