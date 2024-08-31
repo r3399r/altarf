@@ -1,18 +1,29 @@
 import classNames from 'classnames';
 import { useState } from 'react';
+import IcAccount from 'src/image/ic-account.svg';
 import Body from './typography/Body';
 
 const Bar = () => {
   const [tab, setTab] = useState(0);
+  const [isLogin, setIsLogin] = useState(false);
 
   return (
     <div className="relative mx-4 mt-4 flex justify-center sm:mx-8">
-      <Body className="absolute left-0 top-0 sm:top-4">LOGO</Body>
-      <Body className="absolute right-0 top-0 sm:top-4">以Google帳號登入</Body>
+      <Body className="absolute left-0 top-0 sm:top-4 sm:leading-9">LOGO</Body>
+      <div className="absolute right-0 top-0 sm:top-4">
+        {isLogin ? (
+          <div className="flex items-center gap-6">
+            <Body className="text-beige-300">餘額：NT$100</Body>
+            <img src={IcAccount} className="h-6 sm:h-auto" />
+          </div>
+        ) : (
+          <Body>以Google帳號登入</Body>
+        )}
+      </div>
       <div className="flex pt-10 sm:pt-0">
         <Body
           bold
-          className={classNames('mx-6 py-4 cursor-pointer', {
+          className={classNames('mx-6 py-4 cursor-pointer sm:leading-9', {
             'text-beige-300 border-b border-b-beige-300': tab === 0,
           })}
           onClick={() => setTab(0)}
@@ -21,7 +32,7 @@ const Bar = () => {
         </Body>
         <Body
           bold
-          className={classNames('mx-6 py-4 cursor-pointer', {
+          className={classNames('mx-6 py-4 cursor-pointer sm:leading-9', {
             'text-beige-300 border-b border-b-beige-300': tab === 1,
           })}
           onClick={() => setTab(1)}
