@@ -1,9 +1,12 @@
 import classNames from 'classnames';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Page } from 'src/constant/Page';
 import IcAccount from 'src/image/ic-account.svg';
 import Body from './typography/Body';
 
 const Bar = () => {
+  const navigate = useNavigate();
   const [tab, setTab] = useState(0);
   const [isLogin, setIsLogin] = useState(false);
 
@@ -26,7 +29,10 @@ const Bar = () => {
           className={classNames('mx-6 py-4 cursor-pointer sm:leading-9', {
             'text-beige-300 border-b border-b-beige-300': tab === 0,
           })}
-          onClick={() => setTab(0)}
+          onClick={() => {
+            setTab(0);
+            navigate(Page.Tarot);
+          }}
         >
           線上解牌
         </Body>
@@ -35,7 +41,10 @@ const Bar = () => {
           className={classNames('mx-6 py-4 cursor-pointer sm:leading-9', {
             'text-beige-300 border-b border-b-beige-300': tab === 1,
           })}
-          onClick={() => setTab(1)}
+          onClick={() => {
+            setTab(1);
+            navigate(Page.Daily);
+          }}
         >
           每日塔羅
         </Body>

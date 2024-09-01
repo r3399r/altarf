@@ -1,7 +1,7 @@
 import PicDraw from 'src/image/pic-draw.svg';
 import PicShadow from 'src/image/pic-shadow.svg';
 
-const Home = () => (
+const Daily = () => (
   <div className="flex justify-center">
     <div className="mt-10 flex w-fit cursor-pointer flex-col items-center justify-center gap-10 sm:mt-20">
       <img src={PicDraw} />
@@ -10,4 +10,4 @@ const Home = () => (
   </div>
 );
 
-export default Home;
+export default Daily;
