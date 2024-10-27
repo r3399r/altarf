@@ -1,21 +1,27 @@
+import { SQS } from 'aws-sdk';
 import { DbAccess } from './access/DbAccess';
 import { bindings } from './bindings';
 import { TarotService } from './logic/TarotService';
 import { TarotEvent } from './model/api/Tarot';
-import { LambdaContext, LambdaEvent } from './model/Lambda';
+import { LambdaContext, LambdaEvent, LambdaOutput } from './model/Lambda';
 import tarot from './routes/tarot';
 import user from './routes/user';
 import { errorOutput, initLambda, successOutput } from './utils/LambdaHelper';
 
-export const api = async (event: LambdaEvent, _context: LambdaContext) => {
+export const api = async (event: LambdaEvent, _context: LambdaContext): Promise<LambdaOutput> => {
   console.log(event);
 
   const db = bindings.get(DbAccess);
+  const sqs = bindings.get(SQS);
+
+  let output: LambdaOutput;
+  const startTime = Date.now();
+
   await db.startTransaction();
   initLambda(event);
 
   try {
-    let res: any;
+    let res: unknown;
 
     const resource = event.resource.split('/')[2];
     switch (resource) {
@@ -27,18 +33,45 @@ export const api = async (event: LambdaEvent, _context: LambdaContext) => {
         break;
     }
 
-    const output = successOutput(res);
+    output = successOutput(res);
     await db.commitTransaction();
-
-    return output;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     await db.rollbackTransaction();
 
-    return errorOutput(e);
+    output = errorOutput(e);
   } finally {
     await db.cleanup();
   }
+
+  // logger sqs
+  try {
+    await sqs
+      .sendMessage({
+        MessageBody: JSON.stringify({
+          project: process.env.PROJECT ?? '',
+          resource: event.resource,
+          path: event.path,
+          httpMethod: event.httpMethod,
+          queryStringParameters: event.queryStringParameters
+            ? JSON.stringify(event.queryStringParameters)
+            : null,
+          body: event.body,
+          elapsedTime: Date.now() - startTime,
+          statusCode: output.statusCode,
+          dateRequested: new Date().toISOString(),
+          version: event.headers
+            ? event.headers['x-api-version'] ?? null
+            : null,
+        }),
+        QueueUrl: process.env.LOGGER_QUEUE_URL ?? '',
+      })
+      .promise();
+  } catch (e) {
+    console.error(e);
+  }
+
+  return output;
 };
 
 export const chat = async (event: TarotEvent, _context: LambdaContext) => {

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Lambda } from 'aws-sdk';
+import { Lambda, SQS } from 'aws-sdk';
 import { Container } from 'inversify';
 import { DbAccess } from './access/DbAccess';
 import { FreeTarotAccess } from './access/FreeTarotAccess';
@@ -35,5 +35,6 @@ container.bind(UserService).toSelf();
 
 // AWS
 container.bind(Lambda).toDynamicValue(() => new Lambda());
+container.bind<SQS>(SQS).toDynamicValue(() => new SQS());
 
 export { container as bindings };
