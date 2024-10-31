@@ -3,20 +3,15 @@ import { DbAccess } from './access/DbAccess';
 import { bindings } from './bindings';
 import { TarotService } from './logic/TarotService';
 import { TarotEvent } from './model/api/Tarot';
+import { GatewayTimeoutError } from './model/error/5XX/GatewayTimeoutError';
 import { LambdaContext, LambdaEvent, LambdaOutput } from './model/Lambda';
 import tarot from './routes/tarot';
 import user from './routes/user';
 import { errorOutput, initLambda, successOutput } from './utils/LambdaHelper';
 
-export const api = async (event: LambdaEvent, _context: LambdaContext): Promise<LambdaOutput> => {
-  console.log(event);
-
+const apiProcess = async (event: LambdaEvent): Promise<LambdaOutput> => {
   const db = bindings.get(DbAccess);
-  const sqs = bindings.get(SQS);
-
   let output: LambdaOutput;
-  const startTime = Date.now();
-
   await db.startTransaction();
   initLambda(event);
 
@@ -44,7 +39,29 @@ export const api = async (event: LambdaEvent, _context: LambdaContext): Promise<
     await db.cleanup();
   }
 
+  return output;
+};
+
+export const api = async (
+  event: LambdaEvent,
+  context: LambdaContext
+): Promise<LambdaOutput> => {
+  console.log(event);
+
+  const startTime = Date.now();
+
+  const output = await Promise.race([
+    apiProcess(event),
+    new Promise<LambdaOutput>((resolve) =>
+      setTimeout(
+        () => resolve(errorOutput(new GatewayTimeoutError('Gateway Timeout'))),
+        context.getRemainingTimeInMillis() - 2000
+      )
+    ),
+  ]);
+
   // logger sqs
+  const sqs = bindings.get(SQS);
   try {
     await sqs
       .sendMessage({
