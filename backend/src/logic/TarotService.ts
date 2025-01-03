@@ -2,8 +2,10 @@ import { Lambda } from 'aws-sdk';
 import axios from 'axios';
 import { addDays, isBefore } from 'date-fns';
 import { inject, injectable } from 'inversify';
+import { IsNull } from 'typeorm';
 import { FreeTarotAccess } from 'src/access/FreeTarotAccess';
 import { TarotAccess } from 'src/access/TarotAccess';
+import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
 import { UserAccess } from 'src/access/UserAccess';
 import {
   GetTarotIdResponse,
@@ -19,9 +21,11 @@ import {
   TarotType,
 } from 'src/model/constant/Spread';
 import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
+import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
 import { User } from 'src/model/entity/UserEntity';
-import { BadRequestError } from 'src/model/error';
+import { BadRequestError, InternalServerError } from 'src/model/error';
+import { random } from 'src/utils/random';
 import { UserService } from './UserService';
 
 /**
@@ -43,6 +47,9 @@ export class TarotService {
 
   @inject(FreeTarotAccess)
   private readonly freeTarotAccess!: FreeTarotAccess;
+
+  @inject(TarotDailyAccess)
+  private readonly tarotDailyAccess!: TarotDailyAccess;
 
   private async checkQuota(user: User, tarot: Tarot) {
     const free = await this.freeTarotAccess.find({
@@ -181,5 +188,26 @@ export class TarotService {
     }
 
     return tarot;
+  }
+
+  public async getTarotDaily(tarotId?: string): Promise<TarotDaily> {
+    const pickedCard = TAROT_CARDS[random(TAROT_CARDS.length)];
+    const pickedDaily = await this.tarotDailyAccess.find({
+      where: {
+        card: pickedCard.id,
+        deletedAt: IsNull(),
+      },
+    });
+
+    if (pickedDaily.length === 0)
+      throw new InternalServerError('no daily tarot');
+
+    if (pickedDaily.length < 2)
+      throw new InternalServerError('wrong number of tarot daily');
+
+    if (tarotId === null || tarotId !== pickedDaily[0].id)
+      return pickedDaily[0];
+
+    return pickedDaily[1];
   }
 }
