@@ -17,3 +17,8 @@ export type Completion = {
     total_tokens: number; // 17
   };
 };
+
+export type Messages = {
+  role: string; // system
+  content: string; // You are a helpful assistant.
+}[];

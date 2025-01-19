@@ -1,8 +1,7 @@
 import { Lambda } from 'aws-sdk';
-import axios from 'axios';
 import { addDays, isBefore } from 'date-fns';
 import { inject, injectable } from 'inversify';
-import { IsNull } from 'typeorm';
+import { IsNull, Not } from 'typeorm';
 import { FreeTarotAccess } from 'src/access/FreeTarotAccess';
 import { TarotAccess } from 'src/access/TarotAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
@@ -13,7 +12,6 @@ import {
   PostTarotResponse,
   TarotEvent,
 } from 'src/model/api/Tarot';
-import { Completion } from 'src/model/ChatGPT';
 import { TAROT_CARDS } from 'src/model/constant/Card';
 import {
   FREE_QUOTA,
@@ -24,8 +22,9 @@ import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
 import { User } from 'src/model/entity/UserEntity';
-import { BadRequestError, InternalServerError } from 'src/model/error';
+import { BadRequestError } from 'src/model/error';
 import { random } from 'src/utils/random';
+import { OpenAiService } from './OpenAiService';
 import { UserService } from './UserService';
 
 /**
@@ -35,6 +34,9 @@ import { UserService } from './UserService';
 export class TarotService {
   @inject(Lambda)
   private readonly lambda!: Lambda;
+
+  @inject(OpenAiService)
+  private readonly openAiService!: OpenAiService;
 
   @inject(TarotAccess)
   private readonly tarotAccess!: TarotAccess;
@@ -160,16 +162,9 @@ export class TarotService {
     content += `我想問「${tarot.description}」`;
     content += `我抽到${translateCards.map((v) => `「${v}」`).join('、')}`;
 
-    const res = await axios.request<Completion>({
-      method: 'POST',
-      url: 'https://api.openai.com/v1/chat/completions',
-      data: {
-        messages: [{ role: 'user', content }],
-        model: 'gpt-3.5-turbo',
-      },
-      headers: { Authorization: `Bearer ${process.env.OPENAI_KEY}` },
-    });
-    const chatCompletion = res.data;
+    const chatCompletion = await this.openAiService.chatCompletion([
+      { role: 'user', content },
+    ]);
     const elapsedTime = new Date().getTime() - now;
 
     tarot.response = chatCompletion.choices[0].message.content;
@@ -194,20 +189,12 @@ export class TarotService {
     const pickedCard = TAROT_CARDS[random(TAROT_CARDS.length)];
     const pickedDaily = await this.tarotDailyAccess.find({
       where: {
+        id: tarotId ? Not(tarotId) : undefined,
         card: pickedCard.id,
         deletedAt: IsNull(),
       },
     });
 
-    if (pickedDaily.length === 0)
-      throw new InternalServerError('no daily tarot');
-
-    if (pickedDaily.length < 2)
-      throw new InternalServerError('wrong number of tarot daily');
-
-    if (tarotId === null || tarotId !== pickedDaily[0].id)
-      return pickedDaily[0];
-
-    return pickedDaily[1];
+    return pickedDaily[random(pickedDaily.length)];
   }
 }

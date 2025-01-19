@@ -7,6 +7,7 @@ import { TarotAccess } from './access/TarotAccess';
 import { TarotDailyAccess } from './access/TarotDailyAccess';
 import { UserAccess } from './access/UserAccess';
 import { GoogleService } from './logic/GoogleService';
+import { OpenAiService } from './logic/OpenAiService';
 import { TarotService } from './logic/TarotService';
 import { UserService } from './logic/UserService';
 import { FreeTarotEntity } from './model/entity/FreeTarotEntity';
@@ -34,6 +35,7 @@ container.bind(UserAccess).toSelf();
 
 // service
 container.bind(GoogleService).toSelf();
+container.bind(OpenAiService).toSelf();
 container.bind(TarotService).toSelf();
 container.bind(UserService).toSelf();
 
