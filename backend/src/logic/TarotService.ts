@@ -187,10 +187,12 @@ export class TarotService {
 
   public async getTarotDaily(tarotId?: string): Promise<TarotDaily> {
     const pickedCard = TAROT_CARDS[random(TAROT_CARDS.length)];
+    const reversal = random(2) === 1 ? true : false;
     const pickedDaily = await this.tarotDailyAccess.find({
       where: {
         id: tarotId ? Not(tarotId) : undefined,
         card: pickedCard.id,
+        reversal,
         deletedAt: IsNull(),
       },
     });
