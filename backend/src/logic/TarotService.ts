@@ -22,7 +22,7 @@ import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
 import { User } from 'src/model/entity/UserEntity';
-import { BadRequestError } from 'src/model/error';
+import { BadRequestError, InternalServerError } from 'src/model/error';
 import { random } from 'src/utils/random';
 import { OpenAiService } from './OpenAiService';
 import { UserService } from './UserService';
@@ -194,6 +194,9 @@ export class TarotService {
         deletedAt: IsNull(),
       },
     });
+
+    if (pickedDaily.length <= 0)
+      throw new InternalServerError('no daily tarot');
 
     return pickedDaily[random(pickedDaily.length)];
   }
