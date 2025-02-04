@@ -113,3 +113,20 @@ export const chat = async (event: TarotEvent, _context: LambdaContext) => {
     await db.cleanup();
   }
 };
+
+export const tarotDaily = async () => {
+  const db = bindings.get(DbAccess);
+  initLambda();
+  const tarotService = bindings.get(TarotService);
+  await db.startTransaction();
+
+  try {
+    await tarotService.generateTarotDaily();
+    await db.commitTransaction();
+  } catch (e) {
+    console.error(e);
+    await db.rollbackTransaction();
+  } finally {
+    await db.cleanup();
+  }
+};

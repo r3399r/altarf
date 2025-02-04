@@ -29,7 +29,7 @@ export const errorOutput = (e: unknown): LambdaOutput => {
 };
 
 export const initLambda = (event?: LambdaEvent): void => {
-  bind<string>(credentialSymbol, event?.headers?.['x-credential'] ?? '');
+  bind<string>(credentialSymbol, event?.headers?.['x-credential'] ?? 'xx');
 };
 
 const bind = <T>(bindingId: symbol, values: T): void => {

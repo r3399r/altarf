@@ -4,6 +4,7 @@ import { inject, injectable } from 'inversify';
 import { IsNull, Not } from 'typeorm';
 import { FreeTarotAccess } from 'src/access/FreeTarotAccess';
 import { TarotAccess } from 'src/access/TarotAccess';
+import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
 import { UserAccess } from 'src/access/UserAccess';
 import {
@@ -19,7 +20,10 @@ import {
   TarotType,
 } from 'src/model/constant/Spread';
 import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
-import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
+import {
+  TarotDaily,
+  TarotDailyEntity,
+} from 'src/model/entity/TarotDailyEntity';
 import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
@@ -49,6 +53,9 @@ export class TarotService {
 
   @inject(FreeTarotAccess)
   private readonly freeTarotAccess!: FreeTarotAccess;
+
+  @inject(TarotCardAccess)
+  private readonly tarotCardAccess!: TarotCardAccess;
 
   @inject(TarotDailyAccess)
   private readonly tarotDailyAccess!: TarotDailyAccess;
@@ -191,7 +198,7 @@ export class TarotService {
     const pickedDaily = await this.tarotDailyAccess.find({
       where: {
         id: tarotId ? Not(tarotId) : undefined,
-        card: pickedCard.id,
+        cardId: pickedCard.id,
         reversal,
         deletedAt: IsNull(),
       },
@@ -201,5 +208,48 @@ export class TarotService {
       throw new InternalServerError('no daily tarot');
 
     return pickedDaily[random(pickedDaily.length)];
+  }
+
+  public async generateTarotDaily() {
+    const tartCards = await this.tarotCardAccess.find();
+    const unreadTarot = await this.tarotDailyAccess.find({
+      where: { deletedAt: IsNull() },
+    });
+
+    for (const card of tartCards) {
+      console.log(card.name);
+      for (const reversal of [true, false]) {
+        console.log('reversal: ', reversal);
+        const tarotExists = unreadTarot.find(
+          (v) => v.cardId === card.id && v.reversal === reversal
+        );
+        console.log('tarot exists: ', !!tarotExists);
+        if (tarotExists) continue;
+
+        const tarotDaily = new TarotDailyEntity();
+        tarotDaily.cardId = card.id;
+        tarotDaily.reversal = reversal;
+        tarotDaily.interpretation = await this.generateTarotDailyByCard(
+          card.name,
+          reversal
+        );
+        await this.tarotDailyAccess.save(tarotDaily);
+      }
+    }
+  }
+
+  private async generateTarotDailyByCard(cardName: string, reversal: boolean) {
+    const content =
+      '你現在是塔羅占卜師，我會給你問題，以及我抽到的牌卡，你會給我清晰的觀點，如果抽到負面的牌卡，你會為我加油打氣，並且提供我建議，不需要另外說明，以唐綺陽的語氣來回答我的問題，不要自稱唐綺陽。我想問「我想問今日運勢 請給於我建議跟加油打氣」我抽到「' +
+      (reversal ? '逆位的' : '正位的') +
+      cardName +
+      '」';
+    console.log('content: ', content);
+    const chatCompletion = await this.openAiService.chatCompletion([
+      { role: 'user', content },
+    ]);
+    console.log(JSON.stringify(chatCompletion));
+
+    return chatCompletion.choices[0].message.content;
   }
 }

@@ -318,6 +318,27 @@ Resources:
           DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
           DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
           DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
+  LambdaTarotDailyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures: [arm64]
+      Handler: index.tarotDaily
+      Runtime: nodejs18.x
+      FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily
+      Role: !GetAtt ExecutionRole.Arn
+      CodeUri: ../../lib/src
+      MemorySize: 128
+      Timeout: 900
+      Layers: [!Ref LambdaLayer]
+      Environment:
+        Variables:
+          PROJECT: !Sub ${Project}
+          ENVR: !Sub ${TargetEnvr}
+          OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai}}'
+          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
+          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
+          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
+          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
   LambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:

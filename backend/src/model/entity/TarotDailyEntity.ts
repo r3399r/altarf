@@ -2,10 +2,9 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, Generated } from 'typeorm';
 
 export type TarotDaily = {
   id: string;
-  card: string;
-  reading: string;
+  cardId: string;
+  interpretation: string;
   reversal: boolean;
-  isRead: boolean;
   createdAt: string;
   updatedAt: string | null;
   deletedAt: string | null;
@@ -17,17 +16,14 @@ export class TarotDailyEntity implements TarotDaily {
   @Generated('uuid')
   id!: string;
 
-  @Column({ type: 'text' })
-  card!: string;
+  @Column({ type: 'text', name: 'card_id' })
+  cardId!: string;
 
   @Column({ type: 'text' })
-  reading!: string;
+  interpretation!: string;
 
   @Column({ type: 'boolean' })
   reversal!: boolean;
-
-  @Column({ type: 'boolean', name: 'is_read' })
-  isRead!: boolean;
 
   @Column({ type: 'timestamp', name: 'created_at', default: null })
   createdAt!: string;
