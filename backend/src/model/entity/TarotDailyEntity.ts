@@ -7,7 +7,7 @@ export type TarotDaily = {
   reversal: boolean;
   createdAt: string;
   updatedAt: string | null;
-  deletedAt: string | null;
+  lastReadAt: string | null;
 };
 
 @Entity({ name: 'tarot_daily' })
@@ -31,8 +31,8 @@ export class TarotDailyEntity implements TarotDaily {
   @Column({ type: 'timestamp', name: 'updated_at', default: null })
   updatedAt: string | null = null;
 
-  @Column({ type: 'timestamp', name: 'deleted_at', default: null })
-  deletedAt: string | null = null;
+  @Column({ type: 'timestamp', name: 'last_read_at', default: null })
+  lastReadAt: string | null = null;
 
   @BeforeInsert()
   setDateCreated(): void {

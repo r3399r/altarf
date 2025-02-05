@@ -1,7 +1,7 @@
 import { Lambda } from 'aws-sdk';
 import { addDays, isBefore } from 'date-fns';
 import { inject, injectable } from 'inversify';
-import { IsNull, Not } from 'typeorm';
+import { Not } from 'typeorm';
 import { FreeTarotAccess } from 'src/access/FreeTarotAccess';
 import { TarotAccess } from 'src/access/TarotAccess';
 import { TarotCardAccess } from 'src/access/TarotCardAccess';
@@ -211,31 +211,35 @@ export class TarotService {
         id: tarotId ? Not(tarotId) : undefined,
         cardId: pickedCard.id,
         reversal,
-        deletedAt: IsNull(),
       },
+      order: { lastReadAt: 'asc' },
     });
 
     if (pickedDaily.length <= 0)
-      throw new InternalServerError('no daily tarot');
+      throw new InternalServerError('there is no daily tarot');
 
-    return pickedDaily[random(pickedDaily.length)];
+    const unreadTarot = pickedDaily.find((v) => v.lastReadAt === null);
+    if (unreadTarot) {
+      unreadTarot.lastReadAt = new Date().toISOString();
+      await this.tarotDailyAccess.save(unreadTarot);
+
+      return unreadTarot;
+    }
+
+    // return earliest read tarot
+    pickedDaily[0].lastReadAt = new Date().toISOString();
+    await this.tarotDailyAccess.save(pickedDaily[0]);
+
+    return pickedDaily[0];
   }
 
   public async generateTarotDaily() {
     const tartCards = await this.getAllTarotCards();
-    const unreadTarot = await this.tarotDailyAccess.find({
-      where: { deletedAt: IsNull() },
-    });
 
     for (const card of tartCards) {
       console.log(card.name);
       for (const reversal of [true, false]) {
         console.log('reversal: ', reversal);
-        const tarotExists = unreadTarot.find(
-          (v) => v.cardId === card.id && v.reversal === reversal
-        );
-        console.log('tarot exists: ', !!tarotExists);
-        if (tarotExists) continue;
 
         const tarotDaily = new TarotDailyEntity();
         tarotDaily.cardId = card.id;
