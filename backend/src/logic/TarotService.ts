@@ -13,13 +13,13 @@ import {
   PostTarotResponse,
   TarotEvent,
 } from 'src/model/api/Tarot';
-import { TAROT_CARDS } from 'src/model/constant/Card';
 import {
   FREE_QUOTA,
   TAROT_SPREADS,
   TarotType,
 } from 'src/model/constant/Spread';
 import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
+import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import {
   TarotDaily,
   TarotDailyEntity,
@@ -36,6 +36,8 @@ import { UserService } from './UserService';
  */
 @injectable()
 export class TarotService {
+  private tarotCards: TarotCard[] | null = null;
+
   @inject(Lambda)
   private readonly lambda!: Lambda;
 
@@ -59,6 +61,13 @@ export class TarotService {
 
   @inject(TarotDailyAccess)
   private readonly tarotDailyAccess!: TarotDailyAccess;
+
+  private async getAllTarotCards() {
+    if (this.tarotCards === null)
+      this.tarotCards = await this.tarotCardAccess.find();
+
+    return this.tarotCards;
+  }
 
   private async checkQuota(user: User, tarot: Tarot) {
     const free = await this.freeTarotAccess.find({
@@ -154,12 +163,13 @@ export class TarotService {
 
     const now = new Date().getTime();
 
+    const tartCards = await this.getAllTarotCards();
     const translateCards = tarot.card
       .split(',')
       .map((v) =>
         v.startsWith('+')
           ? '正位的'
-          : '逆位的' + TAROT_CARDS.find((o) => o.id === v.substring(1))?.name
+          : '逆位的' + tartCards.find((o) => o.id === v.substring(1))?.name
       );
 
     let content =
@@ -193,7 +203,8 @@ export class TarotService {
   }
 
   public async getTarotDaily(tarotId?: string): Promise<TarotDaily> {
-    const pickedCard = TAROT_CARDS[random(TAROT_CARDS.length)];
+    const tartCards = await this.getAllTarotCards();
+    const pickedCard = tartCards[random(tartCards.length)];
     const reversal = random(2) === 1 ? true : false;
     const pickedDaily = await this.tarotDailyAccess.find({
       where: {
@@ -211,7 +222,7 @@ export class TarotService {
   }
 
   public async generateTarotDaily() {
-    const tartCards = await this.tarotCardAccess.find();
+    const tartCards = await this.getAllTarotCards();
     const unreadTarot = await this.tarotDailyAccess.find({
       where: { deletedAt: IsNull() },
     });
