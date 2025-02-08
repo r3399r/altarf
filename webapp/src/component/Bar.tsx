@@ -27,7 +27,7 @@ const Bar = () => {
         <Body
           bold
           className={classNames('mx-6 py-4 cursor-pointer sm:leading-9', {
-            'text-beige-300 border-b border-b-beige-300': tab === 0,
+            'text-text-tab-focus border-b border-b-border-tab': tab === 0,
           })}
           onClick={() => {
             setTab(0);
@@ -39,7 +39,7 @@ const Bar = () => {
         <Body
           bold
           className={classNames('mx-6 py-4 cursor-pointer sm:leading-9', {
-            'text-beige-300 border-b border-b-beige-300': tab === 1,
+            'text-text-tab-focus border-b border-b-border-tab': tab === 1,
           })}
           onClick={() => {
             setTab(1);

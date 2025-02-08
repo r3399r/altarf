@@ -1,0 +1,9 @@
+html {
+  --color-text-body: var(--color-white);
+  --color-text-tab-normal: var(--color-white);
+  --color-text-tab-focus: var(--color-beige-300);
+
+  --color-background-surface-body: var(--color-grey-900);
+
+  --color-border-tab: var(--color-beige-300);
+}
