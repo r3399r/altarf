@@ -9,7 +9,7 @@ import Body from './typography/Body';
 const Bar = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState(0);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, _setIsLogin] = useState(false);
 
   return (
     <div className="relative mx-4 mt-4 flex justify-center sm:mx-8">

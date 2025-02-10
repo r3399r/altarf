@@ -1,21 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap');
-@import './theme.css';
-@import './color.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@page {
-  size: auto;
-  margin: 1rem;
-}
+@import "tailwindcss";
+@import "./color.css";
+@import "./theme.css";
 
 @layer base {
   body {
     font-family: 'Noto Sans TC', serif;
     font-size: 16px;
-    color: var(--color-text-body);
-    background: var(--color-background-surface-body);
+    color: theme(color-text-body);
+    background: theme(color-background-surface-body);
   }
 }
