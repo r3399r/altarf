@@ -11,17 +11,3 @@
 
     --color-border-tab: theme(color-beige-400);
   }
-
-  [data-theme="secondary"] {
-    --color-text-body: theme(color-white);
-    --color-text-tab-normal: theme(color-beige-300);
-    --color-text-tab-focus: theme(color-beige-300);
-    --color-text-button-primary-normal: theme(color-beige-300);
-
-    --color-background-surface-body: theme(color-beige-300);
-    --color-background-button-primary-normal: theme(color-beige-300);
-    --color-background-button-primary-hover: theme(color-beige-300);
-    --color-background-button-primary-active: theme(color-beige-300);
-
-    --color-border-tab: theme(color-beige-300);
-  }
