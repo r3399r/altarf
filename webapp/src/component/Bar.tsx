@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Page } from 'src/constant/Page';
 import IcAccount from 'src/image/ic-account.svg';
+import PicLogo from 'src/image/pic-logo.svg';
 import Body from './typography/Body';
 
 const Bar = () => {
@@ -12,7 +13,7 @@ const Bar = () => {
 
   return (
     <div className="relative mx-4 mt-4 flex justify-center sm:mx-8">
-      <Body className="absolute left-0 top-0 sm:top-4 sm:leading-9">LOGO</Body>
+      <Body className="absolute left-0 top-0 sm:top-4 sm:leading-9"><img className="sm:w-[143px] sm:h-[48px]" src={PicLogo} /></Body>
       <div className="absolute right-0 top-0 sm:top-4">
         {isLogin ? (
           <div className="flex items-center gap-6">
