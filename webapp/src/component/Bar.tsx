@@ -9,11 +9,14 @@ import Body from './typography/Body';
 const Bar = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState(0);
-  const [isLogin, _setIsLogin] = useState(false);
+  // const [isLogin, _setIsLogin] = useState(false);
+  const isLogin = false;
 
   return (
     <div className="relative mx-4 mt-4 flex justify-center sm:mx-8">
-      <Body className="absolute left-0 top-0 sm:top-4 sm:leading-9"><img className="sm:w-[143px] sm:h-[48px]" src={PicLogo} /></Body>
+      <Body className="absolute left-0 top-0 sm:top-4 sm:leading-9">
+        <img className="sm:w-[143px] sm:h-[48px]" src={PicLogo} />
+      </Body>
       <div className="absolute right-0 top-0 sm:top-4">
         {isLogin ? (
           <div className="flex items-center gap-6">
