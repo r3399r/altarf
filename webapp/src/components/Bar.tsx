@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Page } from 'src/constant/Page';
 import IcAccount from 'src/assets/ic-account.svg';
+import IcGoogle from 'src/assets/ic-google.svg';
 import PicLogo from 'src/assets/pic-logo.svg';
 import Body from './typography/Body';
+import Button from './Button';
 
 const Bar = () => {
   const navigate = useNavigate();
@@ -20,11 +22,18 @@ const Bar = () => {
       <div className="absolute right-0 top-0 sm:top-4">
         {isLogin ? (
           <div className="flex items-center gap-6">
-            <Body className="text-beige-300">餘額：NT$100</Body>
+            <Body className="text-text-primary">餘額：NT$100</Body>
             <img src={IcAccount} className="h-6 sm:h-auto" />
           </div>
         ) : (
-          <Body>以Google帳號登入</Body>
+          <Body>
+            <Button appearance="secondary" className="!px-3 !py-[9.5px] !text-[14px]">
+              <div className="flex gap-1 items-center">
+                <img src={IcGoogle} />
+                <div>Google 登入</div>
+              </div>
+            </Button>
+          </Body>
         )}
       </div>
       <div className="flex pt-10 sm:pt-0">
