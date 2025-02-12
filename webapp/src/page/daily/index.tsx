@@ -1,5 +1,5 @@
-import PicDraw from 'src/image/pic-draw.svg';
-import PicShadow from 'src/image/pic-shadow.svg';
+import PicDraw from 'src/assets/pic-draw.svg';
+import PicShadow from 'src/assets/pic-shadow.svg';
 
 const Daily = () => (
   <div className="flex justify-center">

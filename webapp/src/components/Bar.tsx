@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Page } from 'src/constant/Page';
-import IcAccount from 'src/image/ic-account.svg';
-import PicLogo from 'src/image/pic-logo.svg';
+import IcAccount from 'src/assets/ic-account.svg';
+import PicLogo from 'src/assets/pic-logo.svg';
 import Body from './typography/Body';
 
 const Bar = () => {
