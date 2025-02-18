@@ -8,6 +8,7 @@ import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
 import { UserAccess } from 'src/access/UserAccess';
 import {
+  GetTaortDailyResponse,
   GetTarotIdResponse,
   PostTarotRequest,
   PostTarotResponse,
@@ -20,10 +21,7 @@ import {
 } from 'src/model/constant/Spread';
 import { FreeTarotEntity } from 'src/model/entity/FreeTarotEntity';
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
-import {
-  TarotDaily,
-  TarotDailyEntity,
-} from 'src/model/entity/TarotDailyEntity';
+import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
 import { Tarot, TarotEntity } from 'src/model/entity/TarotEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
@@ -202,7 +200,7 @@ export class TarotService {
     return tarot;
   }
 
-  public async getTarotDaily(tarotId?: string): Promise<TarotDaily> {
+  public async getTarotDaily(tarotId?: string): Promise<GetTaortDailyResponse> {
     const tartCards = await this.getAllTarotCards();
     const pickedCard = tartCards[random(tartCards.length)];
     const reversal = random(2) === 1 ? true : false;

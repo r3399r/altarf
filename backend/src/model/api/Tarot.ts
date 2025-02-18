@@ -1,4 +1,5 @@
 import { TarotType } from 'src/model/constant/Spread';
+import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { Tarot } from 'src/model/entity/TarotEntity';
 
 export type TarotEvent = {
@@ -19,3 +20,5 @@ export type PostTarotResponse = Tarot & {
 export type GetTarotIdResponse = Tarot & {
   statistics?: { avg: number | null; std: number | null };
 };
+
+export type GetTaortDailyResponse = TarotDaily;
