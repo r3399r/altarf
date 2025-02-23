@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Page } from 'src/constant/Page';
 import IcAccount from 'src/assets/ic-account.svg';
 import IcGoogle from 'src/assets/ic-google.svg';
@@ -10,7 +10,8 @@ import Button from './Button';
 
 const Bar = () => {
   const navigate = useNavigate();
-  const [tab, setTab] = useState(0);
+  const location = useLocation();
+  const [tab, setTab] = useState(location.pathname === '/daily' ? 1 : 0);
   // const [isLogin, _setIsLogin] = useState(false);
   const isLogin = false;
 
