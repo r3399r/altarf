@@ -3,7 +3,7 @@ set -e
 
 env=$1
 project=altarf
-subDomain=tarot
+subDomain=lookout
 domain=celestialstudio.net
 
 echo ====================================================================================

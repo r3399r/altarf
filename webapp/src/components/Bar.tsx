@@ -16,10 +16,10 @@ const Bar = () => {
 
   return (
     <div className="relative mx-4 mt-4 flex justify-center sm:mx-8">
-      <Body className="absolute left-0 top-0 sm:top-4 sm:leading-9">
+      <Body className="absolute left-0 top-0 sm:top-2 sm:leading-9">
         <img className="sm:w-[143px] sm:h-[48px]" src={PicLogo} />
       </Body>
-      <div className="absolute right-0 top-0 sm:top-4">
+      <div className="absolute right-0 top-0 sm:top-2">
         {isLogin ? (
           <div className="flex items-center gap-6">
             <Body className="text-text-primary">餘額：NT$100</Body>

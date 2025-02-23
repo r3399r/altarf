@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://tarot-test.celestialstudio.net',
+        target: 'https://lookout-test.celestialstudio.net',
         changeOrigin: true,
       },
     },

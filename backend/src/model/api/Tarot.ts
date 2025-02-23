@@ -21,4 +21,6 @@ export type GetTarotIdResponse = Tarot & {
   statistics?: { avg: number | null; std: number | null };
 };
 
-export type GetTaortDailyResponse = TarotDaily;
+export type GetTaortDailyResponse = TarotDaily & {
+  name: string;
+};

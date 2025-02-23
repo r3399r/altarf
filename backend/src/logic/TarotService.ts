@@ -221,14 +221,20 @@ export class TarotService {
       unreadTarot.lastReadAt = new Date().toISOString();
       await this.tarotDailyAccess.save(unreadTarot);
 
-      return unreadTarot;
+      return {
+        ...unreadTarot,
+        name: pickedCard.name,
+      };
     }
 
     // return earliest read tarot
     pickedDaily[0].lastReadAt = new Date().toISOString();
     await this.tarotDailyAccess.save(pickedDaily[0]);
 
-    return pickedDaily[0];
+    return {
+      ...pickedDaily[0],
+      name: pickedCard.name,
+    };
   }
 
   public async generateTarotDaily() {

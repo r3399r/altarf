@@ -8,7 +8,7 @@ export type Props = HTMLAttributes<HTMLDivElement> & {
 
 const Body = ({ size = 'l', bold = false, className, ...props }: Props) => (
   <div
-    className={classNames(className, {
+    className={classNames('!text-text-body', className, {
       'font-bold': bold,
       'text-base': size === 'l',
       'text-[0.875rem] leading-normal': size === 'm',
