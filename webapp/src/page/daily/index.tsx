@@ -27,7 +27,7 @@ const Daily = () => {
           <img
             src={`/card/${drawnCard?.cardId}.jpg`}
             className={classNames(
-              'absolute top-1/2 left-1/2 -translate-1/2 h-[calc(100%-36px)] w-auto',
+              'absolute top-1/2 left-1/2 -translate-1/2 h-[calc(100%-36px)] w-auto border-white border-4 rounded-md',
               {
                 'rotate-180': drawnCard?.reversal,
               },
