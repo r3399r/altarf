@@ -1,4 +1,4 @@
 export enum Page {
-  Tarot = '/tarot',
+  Online = '/online',
   Daily = '/daily',
 }
