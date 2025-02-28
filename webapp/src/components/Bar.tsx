@@ -45,7 +45,7 @@ const Bar = () => {
           })}
           onClick={() => {
             setTab(0);
-            navigate(Page.Tarot);
+            navigate(Page.Online);
           }}
         >
           線上解牌
