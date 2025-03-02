@@ -11,8 +11,8 @@ const Body = ({ size = 'l', bold = false, className, ...props }: Props) => (
     className={classNames('text-text-body', className, {
       'font-bold': bold,
       'text-base': size === 'l',
-      'text-[0.875rem] leading-normal': size === 'm',
-      'text-[0.75rem] leading-normal': size === 's',
+      'text-[0.875rem] leading-[1.5]': size === 'm',
+      'text-[0.75rem] leading-[1.5]': size === 's',
     })}
     {...props}
   />

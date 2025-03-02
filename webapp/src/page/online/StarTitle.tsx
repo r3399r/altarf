@@ -1,4 +1,4 @@
-import H4 from './typography/H4';
+import H4 from 'src/components/typography/H4';
 import IcStar from 'src/assets/ic-star.svg';
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
 
 const StarTitle = ({ title }: Props) => {
   return (
-    <div className="absolute flex items-center top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background-surface-body gap-2">
+    <div className="flex items-center gap-2 justify-center">
       <img className="bg-background-surface-body md:w-[40px]" src={IcStar}></img>
       <H4 className="whitespace-nowrap md:text-[1.5rem] md:leading-[1.33]">{title}</H4>
       <img className="bg-background-surface-body md:w-[40px]" src={IcStar}></img>

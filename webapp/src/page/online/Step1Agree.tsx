@@ -1,4 +1,4 @@
-import StarTitle from 'src/components/StarTitle';
+import StarDivision from 'src/components/StarDivision';
 import Description from './Description';
 import Button from 'src/components/Button';
 
@@ -9,8 +9,10 @@ type Props = {
 const Step1Agree = ({ onNext }: Props) => {
   return (
     <>
-      <div className="mt-[55px] sm:mt-[95px] md:mt-[99px] border-y-border-content border-y-2 px-4 pt-10 py-6 relative">
-        <StarTitle title="占卜前請先仔細閱讀" />
+      <StarDivision
+        className="mt-[55px] sm:mt-[95px] md:mt-[99px] border-y-border-content border-y-2 px-4 pt-10 py-6 relative"
+        title="占卜前請先仔細閱讀"
+      >
         <div className="flex flex-col gap-6">
           <Description
             title="開放的心態"
@@ -33,7 +35,7 @@ const Step1Agree = ({ onNext }: Props) => {
             description="死亡日期、法律事務、健康診斷、過於具體的時間、過於敏感的主題。"
           />
         </div>
-      </div>
+      </StarDivision>
       <div className="text-center">
         <Button className="mt-10" onClick={onNext}>
           我同意

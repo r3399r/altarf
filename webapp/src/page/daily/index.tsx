@@ -6,7 +6,7 @@ import { drawTarotDaily } from 'src/service/tarotService';
 import { GetTaortDailyResponse } from 'src/model/backend/api/Tarot';
 import Body from 'src/components/typography/Body';
 import classNames from 'classnames';
-import StarTitle from 'src/components/StarTitle';
+import StarDivision from 'src/components/StarDivision';
 
 const Daily = () => {
   const [drawnCard, setDrawnCard] = useState<GetTaortDailyResponse>();
@@ -33,10 +33,12 @@ const Daily = () => {
             )}
           />
         </div>
-        <div className="mt-[53px] border-y-border-content border-y-2 px-4 pt-10 py-6 relative">
-          <StarTitle title={`${drawnCard?.name} (${drawnCard?.reversal ? '逆位' : '正位'})`} />
+        <StarDivision
+          className="mt-[53px] border-y-border-content border-y-2 px-4 pt-10 py-6 relative"
+          title={`${drawnCard?.name} (${drawnCard?.reversal ? '逆位' : '正位'})`}
+        >
           <Body className="whitespace-pre-line">{drawnCard?.interpretation}</Body>
-        </div>
+        </StarDivision>
       </div>
     );
   }
