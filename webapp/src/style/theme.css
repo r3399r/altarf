@@ -11,6 +11,7 @@
   --color-text-input-helper: var(--color-text-input-helper);
 
   --color-background-surface-body: var(--color-background-surface-body);
+  --color-background-surface-overlay-normal: var(--color-background-surface-overlay-normal);
   --color-background-button-primary-normal: var(--color-background-button-primary-normal);
   --color-background-button-primary-hover: var(--color-background-button-primary-hover);
   --color-background-button-primary-active: var(--color-background-button-primary-active);
@@ -36,6 +37,7 @@
   --color-text-input-helper: theme(color-grey-300);
 
   --color-background-surface-body: theme(color-grey-900);
+  --color-background-surface-overlay-normal: theme(color-grey-800);
   --color-background-button-primary-normal: theme(color-beige-300);
   --color-background-button-primary-hover: theme(color-beige-100);
   --color-background-button-primary-active: theme(color-beige-400);

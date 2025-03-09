@@ -10,7 +10,7 @@ const Step1Agree = ({ onNext }: Props) => {
   return (
     <>
       <StarDivision
-        className="mt-[55px] sm:mt-[95px] md:mt-[99px] border-y-border-content border-y-2 px-4 pt-10 py-6 relative"
+        className="mt-[55px] sm:mt-[95px] md:mt-[99px] px-4 pt-10 py-6"
         title="占卜前請先仔細閱讀"
       >
         <div className="flex flex-col gap-6">

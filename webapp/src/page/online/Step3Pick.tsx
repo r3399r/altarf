@@ -7,9 +7,10 @@ import { Spread } from 'src/model/Spread';
 
 type Props = {
   spreadId: string | undefined;
+  onNext: () => void;
 };
 
-const Step3Pick = ({ spreadId }: Props) => {
+const Step3Pick = ({ spreadId, onNext }: Props) => {
   const spread = useMemo(() => {
     return Spread.find((v) => v.id === spreadId);
   }, [spreadId]);
@@ -43,12 +44,16 @@ const Step3Pick = ({ spreadId }: Props) => {
       <div className="text-center mt-10">
         <Button
           onClick={() => {
-            for (let i = 0; i < spread.pickTotal; i++) {
-              if (!visibleCard.has(i)) {
-                const newSet = new Set(visibleCard);
-                newSet.add(i);
-                setVisibleCard(newSet);
-                break;
+            if (isReady) {
+              onNext();
+            } else {
+              for (let i = 0; i < spread.pickTotal; i++) {
+                if (!visibleCard.has(i)) {
+                  const newSet = new Set(visibleCard);
+                  newSet.add(i);
+                  setVisibleCard(newSet);
+                  break;
+                }
               }
             }
           }}

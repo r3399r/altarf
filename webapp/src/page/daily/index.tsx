@@ -34,7 +34,7 @@ const Daily = () => {
           />
         </div>
         <StarDivision
-          className="mt-[53px] border-y-border-content border-y-2 px-4 pt-10 py-6 relative"
+          className="mt-[53px] px-4 pt-10 py-6"
           title={`${drawnCard?.name} (${drawnCard?.reversal ? '逆位' : '正位'})`}
         >
           <Body className="whitespace-pre-line">{drawnCard?.interpretation}</Body>
