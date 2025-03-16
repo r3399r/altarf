@@ -28,19 +28,14 @@ const Step3Pick = ({ spreadId, onNext }: Props) => {
           return (
             <img
               src={PicCardBack}
-              className={classNames('border-white border-4 rounded-md cursor-pointer', {
+              className={classNames('border-white border-4 rounded-md', {
                 invisible: !visibleCard.has(i),
               })}
-              onClick={() => {
-                const newSet = new Set(visibleCard);
-                newSet.delete(i);
-                setVisibleCard(newSet);
-              }}
             />
           );
         })}
       </div>
-      <StarTitle title={`請抽 ${spread.pickTotal} 張牌`} />
+      <StarTitle title={`此牌陣需抽 ${spread.pickTotal} 張牌`} />
       <div className="text-center mt-10">
         <Button
           onClick={() => {
@@ -58,7 +53,7 @@ const Step3Pick = ({ spreadId, onNext }: Props) => {
             }
           }}
         >
-          {isReady ? '我選好了' : '抽牌'}
+          {isReady ? '我選好了' : `抽第 ${visibleCard.size + 1} 張牌`}
         </Button>
       </div>
     </>
