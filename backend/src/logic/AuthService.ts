@@ -15,8 +15,11 @@ export class AuthService {
   @inject(GoogleService)
   private readonly googleService!: GoogleService;
 
-  public async exchangeToken(data: PostAuthRequest): Promise<PostAuthResponse> {
-    const token = await this.googleService.exchangeToken(data.code);
+  public async exchangeToken(
+    data: PostAuthRequest,
+    origin: string
+  ): Promise<PostAuthResponse> {
+    const token = await this.googleService.exchangeToken(data.code, origin);
 
     return {
       accessToken: token.access_token,

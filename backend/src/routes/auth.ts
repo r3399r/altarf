@@ -28,7 +28,8 @@ const authDefault = async () => {
         throw new BadRequestError('body should not be empty');
 
       return await service.exchangeToken(
-        JSON.parse(event.body) as PostAuthRequest
+        JSON.parse(event.body) as PostAuthRequest,
+        event.headers?.origin ?? ''
       );
   }
 

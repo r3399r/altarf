@@ -12,7 +12,7 @@ export class GoogleService {
   @inject(credentialSymbol)
   private readonly credential!: string;
 
-  public async exchangeToken(code: string) {
+  public async exchangeToken(code: string, redirectUri: string) {
     const res = await axios.request<CodeResponse>({
       method: 'POST',
       url: 'https://oauth2.googleapis.com/token',
@@ -21,7 +21,7 @@ export class GoogleService {
         code,
         client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
         client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-        redirect_uri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
+        redirect_uri: redirectUri,
       },
     });
 
