@@ -11,13 +11,14 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { login } from 'src/service/authService';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/redux/store';
-import userEndpoint from 'src/api/userEndpoint';
+import { getUserProfile } from 'src/service/userService';
 
 const Bar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [tab, setTab] = useState(location.pathname === '/daily' ? 1 : 0);
   const { isLogin } = useSelector((rootState: RootState) => rootState.ui);
+  const [balance, setBalance] = useState<number>();
 
   const onLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => login(tokenResponse.code),
@@ -26,8 +27,7 @@ const Bar = () => {
   });
 
   useEffect(() => {
-    console.log(isLogin);
-    if (isLogin) userEndpoint.getUser().then((res) => console.log(res));
+    if (isLogin) getUserProfile().then((res) => setBalance(res.balance));
   }, [isLogin]);
 
   return (
@@ -38,7 +38,7 @@ const Bar = () => {
       <div className="absolute right-0 top-0 sm:top-2">
         {isLogin ? (
           <div className="flex items-center gap-6">
-            <Body className="text-text-primary">餘額：NT$100</Body>
+            <Body className="text-text-primary">{`餘額: ${balance ?? '-'} 點`}</Body>
             <img src={IcAccount} className="h-6 sm:h-auto" />
           </div>
         ) : (
