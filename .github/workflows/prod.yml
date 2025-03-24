@@ -33,6 +33,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: 'Create env file'
+        run: |
+          cd webapp
+          touch .env
+          echo VITE_GOOGLE_OAUTH_CLIENT_ID=${{ secrets.VITE_GOOGLE_OAUTH_CLIENT_ID }} >> .env
+          echo VITE_CRYPTO_SECRET_KEY=${{ secrets.VITE_CRYPTO_SECRET_KEY }} >> .env
+
       # Runs a single command using the runners shell
       - name: Deploy to production environment
         run: |
