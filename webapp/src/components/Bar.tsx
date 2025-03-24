@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Page } from 'src/constant/Page';
 import IcAccount from 'src/assets/ic-account.svg';
@@ -7,13 +7,28 @@ import IcGoogle from 'src/assets/ic-google.svg';
 import PicLogo from 'src/assets/pic-logo.svg';
 import Body from './typography/Body';
 import Button from './Button';
+import { useGoogleLogin } from '@react-oauth/google';
+import { login } from 'src/service/authService';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/redux/store';
+import userEndpoint from 'src/api/userEndpoint';
 
 const Bar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [tab, setTab] = useState(location.pathname === '/daily' ? 1 : 0);
-  // const [isLogin, _setIsLogin] = useState(false);
-  const isLogin = false;
+  const { isLogin } = useSelector((rootState: RootState) => rootState.ui);
+
+  const onLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => login(tokenResponse.code),
+    onError: (error) => console.log('Login Failed', error),
+    flow: 'auth-code',
+  });
+
+  useEffect(() => {
+    console.log(isLogin);
+    if (isLogin) userEndpoint.getUser().then((res) => console.log(res));
+  }, [isLogin]);
 
   return (
     <div className="relative mx-4 mt-4 flex justify-center sm:mx-8">
@@ -28,7 +43,11 @@ const Bar = () => {
           </div>
         ) : (
           <Body>
-            <Button appearance="secondary" className="!px-3 !py-[9.5px] !text-[14px]">
+            <Button
+              appearance="secondary"
+              className="!px-3 !py-[9.5px] !text-[14px]"
+              onClick={() => onLogin()}
+            >
               <div className="flex gap-1 items-center">
                 <img src={IcGoogle} />
                 <div>Google 登入</div>

@@ -5,6 +5,7 @@ import { TarotService } from './logic/TarotService';
 import { TarotEvent } from './model/api/Tarot';
 import { GatewayTimeoutError } from './model/error/5XX/GatewayTimeoutError';
 import { LambdaContext, LambdaEvent, LambdaOutput } from './model/Lambda';
+import auth from './routes/auth';
 import tarot from './routes/tarot';
 import user from './routes/user';
 import { errorOutput, initLambda, successOutput } from './utils/LambdaHelper';
@@ -20,6 +21,9 @@ const apiProcess = async (event: LambdaEvent): Promise<LambdaOutput> => {
 
     const resource = event.resource.split('/')[2];
     switch (resource) {
+      case 'auth':
+        res = await auth(event);
+        break;
       case 'tarot':
         res = await tarot(event);
         break;

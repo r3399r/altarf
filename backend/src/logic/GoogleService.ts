@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { inject, injectable } from 'inversify';
 import { UnauthorizedError } from 'src/model/error';
-import { UserInfo } from 'src/model/Google';
+import { CodeResponse, RefreshTokenResponse, UserInfo } from 'src/model/Google';
 import { credentialSymbol } from 'src/utils/LambdaHelper';
 
 /**
@@ -11,6 +11,37 @@ import { credentialSymbol } from 'src/utils/LambdaHelper';
 export class GoogleService {
   @inject(credentialSymbol)
   private readonly credential!: string;
+
+  public async exchangeToken(code: string) {
+    const res = await axios.request<CodeResponse>({
+      method: 'POST',
+      url: 'https://oauth2.googleapis.com/token',
+      params: {
+        grant_type: 'authorization_code',
+        code,
+        client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+        client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+        redirect_uri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
+      },
+    });
+
+    return res.data;
+  }
+
+  public async getNewAccessToken(refreshToken: string) {
+    const res = await axios.request<RefreshTokenResponse>({
+      method: 'POST',
+      url: 'https://oauth2.googleapis.com/token',
+      params: {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+        client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+        client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+      },
+    });
+
+    return res.data;
+  }
 
   public async getUserInfo(): Promise<UserInfo> {
     try {
