@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 import packageJson from '../../package.json';
 import { PostAuthRefreshRequest, PostAuthRefreshResponse } from 'src/model/backend/api/Auth';
-import { decrypt, encrypt } from './crypto';
+import { decrypt, encrypt } from '../utils/crypto';
 import { dispatch } from 'src/redux/store';
 import { setIsLogin } from 'src/redux/uiSlice';
 
