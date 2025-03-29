@@ -7,6 +7,7 @@ import { TarotDailyAccess } from './access/TarotDailyAccess';
 import { TarotInterpretationAiAccess } from './access/TarotInterpretationAiAccess';
 import { TarotQuestionAccess } from './access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from './access/TarotQuestionCardAccess';
+import { TarotSpreadAccess } from './access/TarotSpreadAccess';
 import { UserAccess } from './access/UserAccess';
 import { AuthService } from './logic/AuthService';
 import { GoogleService } from './logic/GoogleService';
@@ -46,6 +47,7 @@ container.bind(TarotCardAccess).toSelf();
 container.bind(TarotDailyAccess).toSelf();
 container.bind(TarotQuestionAccess).toSelf();
 container.bind(TarotQuestionCardAccess).toSelf();
+container.bind(TarotSpreadAccess).toSelf();
 container.bind(UserAccess).toSelf();
 
 // service

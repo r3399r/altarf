@@ -6,6 +6,7 @@ import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
 import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
+import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
 import {
   GetTaortDailyResponse,
   PostTarotQuestionAiRequest,
@@ -17,6 +18,7 @@ import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
 import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
 import { TarotQuestionCardEntity } from 'src/model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from 'src/model/entity/TarotQuestionEntity';
+import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
 import { random } from 'src/utils/random';
@@ -29,6 +31,7 @@ import { UserService } from './UserService';
 @injectable()
 export class TarotService {
   private tarotCards: TarotCard[] | null = null;
+  private tarotSpreads: TarotSpread[] | null = null;
 
   @inject(Lambda)
   private readonly lambda!: Lambda;
@@ -51,6 +54,9 @@ export class TarotService {
   @inject(TarotCardAccess)
   private readonly tarotCardAccess!: TarotCardAccess;
 
+  @inject(TarotSpreadAccess)
+  private readonly tarotSpreadAccess!: TarotSpreadAccess;
+
   @inject(TarotDailyAccess)
   private readonly tarotDailyAccess!: TarotDailyAccess;
 
@@ -59,6 +65,13 @@ export class TarotService {
       this.tarotCards = await this.tarotCardAccess.find();
 
     return this.tarotCards;
+  }
+
+  private async getAllTarotSpreads() {
+    if (this.tarotSpreads === null)
+      this.tarotSpreads = await this.tarotSpreadAccess.find();
+
+    return this.tarotSpreads;
   }
 
   public async questionReplyFromAi(data: TarotEvent) {
@@ -209,9 +222,25 @@ export class TarotService {
     if (user.balance < 0) throw new BadRequestError('balance is less than 0');
   }
 
+  private async validateSpread(data: {
+    spreadId: string;
+    card: {
+      id: string;
+      reversed: boolean;
+    }[];
+  }) {
+    const spreads = await this.getAllTarotSpreads();
+    const spread = spreads.find((v) => v.id === data.spreadId);
+    if (!spread) throw new BadRequestError('spread not found');
+    if (Number(spread.drawnCardCount) !== data.card.length)
+      throw new BadRequestError('card count not match');
+  }
+
   public async askQuestionToAi(
     data: PostTarotQuestionAiRequest
   ): Promise<PostTarotQuestionAiResponse> {
+    await this.validateSpread({ spreadId: data.spreadId, card: data.card });
+
     const user = await this.getUserInfo();
 
     const tarotQuestion = await this.createTarotQuestion({
