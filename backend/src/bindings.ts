@@ -2,20 +2,23 @@ import 'reflect-metadata';
 import { Lambda, SQS } from 'aws-sdk';
 import { Container } from 'inversify';
 import { DbAccess } from './access/DbAccess';
-import { FreeTarotAccess } from './access/FreeTarotAccess';
-import { TarotAccess } from './access/TarotAccess';
 import { TarotCardAccess } from './access/TarotCardAccess';
 import { TarotDailyAccess } from './access/TarotDailyAccess';
+import { TarotInterpretationAiAccess } from './access/TarotInterpretationAiAccess';
+import { TarotQuestionAccess } from './access/TarotQuestionAccess';
+import { TarotQuestionCardAccess } from './access/TarotQuestionCardAccess';
 import { UserAccess } from './access/UserAccess';
 import { AuthService } from './logic/AuthService';
 import { GoogleService } from './logic/GoogleService';
 import { OpenAiService } from './logic/OpenAiService';
 import { TarotService } from './logic/TarotService';
 import { UserService } from './logic/UserService';
-import { FreeTarotEntity } from './model/entity/FreeTarotEntity';
 import { TarotCardEntity } from './model/entity/TarotCardEntity';
 import { TarotDailyEntity } from './model/entity/TarotDailyEntity';
-import { TarotEntity } from './model/entity/TarotEntity';
+import { TarotInterpretationAiEntity } from './model/entity/TarotInterpretationAiEntity';
+import { TarotQuestionCardEntity } from './model/entity/TarotQuestionCardEntity';
+import { TarotQuestionEntity } from './model/entity/TarotQuestionEntity';
+import { TarotSpreadEntity } from './model/entity/TarotSpreadEntity';
 import { UserEntity } from './model/entity/UserEntity';
 import { Database, dbEntitiesBindingId } from './utils/Database';
 
@@ -24,18 +27,25 @@ const container: Container = new Container();
 container.bind(Database).toSelf().inSingletonScope();
 
 // db entities
-container.bind<Function>(dbEntitiesBindingId).toFunction(FreeTarotEntity);
-container.bind<Function>(dbEntitiesBindingId).toFunction(TarotEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotCardEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotDailyEntity);
+container
+  .bind<Function>(dbEntitiesBindingId)
+  .toFunction(TarotInterpretationAiEntity);
+container
+  .bind<Function>(dbEntitiesBindingId)
+  .toFunction(TarotQuestionCardEntity);
+container.bind<Function>(dbEntitiesBindingId).toFunction(TarotQuestionEntity);
+container.bind<Function>(dbEntitiesBindingId).toFunction(TarotSpreadEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(UserEntity);
 
 // db access
 container.bind(DbAccess).toSelf();
-container.bind(FreeTarotAccess).toSelf();
-container.bind(TarotAccess).toSelf();
+container.bind(TarotInterpretationAiAccess).toSelf();
 container.bind(TarotCardAccess).toSelf();
 container.bind(TarotDailyAccess).toSelf();
+container.bind(TarotQuestionAccess).toSelf();
+container.bind(TarotQuestionCardAccess).toSelf();
 container.bind(UserAccess).toSelf();
 
 // service

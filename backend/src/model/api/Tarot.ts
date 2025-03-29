@@ -1,25 +1,17 @@
-import { TarotType } from 'src/model/constant/Spread';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
-import { Tarot } from 'src/model/entity/TarotEntity';
+import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
 
 export type TarotEvent = {
   id: string;
 };
 
-export type PostTarotRequest = {
-  spread: string;
-  description: string;
-  type: TarotType;
-  card: { id: string; side: 'upright' | 'reversed' }[];
+export type PostTarotQuestionAiRequest = {
+  spreadId: string;
+  question: string;
+  card: { id: string; reversed: boolean }[];
 };
 
-export type PostTarotResponse = Tarot & {
-  statistics?: { avg: number | null; std: number | null };
-};
-
-export type GetTarotIdResponse = Tarot & {
-  statistics?: { avg: number | null; std: number | null };
-};
+export type PostTarotQuestionAiResponse = TarotQuestion;
 
 export type GetTaortDailyResponse = TarotDaily & {
   name: string;

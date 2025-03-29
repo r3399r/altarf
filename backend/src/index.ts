@@ -96,7 +96,7 @@ export const api = async (
   return output;
 };
 
-export const chat = async (event: TarotEvent, _context: LambdaContext) => {
+export const aiAgent = async (event: TarotEvent, _context: LambdaContext) => {
   console.log(event);
   const db = bindings.get(DbAccess);
   await db.startTransaction();
@@ -104,7 +104,7 @@ export const chat = async (event: TarotEvent, _context: LambdaContext) => {
   try {
     const service = bindings.get(TarotService);
 
-    await service.readCard(event);
+    await service.questionReplyFromAi(event);
     await db.commitTransaction();
 
     return;

@@ -50,7 +50,7 @@ Resources:
             "title": !Sub "${Project}-${TargetEnvr}-api"
           },
           "paths": {
-            "/api/tarot": {
+            "/api/tarot/question/ai": {
               "post": {
                 "parameters":[{
                   "name": "x-credential",
@@ -64,7 +64,7 @@ Resources:
                   "content": {
                     "application/json": {
                       "schema": {
-                        "$ref": "#/components/schemas/postTarot"
+                        "$ref": "#/components/schemas/postTarotQuestionAi"
                       }
                     }
                   },
@@ -88,48 +88,6 @@ Resources:
                   }
                 },
                 "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
-                "x-amazon-apigateway-integration": {
-                  "type": "aws_proxy",
-                  "httpMethod": "POST",
-                  "uri": !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Project}-${TargetEnvr}-api/invocations",
-                  "responses": {
-                    "default": {
-                      "statusCode": "200",
-                      "responseParameters": {
-                        "method.response.header.Access-Control-Allow-Origin": "'*'"
-                      }
-                    }
-                  },
-                  "passthroughBehavior": "when_no_match",
-                  "contentHandling": "CONVERT_TO_TEXT"
-                }
-              }
-            },
-            "/api/tarot/{id}": {
-              "get": {
-                "parameters": [{
-                  "name": "id",
-                  "in": "path",
-                  "required": true,
-                  "schema": {"type": "string"}
-                }],
-                "responses": {
-                  "200": {
-                    "description": "200 response",
-                    "headers": {
-                      "Access-Control-Allow-Origin": {
-                        "schema": {"type": "string"}
-                      }
-                    },
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "$ref": "#/components/schemas/Empty"
-                        }
-                      }
-                    }
-                  }
-                },
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -328,27 +286,23 @@ Resources:
               "type": "object",
               "title": "Empty Schema"
             },
-            "postTarot": {
+            "postTarotQuestionAi": {
               "type": "object",
               "properties": {
-                "spread":{"type": "string"},
-                "description":{"type": "string"},
-                "type": {
-                  "type": "string",
-                  "enum": [ "ai", "human"]
-                },
+                "spreadId":{"type": "string"},
+                "question":{"type": "string"},
                 "card": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "properties": {
                       "id": {"type": "string"},
-                      "side": {"type": "string"}
+                      "reversed": {"type": "boolean"}
                     }
                   }
                 }
               },
-              "required": ["spread","description","type","card"]
+              "required": ["spreadId","question","card"]
             },
             "postAuth": {
               "type": "object",
@@ -407,13 +361,13 @@ Resources:
       Action: 'lambda:InvokeFunction'
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ServerlessApi}/*
-  LambdaInvokeFunction:
+  LambdaAiAgentFunction:
     Type: AWS::Serverless::Function
     Properties:
       Architectures: [arm64]
-      Handler: index.invoke
+      Handler: index.aiAgent
       Runtime: nodejs18.x
-      FunctionName: !Sub ${Project}-${TargetEnvr}-invoke
+      FunctionName: !Sub ${Project}-${TargetEnvr}-ai-agent
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
       MemorySize: 128
