@@ -5,6 +5,7 @@ export type TarotSpread = {
   name: string;
   description: string;
   drawnCardCount: string;
+  seqNo: string;
 };
 
 @Entity({ name: 'tarot_spread' })
@@ -20,4 +21,7 @@ export class TarotSpreadEntity implements TarotSpread {
 
   @Column({ type: 'int8', name: 'drawn_card_count' })
   drawnCardCount!: string;
+
+  @Column({ type: 'int8', name: 'seq_no' })
+  seqNo!: string;
 }

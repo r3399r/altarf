@@ -9,6 +9,7 @@ import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
 import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
 import {
   GetTaortDailyResponse,
+  GetTarotBasicInfoResponse,
   PostTarotQuestionAiRequest,
   PostTarotQuestionAiResponse,
   TarotEvent,
@@ -69,7 +70,9 @@ export class TarotService {
 
   private async getAllTarotSpreads() {
     if (this.tarotSpreads === null)
-      this.tarotSpreads = await this.tarotSpreadAccess.find();
+      this.tarotSpreads = await this.tarotSpreadAccess.find({
+        order: { seqNo: 'asc' },
+      });
 
     return this.tarotSpreads;
   }
@@ -263,5 +266,12 @@ export class TarotService {
       .promise();
 
     return tarotQuestion;
+  }
+
+  public async getBasicInfo(): Promise<GetTarotBasicInfoResponse> {
+    const spread = await this.getAllTarotSpreads();
+    const card = await this.getAllTarotCards();
+
+    return { spread, card };
   }
 }
