@@ -14,6 +14,7 @@ import {
   PostTarotQuestionAiResponse,
   TarotEvent,
 } from 'src/model/api/Tarot';
+import { AiSupportedSpread } from 'src/model/constant/Tarot';
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
 import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
@@ -22,6 +23,7 @@ import { TarotQuestionEntity } from 'src/model/entity/TarotQuestionEntity';
 import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
+import { CardDisplay } from 'src/model/Tarot';
 import { random } from 'src/utils/random';
 import { OpenAiService } from './OpenAiService';
 import { UserService } from './UserService';
@@ -75,6 +77,10 @@ export class TarotService {
       });
 
     return this.tarotSpreads;
+  }
+
+  private isSpreadAiSupported(spreadId: string) {
+    return Object.keys(AiSupportedSpread).includes(spreadId);
   }
 
   public async questionReplyFromAi(data: TarotEvent) {
@@ -198,10 +204,7 @@ export class TarotService {
     question: string;
     spreadId: string;
     userId: string;
-    card: {
-      id: string;
-      reversed: boolean;
-    }[];
+    card: CardDisplay[];
   }) {
     const tarotQuestion = new TarotQuestionEntity();
     tarotQuestion.question = data.question;
@@ -225,24 +228,24 @@ export class TarotService {
     if (user.balance < 0) throw new BadRequestError('balance is less than 0');
   }
 
-  private async validateSpread(data: {
-    spreadId: string;
-    card: {
-      id: string;
-      reversed: boolean;
-    }[];
-  }) {
+  private async validateSpread(
+    spreadId: string,
+    card: CardDisplay[],
+    needAi: boolean = false
+  ) {
     const spreads = await this.getAllTarotSpreads();
-    const spread = spreads.find((v) => v.id === data.spreadId);
+    const spread = spreads.find((v) => v.id === spreadId);
     if (!spread) throw new BadRequestError('spread not found');
-    if (Number(spread.drawnCardCount) !== data.card.length)
+    if (Number(spread.drawnCardCount) !== card.length)
       throw new BadRequestError('card count not match');
+    if (needAi && !this.isSpreadAiSupported(spreadId))
+      throw new BadRequestError('this spread doese not support AI');
   }
 
   public async askQuestionToAi(
     data: PostTarotQuestionAiRequest
   ): Promise<PostTarotQuestionAiResponse> {
-    await this.validateSpread({ spreadId: data.spreadId, card: data.card });
+    await this.validateSpread(data.spreadId, data.card, true);
 
     const user = await this.getUserInfo();
 
@@ -269,9 +272,14 @@ export class TarotService {
   }
 
   public async getBasicInfo(): Promise<GetTarotBasicInfoResponse> {
-    const spread = await this.getAllTarotSpreads();
-    const card = await this.getAllTarotCards();
+    const tarotSpread = await this.getAllTarotSpreads();
+    const spread = tarotSpread.map((v) => ({
+      ...v,
+      aiSupported: this.isSpreadAiSupported(v.id),
+    }));
 
-    return { spread, card };
+    const tarotCard = await this.getAllTarotCards();
+
+    return { spread, card: tarotCard };
   }
 }
