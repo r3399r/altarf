@@ -12,7 +12,7 @@ const tmpInterpretation = `今天的你，正位的「世界」意味著一個�
 
 加油！每一個結束都是為了讓新的開始更美好，今天是充滿祝福的一天，抓住機會，讓自己飛得更高！`;
 
-const Step4Interpretation = () => {
+const OnlineInterpretation = () => {
   return (
     <>
       <div className="flex justify-between items-center">
@@ -66,4 +66,4 @@ const Step4Interpretation = () => {
   );
 };
 
-export default Step4Interpretation;
+export default OnlineInterpretation;

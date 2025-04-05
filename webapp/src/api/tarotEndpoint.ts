@@ -1,10 +1,28 @@
-import { GetTaortDailyResponse } from 'src/model/backend/api/Tarot';
+import {
+  GetTaortDailyResponse,
+  GetTarotBasicInfoResponse,
+  PostTarotQuestionAiRequest,
+  PostTarotQuestionAiResponse,
+} from 'src/model/backend/api/Tarot';
 import http from 'src/api/http';
 
 const getTarotDaily = async () => {
   return await http.get<GetTaortDailyResponse>('tarot/daily');
 };
 
+const postTarotQuestionAi = async (data: PostTarotQuestionAiRequest) => {
+  return await http.authPost<PostTarotQuestionAiResponse, PostTarotQuestionAiRequest>(
+    'tarot/question/ai',
+    { data },
+  );
+};
+
+const getTarotBasicInfo = async () => {
+  return await http.get<GetTarotBasicInfoResponse>('tarot/basic-info');
+};
+
 export default {
   getTarotDaily,
+  postTarotQuestionAi,
+  getTarotBasicInfo,
 };

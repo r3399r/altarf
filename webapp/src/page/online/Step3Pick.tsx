@@ -3,28 +3,26 @@ import { useMemo, useState } from 'react';
 import PicCardBack from 'src/assets/pic-card-back.svg';
 import Button from 'src/components/Button';
 import StarTitle from './StarTitle';
-import { Spread } from 'src/model/Spread';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/redux/store';
 
 type Props = {
-  spreadId: string | undefined;
-  onNext: () => void;
+  onSend: () => void;
 };
 
-const Step3Pick = ({ spreadId, onNext }: Props) => {
-  const spread = useMemo(() => {
-    return Spread.find((v) => v.id === spreadId);
-  }, [spreadId]);
+const Step3Pick = ({ onSend }: Props) => {
+  const { pickedSpread } = useSelector((rootState: RootState) => rootState.tarot);
   const [visibleCard, setVisibleCard] = useState<Set<number>>(new Set());
   const isReady = useMemo(() => {
-    return spread === undefined ? false : visibleCard.size === spread.pickTotal;
-  }, [spread, visibleCard]);
+    return pickedSpread === null ? false : visibleCard.size === Number(pickedSpread.drawnCardCount);
+  }, [pickedSpread, visibleCard]);
 
-  if (!spread) return <>Loading...</>;
+  if (!pickedSpread) return <>Something went wrong, please redo</>;
 
   return (
     <>
       <div className="flex gap-8 justify-center items-center mt-11 mb-[85px] flex-wrap">
-        {[...Array(spread.pickTotal).keys()].map((i) => {
+        {[...Array(Number(pickedSpread.drawnCardCount)).keys()].map((i) => {
           return (
             <img
               src={PicCardBack}
@@ -35,14 +33,14 @@ const Step3Pick = ({ spreadId, onNext }: Props) => {
           );
         })}
       </div>
-      <StarTitle title={`此牌陣需抽 ${spread.pickTotal} 張牌`} />
+      <StarTitle title={`此牌陣需抽 ${pickedSpread.drawnCardCount} 張牌`} />
       <div className="text-center mt-10">
         <Button
           onClick={() => {
             if (isReady) {
-              onNext();
+              onSend();
             } else {
-              for (let i = 0; i < spread.pickTotal; i++) {
+              for (let i = 0; i < Number(pickedSpread.drawnCardCount); i++) {
                 if (!visibleCard.has(i)) {
                   const newSet = new Set(visibleCard);
                   newSet.add(i);
