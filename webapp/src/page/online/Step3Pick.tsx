@@ -25,6 +25,7 @@ const Step3Pick = ({ onSend }: Props) => {
         {[...Array(Number(pickedSpread.drawnCardCount)).keys()].map((i) => {
           return (
             <img
+              key={i}
               src={PicCardBack}
               className={classNames('border-white border-4 rounded-md', {
                 invisible: !visibleCard.has(i),

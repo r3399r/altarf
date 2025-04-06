@@ -32,9 +32,14 @@ export const tarotSlice = createSlice({
     setQuestion: (state: TarotState, action: PayloadAction<string>) => {
       state.question = action.payload;
     },
+    clearQuestion: (state: TarotState) => {
+      state.pickedSpread = null;
+      state.question = null;
+    },
   },
 });
 
-export const { setSpreadList, setCardList, setPickedSpread, setQuestion } = tarotSlice.actions;
+export const { setSpreadList, setCardList, setPickedSpread, setQuestion, clearQuestion } =
+  tarotSlice.actions;
 
 export default tarotSlice.reducer;

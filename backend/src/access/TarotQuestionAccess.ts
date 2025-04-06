@@ -32,9 +32,14 @@ export class TarotQuestionAccess {
           spread: true,
           user: true,
           card: { card: true },
+          interpretationAi: true,
         },
         ...options,
       }
     );
+  }
+
+  public async findOneByIdOrFail(id: string) {
+    return await this.findOneOrFail({ where: { id } });
   }
 }

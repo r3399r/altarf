@@ -55,3 +55,8 @@ export const sendTarotQuestion = async () => {
     dispatch(finishWaiting());
   }
 };
+
+export const getTarotQuestionById = async (id: string) => {
+  const res = await tarotEndpoint.getTarotQuestionId(id);
+  return res.data;
+};

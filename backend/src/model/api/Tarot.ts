@@ -23,3 +23,5 @@ export type GetTarotBasicInfoResponse = {
   spread: Spread[];
   card: TarotCard[];
 };
+
+export type GetTarotQuestionResponse = TarotQuestion;

@@ -10,6 +10,7 @@ import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
 import {
   GetTaortDailyResponse,
   GetTarotBasicInfoResponse,
+  GetTarotQuestionResponse,
   PostTarotQuestionAiRequest,
   PostTarotQuestionAiResponse,
   TarotEvent,
@@ -84,9 +85,9 @@ export class TarotService {
   }
 
   public async questionReplyFromAi(data: TarotEvent) {
-    const tarotQuestion = await this.tarotQuestionAccess.findOneOrFail({
-      where: { id: data.id },
-    });
+    const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(
+      data.id
+    );
 
     const now = new Date().getTime();
 
@@ -221,7 +222,9 @@ export class TarotService {
       await this.tarotQuestionCardAccess.save(tarotQuestionCard);
     }
 
-    return newTarotQuestion;
+    return await this.tarotQuestionAccess.findOneByIdOrFail(
+      newTarotQuestion.id
+    );
   }
 
   private checkUserQuota(user: User) {
@@ -242,12 +245,19 @@ export class TarotService {
       throw new BadRequestError('this spread doese not support AI');
   }
 
+  public async getTarotQuestionById(
+    id: string
+  ): Promise<GetTarotQuestionResponse> {
+    return await this.tarotQuestionAccess.findOneByIdOrFail(id);
+  }
+
   public async askQuestionToAi(
     data: PostTarotQuestionAiRequest
   ): Promise<PostTarotQuestionAiResponse> {
     await this.validateSpread(data.spreadId, data.card, true);
 
     const user = await this.getUserInfo();
+    this.checkUserQuota(user);
 
     const tarotQuestion = await this.createTarotQuestion({
       question: data.question,
@@ -255,8 +265,6 @@ export class TarotService {
       userId: user.id,
       card: data.card,
     });
-
-    this.checkUserQuota(user);
 
     await this.lambda
       .invoke({

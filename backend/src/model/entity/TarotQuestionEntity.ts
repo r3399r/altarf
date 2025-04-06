@@ -9,6 +9,10 @@ import {
   OneToMany,
 } from 'typeorm';
 import {
+  TarotInterpretationAi,
+  TarotInterpretationAiEntity,
+} from './TarotInterpretationAiEntity';
+import {
   TarotQuestionCard,
   TarotQuestionCardEntity,
 } from './TarotQuestionCardEntity';
@@ -23,6 +27,7 @@ export type TarotQuestion = {
   userId: string;
   user: User;
   card: TarotQuestionCard[];
+  interpretationAi: TarotInterpretationAi[];
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -55,6 +60,12 @@ export class TarotQuestionEntity implements TarotQuestion {
     (tarotQuestionCard) => tarotQuestionCard.question
   )
   card!: TarotQuestionCard[];
+
+  @OneToMany(
+    () => TarotInterpretationAiEntity,
+    (tarotInterpretationAi) => tarotInterpretationAi.question
+  )
+  interpretationAi!: TarotInterpretationAi[];
 
   @Column({ type: 'timestamp', name: 'created_at', default: null })
   createdAt!: string;

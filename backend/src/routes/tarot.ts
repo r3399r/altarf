@@ -14,6 +14,8 @@ export default async (lambdaEvent: LambdaEvent) => {
   switch (event.resource) {
     case '/api/tarot/basic-info':
       return await tarotBasicInfo();
+    case '/api/tarot/question/{id}':
+      return await tarotQuestionId();
     case '/api/tarot/question/ai':
       return await tarotQuestionAi();
     case '/api/tarot/daily':
@@ -27,6 +29,17 @@ const tarotBasicInfo = async () => {
   switch (event.httpMethod) {
     case 'GET':
       return await service.getBasicInfo();
+  }
+
+  throw new Error('unexpected httpMethod');
+};
+
+const tarotQuestionId = async () => {
+  if (event.pathParameters === null)
+    throw new BadRequestError('pathParameters should not be empty');
+  switch (event.httpMethod) {
+    case 'GET':
+      return await service.getTarotQuestionById(event.pathParameters.id);
   }
 
   throw new Error('unexpected httpMethod');
