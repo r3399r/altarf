@@ -93,13 +93,6 @@ Resources:
                   "in": "path",
                   "required": true,
                   "schema": {"type": "string"}
-                },{
-                  "name": "x-credential",
-                  "in": "header",
-                  "required": true,
-                  "schema": {
-                    "type": "string"
-                  }
                 }],
                 "responses": {
                   "200": {

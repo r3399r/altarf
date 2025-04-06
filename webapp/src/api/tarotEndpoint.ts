@@ -23,7 +23,7 @@ const getTarotBasicInfo = async () => {
 };
 
 const getTarotQuestionId = async (id: string) => {
-  return await http.authGet<GetTarotQuestionResponse>(`tarot/question/${id}`);
+  return await http.get<GetTarotQuestionResponse>(`tarot/question/${id}`);
 };
 
 export default {
