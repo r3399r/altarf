@@ -1,13 +1,12 @@
 import tarotEndpoint from 'src/api/tarotEndpoint';
-import { TarotCard } from 'src/model/backend/entity/TarotCardEntity';
-import { Spread } from 'src/model/backend/Tarot';
+import { getState } from 'src/redux/store';
 import { randomBoolean, randomIntExcept } from 'src/utils/random';
 
-export const sendTarotQuestion = async (
-  pickedSpread: Spread,
-  cardList: TarotCard[],
-  question: string,
-) => {
+export const sendTarotQuestion = async () => {
+  const { pickedSpread, question, cardList } = getState().tarot;
+  if (pickedSpread === null || question === null || cardList === null)
+    throw new Error('something went wrong');
+
   const pickedCardNum: number[] = [];
   for (let i = 0; i < Number(pickedSpread.drawnCardCount); i++) {
     const num = randomIntExcept(0, cardList.length - 1, pickedCardNum);
