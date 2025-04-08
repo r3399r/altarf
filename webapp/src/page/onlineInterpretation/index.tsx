@@ -6,40 +6,11 @@ import H3 from 'src/components/typography/H3';
 import StarDivision from 'src/components/StarDivision';
 import IcShare from 'src/assets/ic-share.svg';
 import IcLink from 'src/assets/ic-link.svg';
-import { useLocation, useParams } from 'react-router-dom';
-import { TarotQuestion } from 'src/model/backend/entity/TarotQuestionEntity';
 import classNames from 'classnames';
-import { useEffect, useRef, useState } from 'react';
-import { getTarotQuestionById } from 'src/service/tarotService';
+import useFetch from './useFetch';
 
 const OnlineInterpretation = () => {
-  const { id } = useParams();
-  const location = useLocation();
-  const state = location.state as TarotQuestion | null;
-  const [result, setResult] = useState<TarotQuestion | null>(state);
-  const intervalRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (state === null) getTarotQuestionById(id ?? '').then((res) => setResult(res));
-  }, [state, id]);
-
-  useEffect(() => {
-    if (!!result && result.interpretationAi.length > 0) return;
-
-    const fetchData = async () => {
-      const res = await getTarotQuestionById(id ?? '');
-      setResult(res);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-
-    intervalRef.current = setInterval(() => {
-      fetchData();
-    }, 5000);
-
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [result, id, intervalRef]);
+  const { result } = useFetch();
 
   if (result === null) return <></>;
 

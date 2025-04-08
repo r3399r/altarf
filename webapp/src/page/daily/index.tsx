@@ -1,22 +1,13 @@
-import { useMemo, useState } from 'react';
 import PicDraw from 'src/assets/pic-draw.svg';
 import PicShadow from 'src/assets/pic-shadow.svg';
 import IcCardFrame from 'src/assets/ic-card-frame.svg';
-import { drawTarotDaily } from 'src/service/tarotService';
-import { GetTaortDailyResponse } from 'src/model/backend/api/Tarot';
 import Body from 'src/components/typography/Body';
 import classNames from 'classnames';
 import StarDivision from 'src/components/StarDivision';
+import useFlow from './useFlow';
 
 const Daily = () => {
-  const [drawnCard, setDrawnCard] = useState<GetTaortDailyResponse>();
-  const isDrawn = useMemo(() => !!drawnCard, [drawnCard]);
-
-  const onClickDraw = () => {
-    drawTarotDaily().then((res) => {
-      setDrawnCard(res);
-    });
-  };
+  const { isDrawn, drawnCard, onDraw } = useFlow();
 
   if (isDrawn) {
     return (
@@ -47,7 +38,7 @@ const Daily = () => {
     <div className="flex justify-center">
       <div
         className="mt-10 flex w-fit cursor-pointer flex-col items-center justify-center gap-10 sm:mt-20"
-        onClick={onClickDraw}
+        onClick={onDraw}
       >
         <img src={PicDraw} />
         <img src={PicShadow} />
