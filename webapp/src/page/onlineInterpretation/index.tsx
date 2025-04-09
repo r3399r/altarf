@@ -2,6 +2,7 @@ import Body from 'src/components/typography/Body';
 import H2 from 'src/components/typography/H2';
 import IcLoader from 'src/assets/ic-loader.svg';
 import { format } from 'date-fns';
+import { CopyToClipboard } from 'react-copy-to-clipboard-ts';
 import H3 from 'src/components/typography/H3';
 import StarDivision from 'src/components/StarDivision';
 import IcShare from 'src/assets/ic-share.svg';
@@ -10,7 +11,7 @@ import classNames from 'classnames';
 import useFetch from './useFetch';
 
 const OnlineInterpretation = () => {
-  const { result } = useFetch();
+  const { result, url } = useFetch();
 
   if (result === null) return <></>;
 
@@ -55,9 +56,11 @@ const OnlineInterpretation = () => {
           <Body className="whitespace-pre-line">{result.interpretationAi[0].interpretation}</Body>
         )}
       </StarDivision>
-      <div className="flex justify-end mt-4 gap-3">
+      <div className="flex justify-end mb-[80px] py-4 gap-3">
         <img src={IcShare} className="cursor-pointer" />
-        <img src={IcLink} className="cursor-pointer" />
+        <CopyToClipboard text={url}>
+          <img src={IcLink} className="cursor-pointer" />
+        </CopyToClipboard>
       </div>
     </>
   );

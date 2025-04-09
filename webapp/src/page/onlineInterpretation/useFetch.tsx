@@ -1,19 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 import tarotEndpoint from 'src/api/tarotEndpoint';
 import { TarotQuestion } from 'src/model/backend/entity/TarotQuestionEntity';
+import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
 
 const useFetch = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const location = useLocation();
   const state = location.state as TarotQuestion | null;
   const intervalRef = useRef<number | null>(null);
   const [result, setResult] = useState<TarotQuestion | null>(state);
 
   useEffect(() => {
-    if (state === null)
-      tarotEndpoint.getTarotQuestionId(id ?? '').then((res) => setResult(res.data));
-  }, [state, id]);
+    if (state === null) {
+      dispatch(startWaiting());
+      tarotEndpoint
+        .getTarotQuestionId(id ?? '')
+        .then((res) => setResult(res.data))
+        .finally(() => {
+          dispatch(finishWaiting());
+        });
+    }
+  }, [state, id, dispatch]);
 
   useEffect(() => {
     if (!!result && result.interpretationAi.length > 0) return;
@@ -33,7 +43,7 @@ const useFetch = () => {
     };
   }, [result, id, intervalRef]);
 
-  return { result };
+  return { result, url: `${window.location.origin.toString()}${location.pathname}` };
 };
 
 export default useFetch;

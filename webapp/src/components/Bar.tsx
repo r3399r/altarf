@@ -9,11 +9,13 @@ import Body from './typography/Body';
 import Button from './Button';
 import { useGoogleLogin } from '@react-oauth/google';
 import { login } from 'src/service/authService';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/redux/store';
-import { getUserProfile } from 'src/service/userService';
+import userEndpoint from 'src/api/userEndpoint';
+import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
 
 const Bar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const [tab, setTab] = useState(location.pathname === '/daily' ? 1 : 0);
@@ -27,8 +29,18 @@ const Bar = () => {
   });
 
   useEffect(() => {
-    if (isLogin) getUserProfile().then((res) => setBalance(res.balance));
-  }, [isLogin]);
+    if (isLogin) {
+      dispatch(startWaiting());
+      userEndpoint
+        .getUser()
+        .then((res) => {
+          setBalance(res.data.balance);
+        })
+        .finally(() => {
+          dispatch(finishWaiting());
+        });
+    }
+  }, [isLogin, dispatch]);
 
   return (
     <div className="relative mx-4 mt-4 flex justify-center sm:mx-8">
