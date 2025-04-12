@@ -1,9 +1,9 @@
-import { createRoot } from 'react-dom/client';
-import AppRoutes from './Routes.tsx';
-import Loader from './components/Loader.tsx';
-import { Provider } from 'react-redux';
-import { configStore } from './redux/store.ts';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
+import Loader from './components/Loader.tsx';
+import { configStore } from './redux/store.ts';
+import AppRoutes from './Routes.tsx';
 import './style/index.css';
 
 const store = configStore();

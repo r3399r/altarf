@@ -1,6 +1,6 @@
 import { configureStore, PayloadAction, Store } from '@reduxjs/toolkit';
-import uiReducer, { UiState } from './uiSlice';
 import tarotReducer, { TarotState } from './tarotSlice';
+import uiReducer, { UiState } from './uiSlice';
 
 export type RootState = {
   tarot: TarotState;

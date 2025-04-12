@@ -1,7 +1,7 @@
+import { Backdrop } from '@mui/material';
 import { useSelector } from 'react-redux';
 import IcLoader from 'src/assets/ic-loader.svg';
 import { RootState } from 'src/redux/store';
-import { Backdrop } from '@mui/material';
 
 const Loader = () => {
   const { workload } = useSelector((rootState: RootState) => rootState.ui);

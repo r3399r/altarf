@@ -1,8 +1,8 @@
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Bar from './components/Bar';
-import { useEffect } from 'react';
-import emitter from './utils/eventEmitter';
 import { logout } from './service/authService';
+import emitter from './utils/eventEmitter';
 
 const AppLayout = () => {
   useEffect(() => {

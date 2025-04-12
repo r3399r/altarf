@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
-import packageJson from '../../package.json';
+import packageJson from '../../package.json'; // eslint-disable-line no-restricted-imports
 import { PostAuthRefreshRequest, PostAuthRefreshResponse } from 'src/model/backend/api/Auth';
-import { decrypt, encrypt } from '../utils/crypto';
+import { decrypt, encrypt } from 'src/utils/crypto';
 import eventEmitter from 'src/utils/eventEmitter';
 
 // eslint-disable-next-line
@@ -41,28 +41,28 @@ const publicRequestConfig = <D = unknown, P = any>(
 
 const authEndpointRefreshToken = async (data: PostAuthRefreshRequest) => {
   const res = await post<PostAuthRefreshResponse, PostAuthRefreshRequest>('auth/refresh', { data });
+
   return res.data;
 };
 
 const checkAccessTokenAvailable = (accessToken: string) => {
   const expiredAt = sessionStorage.getItem('expiredAt');
 
-  if (accessToken.length === 0 || !expiredAt || new Date() > new Date(expiredAt)) {
-    return false;
-  }
+  if (accessToken.length === 0 || !expiredAt || new Date() > new Date(expiredAt)) return false;
+
   return true;
 };
 
 const getNewAccessTokenByRefreshToken = async () => {
   try {
     const encryptedRefreshToken = localStorage.getItem('refreshToken');
-    if (!encryptedRefreshToken) {
-      throw new Error('no refresh token');
-    }
+    if (!encryptedRefreshToken) throw new Error('no refresh token');
+
     const refreshToken = decrypt(encryptedRefreshToken);
     const token = await authEndpointRefreshToken({ refreshToken });
     sessionStorage.setItem('accessToken', encrypt(token.accessToken));
     sessionStorage.setItem('expiredAt', token.expiredAt);
+
     return token.accessToken;
   } catch (e) {
     eventEmitter.emit('sessionExpired');
@@ -78,9 +78,8 @@ const privateRequestConfig = async <D = unknown, P = any>(
 ) => {
   const encryptedAccessToken = sessionStorage.getItem('accessToken');
   let accessToken = encryptedAccessToken ? decrypt(encryptedAccessToken) : '';
-  if (!checkAccessTokenAvailable(accessToken)) {
+  if (!checkAccessTokenAvailable(accessToken))
     accessToken = await getNewAccessTokenByRefreshToken();
-  }
 
   return {
     ...defaultConfig,
@@ -115,26 +114,31 @@ const sendDelete = async <T, D = unknown>(url: string, options?: Options<D>) =>
 // eslint-disable-next-line
 const authGet = async <T, P = any>(url: string, options?: Options<any, P>) => {
   const config = await privateRequestConfig<unknown, P>('get', url, options);
+
   return await axios.request<T>(config);
 };
 
 const authPost = async <T, D = unknown>(url: string, options?: Options<D>) => {
   const config = await privateRequestConfig<D>('post', url, options);
+
   return await axios.request<T>(config);
 };
 
 const authPut = async <T, D = unknown>(url: string, options?: Options<D>) => {
   const config = await privateRequestConfig<D>('put', url, options);
+
   return await axios.request<T>(config);
 };
 
 const authPatch = async <T, D = unknown>(url: string, options?: Options<D>) => {
   const config = await privateRequestConfig<D>('patch', url, options);
+
   return await axios.request<T>(config);
 };
 
 const authDelete = async <T, D = unknown>(url: string, options?: Options<D>) => {
   const config = await privateRequestConfig<D>('delete', url, options);
+
   return await axios.request<T>(config);
 };
 

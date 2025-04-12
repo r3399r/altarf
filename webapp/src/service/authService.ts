@@ -6,6 +6,7 @@ import { encrypt } from 'src/utils/crypto';
 
 const exchangeToken = async (code: string) => {
   const res = await authEndpoint.postAuth({ code });
+
   return res.data;
 };
 

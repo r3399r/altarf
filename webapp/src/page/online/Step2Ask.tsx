@@ -1,12 +1,12 @@
+import { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Button from 'src/components/Button';
 import Textarea from 'src/components/Textarea';
+import useTarotInfo from 'src/hook/useTarotInfo';
+import { RootState } from 'src/redux/store';
+import { setPickedSpread, setQuestion } from 'src/redux/tarotSlice';
 import Spread from './Spread';
 import StarTitle from './StarTitle';
-import Button from 'src/components/Button';
-import { useMemo } from 'react';
-import useTarotInfo from 'src/hook/useTarotInfo';
-import { useDispatch, useSelector } from 'react-redux';
-import { setPickedSpread, setQuestion } from 'src/redux/tarotSlice';
-import { RootState } from 'src/redux/store';
 
 type Props = {
   onNext: () => void;
@@ -27,17 +27,15 @@ const Step2Ask = ({ onNext }: Props) => {
       <div className="mt-8 mb-10 flex flex-wrap justify-around gap-x-[40px] gap-y-8 sm:mb-[58px] md:mb-[80px]">
         {spreadList
           ?.filter((v) => v.aiSupported)
-          .map((v) => {
-            return (
-              <Spread
-                key={v.id}
-                title={v.name}
-                desc={v.description}
-                onClick={() => dispatch(setPickedSpread(v))}
-                selected={pickedSpread?.id === v.id}
-              ></Spread>
-            );
-          })}
+          .map((v) => (
+            <Spread
+              key={v.id}
+              title={v.name}
+              desc={v.description}
+              onClick={() => dispatch(setPickedSpread(v))}
+              selected={pickedSpread?.id === v.id}
+            ></Spread>
+          ))}
       </div>
       <StarTitle title="敘述你的問題" />
       <Textarea

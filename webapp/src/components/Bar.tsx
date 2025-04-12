@@ -1,19 +1,19 @@
+import { useGoogleLogin } from '@react-oauth/google';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Page } from 'src/constant/Page';
+import userEndpoint from 'src/api/userEndpoint';
 import IcAccount from 'src/assets/ic-account.svg';
 import IcGoogle from 'src/assets/ic-google.svg';
 import PicLogo from 'src/assets/pic-logo.svg';
-import Body from './typography/Body';
-import Button from './Button';
-import { useGoogleLogin } from '@react-oauth/google';
-import { login } from 'src/service/authService';
-import { useDispatch, useSelector } from 'react-redux';
+import { Page } from 'src/constant/Page';
 import { RootState } from 'src/redux/store';
-import userEndpoint from 'src/api/userEndpoint';
 import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
+import { login } from 'src/service/authService';
+import Button from './Button';
 import Menu from './Menu';
+import Body from './typography/Body';
 
 const Bar = () => {
   const dispatch = useDispatch();
@@ -33,14 +33,10 @@ const Bar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuVisible(false);
-      }
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) setMenuVisible(false);
     };
 
-    if (menuVisible) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    if (menuVisible) document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);

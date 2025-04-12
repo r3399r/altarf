@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import Body from './typography/Body';
-import Divider from './Divider';
 import { logout } from 'src/service/authService';
+import Divider from './Divider';
+import Body from './typography/Body';
 
 type Props = {
   email: string;
@@ -29,13 +29,11 @@ const Menu: FC<Props> = ({ email }) => {
     // Add recharge logic here
   };
 
-  const Item: FC<ItemProps> = ({ label, onClick }) => {
-    return (
-      <Body className="cursor-pointer p-4 hover:bg-grey-700" onClick={onClick}>
-        {label}
-      </Body>
-    );
-  };
+  const Item: FC<ItemProps> = ({ label, onClick }) => (
+    <Body className="cursor-pointer p-4 hover:bg-grey-700" onClick={onClick}>
+      {label}
+    </Body>
+  );
 
   return (
     <div className="rounded-xl bg-background-menu-normal shadow-lg">

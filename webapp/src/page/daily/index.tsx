@@ -1,15 +1,15 @@
+import classNames from 'classnames';
+import IcCardFrame from 'src/assets/ic-card-frame.svg';
 import PicDraw from 'src/assets/pic-draw.svg';
 import PicShadow from 'src/assets/pic-shadow.svg';
-import IcCardFrame from 'src/assets/ic-card-frame.svg';
-import Body from 'src/components/typography/Body';
-import classNames from 'classnames';
 import StarDivision from 'src/components/StarDivision';
+import Body from 'src/components/typography/Body';
 import useFlow from './useFlow';
 
 const Daily = () => {
   const { isDrawn, drawnCard, onDraw } = useFlow();
 
-  if (isDrawn) {
+  if (isDrawn)
     return (
       <div>
         <div className="relative mt-10 flex items-center justify-center sm:mt-[80px]">
@@ -32,7 +32,6 @@ const Daily = () => {
         </StarDivision>
       </div>
     );
-  }
 
   return (
     <div className="flex justify-center">

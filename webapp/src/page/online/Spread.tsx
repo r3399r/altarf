@@ -1,6 +1,6 @@
-import Body from 'src/components/typography/Body';
-import IcSpread from 'src/assets/ic-spread.svg';
 import classNames from 'classnames';
+import IcSpread from 'src/assets/ic-spread.svg';
+import Body from 'src/components/typography/Body';
 
 type Props = {
   title: string;
@@ -9,23 +9,21 @@ type Props = {
   selected: boolean;
 };
 
-const Spread = ({ title, desc, onClick, selected }: Props) => {
-  return (
-    <div className="w-[120px] pb-[11px] text-center">
-      <img
-        src={IcSpread}
-        className={classNames('cursor-pointer rounded-[4px] border-2', {
-          'border-border-focus': selected,
-          'border-transparent': !selected,
-        })}
-        onClick={onClick}
-      />
-      <Body bold className="mt-3 mb-1">
-        {title}
-      </Body>
-      <Body size="m">{desc}</Body>
-    </div>
-  );
-};
+const Spread = ({ title, desc, onClick, selected }: Props) => (
+  <div className="w-[120px] pb-[11px] text-center">
+    <img
+      src={IcSpread}
+      className={classNames('cursor-pointer rounded-[4px] border-2', {
+        'border-border-focus': selected,
+        'border-transparent': !selected,
+      })}
+      onClick={onClick}
+    />
+    <Body bold className="mt-3 mb-1">
+      {title}
+    </Body>
+    <Body size="m">{desc}</Body>
+  </div>
+);
 
 export default Spread;
