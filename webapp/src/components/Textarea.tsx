@@ -14,7 +14,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       {label && (
         <Body
           size="m"
-          className="text-text-input-subtle disabled:text-text-input-subtle-disabled mb-[5px]"
+          className="mb-[5px] text-text-input-subtle disabled:text-text-input-subtle-disabled"
         >
           {label}
         </Body>
@@ -22,7 +22,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       <textarea
         className={classNames(
           className,
-          'rounded-[8px] bg-background-textfield-normal outline-none p-3 h-16 w-full border-solid border-[1px] focus:border-border-focus',
+          'h-16 w-full rounded-[8px] border-[1px] border-solid bg-background-textfield-normal p-3 outline-none focus:border-border-focus',
           {
             'border-border-error': !!error,
             'border-background-textfield-normal': !error,

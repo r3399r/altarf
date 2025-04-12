@@ -63,16 +63,16 @@ const Bar = () => {
 
   return (
     <div className="relative mx-4 mt-4 flex justify-center sm:mx-8">
-      <Body className="absolute left-0 top-0 sm:top-2 sm:leading-9">
-        <img className="sm:w-[143px] sm:h-[48px]" src={PicLogo} />
+      <Body className="absolute top-0 left-0 sm:top-2 sm:leading-9">
+        <img className="sm:h-[48px] sm:w-[143px]" src={PicLogo} />
       </Body>
-      <div className="absolute right-0 top-0 sm:top-2">
+      <div className="absolute top-0 right-0 sm:top-2">
         {isLogin ? (
-          <div className="flex items-center gap-6 relative">
+          <div className="relative flex items-center gap-6">
             <Body className="text-text-primary">{`餘額: ${balance ?? '-'} 點`}</Body>
             <img
               src={IcAccount}
-              className="h-6 sm:h-auto cursor-pointer"
+              className="h-6 cursor-pointer sm:h-auto"
               onMouseDown={(e) => {
                 e.stopPropagation();
                 setMenuVisible(!menuVisible);
@@ -91,7 +91,7 @@ const Bar = () => {
               className="!px-3 !py-[9.5px] !text-[14px]"
               onClick={() => onLogin()}
             >
-              <div className="flex gap-1 items-center">
+              <div className="flex items-center gap-1">
                 <img src={IcGoogle} />
                 <div>Google 登入</div>
               </div>
@@ -102,8 +102,8 @@ const Bar = () => {
       <div className="flex pt-10 sm:pt-0">
         <Body
           bold
-          className={classNames('mx-6 py-4 cursor-pointer sm:leading-9', {
-            'text-text-tab-focus border-b border-b-border-tab': tab === 0,
+          className={classNames('mx-6 cursor-pointer py-4 sm:leading-9', {
+            'border-b border-b-border-tab text-text-tab-focus': tab === 0,
           })}
           onClick={() => {
             setTab(0);
@@ -114,8 +114,8 @@ const Bar = () => {
         </Body>
         <Body
           bold
-          className={classNames('mx-6 py-4 cursor-pointer sm:leading-9', {
-            'text-text-tab-focus border-b border-b-border-tab': tab === 1,
+          className={classNames('mx-6 cursor-pointer py-4 sm:leading-9', {
+            'border-b border-b-border-tab text-text-tab-focus': tab === 1,
           })}
           onClick={() => {
             setTab(1);

@@ -7,7 +7,7 @@ type Props = {
 
 const StarTitle = ({ title }: Props) => {
   return (
-    <div className="flex items-center gap-2 justify-center">
+    <div className="flex items-center justify-center gap-2">
       <img className="bg-background-surface-body md:w-[40px]" src={IcStar}></img>
       <H4 className="whitespace-nowrap md:text-[1.5rem] md:leading-[1.33]">{title}</H4>
       <img className="bg-background-surface-body md:w-[40px]" src={IcStar}></img>

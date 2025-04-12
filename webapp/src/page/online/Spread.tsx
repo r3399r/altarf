@@ -11,10 +11,10 @@ type Props = {
 
 const Spread = ({ title, desc, onClick, selected }: Props) => {
   return (
-    <div className="text-center pb-[11px] w-[120px]">
+    <div className="w-[120px] pb-[11px] text-center">
       <img
         src={IcSpread}
-        className={classNames('cursor-pointer border-2 rounded-[4px]', {
+        className={classNames('cursor-pointer rounded-[4px] border-2', {
           'border-border-focus': selected,
           'border-transparent': !selected,
         })}

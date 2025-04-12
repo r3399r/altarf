@@ -17,7 +17,7 @@ const OnlineInterpretation = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <H2>占卜結果</H2>
         <Body size="m">
           {format(
@@ -26,13 +26,13 @@ const OnlineInterpretation = () => {
           )}
         </Body>
       </div>
-      <div className="flex gap-[28px] sm:gap-[60px] flex-wrap justify-center mt-16">
+      <div className="mt-16 flex flex-wrap justify-center gap-[28px] sm:gap-[60px]">
         {result.card.map((v) => {
           return (
-            <div key={v.id} className="flex flex-col items-center w-[90px] sm:w-[132px]">
+            <div key={v.id} className="flex w-[90px] flex-col items-center sm:w-[132px]">
               <img
                 src={`/card/${v.cardId}.jpg`}
-                className={classNames('border-white border-4 rounded-md h-[200px]', {
+                className={classNames('h-[200px] rounded-md border-4 border-white', {
                   'rotate-180': v.reversal,
                 })}
               />
@@ -43,11 +43,11 @@ const OnlineInterpretation = () => {
           );
         })}
       </div>
-      <div className="mt-10 px-8 py-4 bg-background-surface-overlay-normal rounded-[8px]">
+      <div className="mt-10 rounded-[8px] bg-background-surface-overlay-normal px-8 py-4">
         <H3 className="mb-2">我的問題：</H3>
         <Body>{result.question}</Body>
       </div>
-      <StarDivision className="mt-[100px] py-10 px-4 sm:py-14 sm:px-8" title="解牌結果">
+      <StarDivision className="mt-[100px] px-4 py-10 sm:px-8 sm:py-14" title="解牌結果">
         {result.interpretationAi.length === 0 ? (
           <div className="flex justify-center">
             <img className="w-20" src={IcLoader} />
@@ -56,7 +56,7 @@ const OnlineInterpretation = () => {
           <Body className="whitespace-pre-line">{result.interpretationAi[0].interpretation}</Body>
         )}
       </StarDivision>
-      <div className="flex justify-end mb-[80px] py-4 gap-3">
+      <div className="mb-[80px] flex justify-end gap-3 py-4">
         <img src={IcShare} className="cursor-pointer" />
         <CopyToClipboard text={url}>
           <img src={IcLink} className="cursor-pointer" />

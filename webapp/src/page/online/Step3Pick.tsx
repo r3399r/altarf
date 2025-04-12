@@ -21,13 +21,13 @@ const Step3Pick = ({ onSend }: Props) => {
 
   return (
     <>
-      <div className="flex gap-8 justify-center items-center mt-11 mb-[85px] flex-wrap">
+      <div className="mt-11 mb-[85px] flex flex-wrap items-center justify-center gap-8">
         {[...Array(Number(pickedSpread.drawnCardCount)).keys()].map((i) => {
           return (
             <img
               key={i}
               src={PicCardBack}
-              className={classNames('border-white border-4 rounded-md', {
+              className={classNames('rounded-md border-4 border-white', {
                 invisible: !visibleCard.has(i),
               })}
             />
@@ -35,7 +35,7 @@ const Step3Pick = ({ onSend }: Props) => {
         })}
       </div>
       <StarTitle title={`此牌陣需抽 ${pickedSpread.drawnCardCount} 張牌`} />
-      <div className="text-center mt-10">
+      <div className="mt-10 text-center">
         <Button
           onClick={() => {
             if (isReady) {

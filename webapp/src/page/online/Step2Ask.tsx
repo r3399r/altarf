@@ -24,7 +24,7 @@ const Step2Ask = ({ onNext }: Props) => {
   return (
     <>
       <StarTitle title="選擇一種牌陣" />
-      <div className="mt-8 mb-10 flex gap-x-[40px] gap-y-8 flex-wrap justify-around sm:mb-[58px] md:mb-[80px]">
+      <div className="mt-8 mb-10 flex flex-wrap justify-around gap-x-[40px] gap-y-8 sm:mb-[58px] md:mb-[80px]">
         {spreadList
           ?.filter((v) => v.aiSupported)
           .map((v) => {
@@ -41,7 +41,7 @@ const Step2Ask = ({ onNext }: Props) => {
       </div>
       <StarTitle title="敘述你的問題" />
       <Textarea
-        className="h-[120px] mt-8 mb-10"
+        className="mt-8 mb-10 h-[120px]"
         placeholder="50字以內"
         value={question ?? ''}
         onChange={(e) => dispatch(setQuestion(e.target.value))}

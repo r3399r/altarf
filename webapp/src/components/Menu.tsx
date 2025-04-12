@@ -31,15 +31,15 @@ const Menu: FC<Props> = ({ email }) => {
 
   const Item: FC<ItemProps> = ({ label, onClick }) => {
     return (
-      <Body className="cursor-pointer hover:bg-grey-700 p-4" onClick={onClick}>
+      <Body className="cursor-pointer p-4 hover:bg-grey-700" onClick={onClick}>
         {label}
       </Body>
     );
   };
 
   return (
-    <div className="bg-background-menu-normal rounded-xl shadow-lg">
-      <Body className="px-4 pt-4 py-3">{email}</Body>
+    <div className="rounded-xl bg-background-menu-normal shadow-lg">
+      <Body className="px-4 py-3 pt-4">{email}</Body>
       <Divider />
       <Item label="餘額與儲值" onClick={onRecharge} />
       <Item label="占卜紀錄" onClick={onViewRecords} />

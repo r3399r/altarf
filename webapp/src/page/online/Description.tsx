@@ -8,8 +8,8 @@ type DescriptionProps = {
 
 const Description = ({ title, description }: DescriptionProps) => {
   return (
-    <div className="flex flex-col md:flex-row gap-2 md:gap-0">
-      <H4 className="!text-text-primary w-[144px]">{title}</H4>
+    <div className="flex flex-col gap-2 md:flex-row md:gap-0">
+      <H4 className="w-[144px] !text-text-primary">{title}</H4>
       <Body className="flex-1">{description}</Body>
     </div>
   );
