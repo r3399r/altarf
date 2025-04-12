@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Page } from 'src/constant/Page';
 import IcAccount from 'src/assets/ic-account.svg';
@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/redux/store';
 import userEndpoint from 'src/api/userEndpoint';
 import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
+import Menu from './Menu';
 
 const Bar = () => {
   const dispatch = useDispatch();
@@ -21,12 +22,30 @@ const Bar = () => {
   const [tab, setTab] = useState(location.pathname === '/daily' ? 1 : 0);
   const { isLogin } = useSelector((rootState: RootState) => rootState.ui);
   const [balance, setBalance] = useState<number>();
+  const [menuVisible, setMenuVisible] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null); // Ref for the menu
 
   const onLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => login(tokenResponse.code),
     onError: (error) => console.log('Login Failed', error),
     flow: 'auth-code',
   });
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuVisible(false);
+      }
+    };
+
+    if (menuVisible) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuVisible]);
 
   useEffect(() => {
     if (isLogin) {
@@ -49,9 +68,21 @@ const Bar = () => {
       </Body>
       <div className="absolute right-0 top-0 sm:top-2">
         {isLogin ? (
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 relative">
             <Body className="text-text-primary">{`餘額: ${balance ?? '-'} 點`}</Body>
-            <img src={IcAccount} className="h-6 sm:h-auto" />
+            <img
+              src={IcAccount}
+              className="h-6 sm:h-auto cursor-pointer"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                setMenuVisible(!menuVisible);
+              }}
+            />
+            {menuVisible && (
+              <div ref={menuRef} className="absolute top-10 right-0 z-10">
+                <Menu email={'axsxsxsx@gmail.com'} />
+              </div>
+            )}
           </div>
         ) : (
           <Body>

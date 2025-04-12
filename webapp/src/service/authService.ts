@@ -28,3 +28,15 @@ export const login = async (code: string) => {
     dispatch(finishWaiting());
   }
 };
+
+export const logout = () => {
+  try {
+    dispatch(startWaiting());
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('expiredAt');
+    localStorage.removeItem('refreshToken');
+    dispatch(setIsLogin(false));
+  } finally {
+    dispatch(finishWaiting());
+  }
+};

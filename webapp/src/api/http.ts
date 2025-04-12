@@ -2,8 +2,7 @@ import axios, { AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 import packageJson from '../../package.json';
 import { PostAuthRefreshRequest, PostAuthRefreshResponse } from 'src/model/backend/api/Auth';
 import { decrypt, encrypt } from '../utils/crypto';
-import { dispatch } from 'src/redux/store';
-import { setIsLogin } from 'src/redux/uiSlice';
+import eventEmitter from 'src/utils/eventEmitter';
 
 // eslint-disable-next-line
 type Options<D = any, P = any> = {
@@ -66,8 +65,7 @@ const getNewAccessTokenByRefreshToken = async () => {
     sessionStorage.setItem('expiredAt', token.expiredAt);
     return token.accessToken;
   } catch (e) {
-    localStorage.removeItem('refreshToken');
-    dispatch(setIsLogin(false));
+    eventEmitter.emit('sessionExpired');
     throw e;
   }
 };

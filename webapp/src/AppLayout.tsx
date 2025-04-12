@@ -1,13 +1,32 @@
 import { Outlet } from 'react-router-dom';
 import Bar from './components/Bar';
+import { useEffect } from 'react';
+import emitter from './utils/eventEmitter';
+import { logout } from './service/authService';
 
-const AppLayout = () => (
-  <>
-    <Bar />
-    <div className="mx-4 sm:mx-10 md:mx-auto md:w-[900px]">
-      <Outlet />
-    </div>
-  </>
-);
+const AppLayout = () => {
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      logout();
+    };
+
+    // Attach the listener
+    emitter.on('sessionExpired', handleSessionExpired);
+
+    // Cleanup the listener on component unmount
+    return () => {
+      emitter.off('sessionExpired', handleSessionExpired);
+    };
+  });
+
+  return (
+    <>
+      <Bar />
+      <div className="mx-4 sm:mx-10 md:mx-auto md:w-[900px]">
+        <Outlet />
+      </div>
+    </>
+  );
+};
 
 export default AppLayout;
