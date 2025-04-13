@@ -9,7 +9,7 @@ import IcGoogle from 'src/assets/ic-google.svg';
 import PicLogo from 'src/assets/pic-logo.svg';
 import { Page } from 'src/constant/Page';
 import { RootState } from 'src/redux/store';
-import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
+import { finishWaiting, setBalance, setEmail, startWaiting } from 'src/redux/uiSlice';
 import { login } from 'src/service/authService';
 import Button from './Button';
 import Menu from './Menu';
@@ -20,10 +20,9 @@ const Bar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [tab, setTab] = useState(location.pathname === '/daily' ? 1 : 0);
-  const { isLogin } = useSelector((rootState: RootState) => rootState.ui);
-  const [balance, setBalance] = useState<number>();
+  const { isLogin, balance } = useSelector((rootState: RootState) => rootState.ui);
   const [menuVisible, setMenuVisible] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null); // Ref for the menu
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const onLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => login(tokenResponse.code),
@@ -49,7 +48,8 @@ const Bar = () => {
       userEndpoint
         .getUser()
         .then((res) => {
-          setBalance(res.data.balance);
+          dispatch(setEmail(res.data.email));
+          dispatch(setBalance(res.data.balance));
         })
         .finally(() => {
           dispatch(finishWaiting());
@@ -76,7 +76,7 @@ const Bar = () => {
             />
             {menuVisible && (
               <div ref={menuRef} className="absolute top-10 right-0 z-10">
-                <Menu email={'axsxsxsx@gmail.com'} />
+                <Menu onClose={() => setMenuVisible(false)} />
               </div>
             )}
           </div>

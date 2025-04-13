@@ -1,7 +1,7 @@
 import authEndpoint from 'src/api/authEndpoint';
 import { PostAuthResponse } from 'src/model/backend/api/Auth';
 import { dispatch } from 'src/redux/store';
-import { finishWaiting, setIsLogin, startWaiting } from 'src/redux/uiSlice';
+import { finishWaiting, setBalance, setEmail, setIsLogin, startWaiting } from 'src/redux/uiSlice';
 import { encrypt } from 'src/utils/crypto';
 
 const exchangeToken = async (code: string) => {
@@ -37,6 +37,8 @@ export const logout = () => {
     sessionStorage.removeItem('expiredAt');
     localStorage.removeItem('refreshToken');
     dispatch(setIsLogin(false));
+    dispatch(setBalance(null));
+    dispatch(setEmail(null));
   } finally {
     dispatch(finishWaiting());
   }
