@@ -1,5 +1,7 @@
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Page } from 'src/constant/Page';
 import { RootState } from 'src/redux/store';
 import { logout } from 'src/service/authService';
 import Divider from './Divider';
@@ -16,6 +18,7 @@ type ItemProps = {
 
 const Menu: FC<Props> = ({ onClose }) => {
   const { email } = useSelector((state: RootState) => state.ui);
+  const navigate = useNavigate();
 
   const onLogout = () => {
     onClose();
@@ -23,15 +26,13 @@ const Menu: FC<Props> = ({ onClose }) => {
   };
 
   const onViewRecords = () => {
-    console.log('View records clicked');
+    navigate(Page.Records);
     onClose();
-    // Add navigation logic here
   };
 
   const onRecharge = () => {
     console.log('Recharge clicked');
     onClose();
-    // Add recharge logic here
   };
 
   const Item: FC<ItemProps> = ({ label, onClick }) => (
