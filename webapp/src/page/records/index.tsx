@@ -1,35 +1,37 @@
+import Button from 'src/components/Button';
+import Table from 'src/components/Table';
 import H2 from 'src/components/typography/H2';
 
-const Records = () => (
-  // const records = [
-  //   { date: '2024/07/25', time: '16:19:03', item: '線上解牌' },
-  //   { date: '2024/07/25', time: '13:17:25', item: '線上解牌' },
-  //   { date: '2024/07/18', time: '22:05:35', item: '線上解牌' },
-  //   { date: '2024/07/15', time: '10:05:26', item: '線上解牌' },
-  //   { date: '2024/07/12', time: '12:52:32', item: '線上解牌' },
-  // ];
+const Records = () => {
+  const records = [
+    { id: '1', date: '2024/07/25', time: '16:19:03', item: '線上解牌' },
+    { id: '2', date: '2024/07/25', time: '13:17:25', item: '線上解牌' },
+    { id: '3', date: '2024/07/18', time: '22:05:35', item: '線上解牌' },
+    { id: '4', date: '2024/07/15', time: '10:05:26', item: '線上解牌' },
+    { id: '5', date: '2024/07/12', time: '12:52:32', item: '線上解牌' },
+  ];
 
-  <>
-    <H2 className="mt-20">占卜結果</H2>
-    {/* <div className="p-4">
-        <div className="grid grid-cols-3 text-sm font-bold border-b border-gray-600 pb-2">
-          <div>時間</div>
-          <div>項目</div>
-          <div></div>
-        </div>
-        {records.map((record, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-3 items-center text-sm py-2 border-b border-gray-600"
-          >
-            <div>{`${record.date} ${record.time}`}</div>
-            <div>{record.item}</div>
-            <Button>
-              占卜結果
-            </Button>
-          </div>
-        ))}
-      </div> */}
-  </>
-);
+  const columns = [
+    {
+      header: '時間',
+      accessor: (row: (typeof records)[0]) => `${row.date} ${row.time}`,
+    },
+    {
+      header: '項目',
+      accessor: (row: (typeof records)[0]) => row.item,
+    },
+    {
+      accessor: () => <Button className="!px-4 !py-2">占卜結果</Button>,
+      className: 'text-right',
+    },
+  ];
+
+  return (
+    <>
+      <H2 className="mt-20 mb-[26px]">占卜結果</H2>
+      <Table data={records} columns={columns} rowKey={(row) => row.id} />
+    </>
+  );
+};
+
 export default Records;
