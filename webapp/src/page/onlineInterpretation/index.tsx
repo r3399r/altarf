@@ -54,7 +54,7 @@ const OnlineInterpretation = () => {
           <Body className="whitespace-pre-line">{result.interpretationAi[0].interpretation}</Body>
         )}
       </StarDivision>
-      <div className="mb-[80px] flex justify-end gap-3 py-4">
+      <div className="flex justify-end gap-3 py-4">
         <img src={IcShare} className="cursor-pointer" />
         <CopyToClipboard text={url}>
           <img src={IcLink} className="cursor-pointer" />

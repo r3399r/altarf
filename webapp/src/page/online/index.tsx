@@ -7,7 +7,7 @@ const Online = () => {
   const { step, goToStep2, goToStep3, onSend } = useFlow();
 
   return (
-    <div className="mt-10 mb-[80px] sm:mt-[80px]">
+    <div className="mt-10 sm:mt-20">
       {step === 1 && <Step1Agree onNext={goToStep2} />}
       {step === 2 && <Step2Ask onNext={goToStep3} />}
       {step === 3 && <Step3Pick onSend={onSend} />}

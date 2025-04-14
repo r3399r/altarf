@@ -22,7 +22,7 @@ const AppLayout = () => {
   return (
     <>
       <Bar />
-      <div className="mx-4 sm:mx-10 md:mx-auto md:w-[900px]">
+      <div className="mx-4 mb-20 sm:mx-10 md:mx-auto md:w-[900px]">
         <Outlet />
       </div>
     </>

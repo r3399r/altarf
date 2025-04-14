@@ -24,7 +24,7 @@ const Step2Ask = ({ onNext }: Props) => {
   return (
     <>
       <StarTitle title="選擇一種牌陣" />
-      <div className="mt-8 mb-10 flex flex-wrap justify-around gap-x-[40px] gap-y-8 sm:mb-[58px] md:mb-[80px]">
+      <div className="mt-8 mb-10 flex flex-wrap justify-around gap-x-10 gap-y-8 sm:mb-[58px] md:mb-20">
         {spreadList
           ?.filter((v) => v.aiSupported)
           .map((v) => (
