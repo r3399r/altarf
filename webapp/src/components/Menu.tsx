@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Page } from 'src/constant/Page';
@@ -16,7 +15,7 @@ type ItemProps = {
   onClick: () => void;
 };
 
-const Menu: FC<Props> = ({ onClose }) => {
+const Menu = ({ onClose }: Props) => {
   const { email } = useSelector((state: RootState) => state.ui);
   const navigate = useNavigate();
 
@@ -35,14 +34,14 @@ const Menu: FC<Props> = ({ onClose }) => {
     onClose();
   };
 
-  const Item: FC<ItemProps> = ({ label, onClick }) => (
+  const Item = ({ label, onClick }: ItemProps) => (
     <Body className="cursor-pointer p-4 hover:bg-grey-700" onClick={onClick}>
       {label}
     </Body>
   );
 
   return (
-    <div className="rounded-xl bg-background-menu-normal shadow-lg">
+    <div className="overflow-hidden rounded-xl bg-background-menu-normal shadow-lg">
       <Body className="px-4 py-3 pt-4">{email ?? '-'}</Body>
       <Divider />
       <Item label="餘額與儲值" onClick={onRecharge} />

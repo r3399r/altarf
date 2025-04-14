@@ -17,7 +17,7 @@ const OnlineInterpretation = () => {
 
   return (
     <>
-      <div className="mt-20 flex items-center justify-between">
+      <div className="mt-10 flex items-center justify-between sm:mt-20">
         <H2>占卜結果</H2>
         <Body size="m">
           {format(
