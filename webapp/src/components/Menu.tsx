@@ -29,8 +29,8 @@ const Menu = ({ onClose }: Props) => {
     onClose();
   };
 
-  const onRecharge = () => {
-    console.log('Recharge clicked');
+  const onViewWallet = () => {
+    navigate(Page.Wallet);
     onClose();
   };
 
@@ -44,7 +44,7 @@ const Menu = ({ onClose }: Props) => {
     <div className="overflow-hidden rounded-xl bg-background-menu-normal shadow-lg">
       <Body className="px-4 py-3 pt-4">{email ?? '-'}</Body>
       <Divider />
-      <Item label="餘額與儲值" onClick={onRecharge} />
+      <Item label="餘額與儲值" onClick={onViewWallet} />
       <Item label="占卜紀錄" onClick={onViewRecords} />
       <Item label="登出" onClick={onLogout} />
     </div>

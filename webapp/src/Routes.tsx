@@ -5,6 +5,7 @@ import Daily from './page/daily';
 import Online from './page/online';
 import OnlineInterpretation from './page/onlineInterpretation';
 import Records from './page/records';
+import Wallet from './page/wallet';
 
 const AppRoutes = () => {
   const router = createBrowserRouter([
@@ -15,6 +16,7 @@ const AppRoutes = () => {
         { path: `${Page.Online}/:id`, element: <OnlineInterpretation /> },
         { path: Page.Daily, element: <Daily /> },
         { path: Page.Records, element: <Records /> },
+        { path: Page.Wallet, element: <Wallet /> },
         { path: '/*', element: <Navigate to={Page.Online} /> },
       ],
     },
