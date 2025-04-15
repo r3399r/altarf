@@ -414,7 +414,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.api
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-api
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -445,7 +445,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.aiAgent
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-ai-agent
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -466,7 +466,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.tarotDaily
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -487,7 +487,7 @@ Resources:
     Properties:
       LayerName: !Sub ${Project}-${TargetEnvr}-layer
       CompatibleArchitectures: [arm64]
-      CompatibleRuntimes: [nodejs18.x]
+      CompatibleRuntimes: [nodejs20.x]
       ContentUri: ../../dist
       RetentionPolicy: Delete
   #########################################
