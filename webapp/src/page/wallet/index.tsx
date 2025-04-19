@@ -41,7 +41,7 @@ const Wallet = () => {
       <H2 className="mt-10 mb-[26px] sm:mt-20">餘額與儲值</H2>
       <div className="mt-8 mb-20 flex items-center justify-between rounded-lg bg-background-surface-overlay-normal px-6 py-4">
         <H4>我的餘額：NT${balance}</H4>
-        <Button>前往儲值</Button>
+        <Button className="!px-6 !py-3 sm:!px-8 sm:!py-4" onClick={onClick}>前往儲值</Button>
       </div>
       <H3 className="mb-6">儲值紀錄</H3>
       <Table data={records} columns={columns} rowKey={(row) => row.id} />
