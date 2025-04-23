@@ -1,3 +1,4 @@
+import ecpayEndpoint from 'src/api/ecpayEndpoint';
 import Button from 'src/components/Button';
 import Table from 'src/components/Table';
 import H2 from 'src/components/typography/H2';
@@ -16,6 +17,39 @@ const Wallet = () => {
     { id: '7', date: '2024/07/05 22:05:35', expense: 150, balance: 80 },
     { id: '8', date: '2024/07/02 10:05:26', expense: 20, balance: 230 },
   ];
+
+  const onClick = () => {
+    ecpayEndpoint
+      .getEcpayPayment({
+        totalAmount: '30000',
+        tradeDesc: '促銷方案',
+        itemName: 'Apple iphone 15',
+        returnUrl: 'https://lookout-test.celestialstudio.net/api/ecpay/notify',
+      })
+      .then((r) => {
+        // Create a temporary form element
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'; // ECPay endpoint
+
+        // Append all input fields to the form
+        Object.keys(r.data).forEach((key) => {
+          const typedKey = key as keyof typeof r.data;
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = key;
+          hiddenInput.value = r.data[typedKey];
+          form.appendChild(hiddenInput);
+        });
+
+        // Append the form to the body and submit it
+        document.body.appendChild(form);
+        form.submit();
+      })
+      .catch((error) => {
+        console.error('Error fetching ecpayHtml:', error);
+      });
+  };
 
   const columns = [
     { header: '時間', accessor: (row: (typeof records)[0]) => row.date },
@@ -36,12 +70,17 @@ const Wallet = () => {
     },
   ];
 
+  // if(showEcpay)
+  // return <div dangerouslySetInnerHTML={{ __html: ecpayHtml }} />
+
   return (
     <>
       <H2 className="mt-10 mb-[26px] sm:mt-20">餘額與儲值</H2>
       <div className="mt-8 mb-20 flex items-center justify-between rounded-lg bg-background-surface-overlay-normal px-6 py-4">
         <H4>我的餘額：NT${balance}</H4>
-        <Button className="!px-6 !py-3 sm:!px-8 sm:!py-4" onClick={onClick}>前往儲值</Button>
+        <Button className="!px-6 !py-3 sm:!px-8 sm:!py-4" onClick={onClick}>
+          前往儲值
+        </Button>
       </div>
       <H3 className="mb-6">儲值紀錄</H3>
       <Table data={records} columns={columns} rowKey={(row) => row.id} />

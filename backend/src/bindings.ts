@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { Lambda, SQS } from 'aws-sdk';
 import { Container } from 'inversify';
 import { DbAccess } from './access/DbAccess';
+import { ECPayTradeAccess } from './access/ECPayTradeAccess';
 import { TarotCardAccess } from './access/TarotCardAccess';
 import { TarotDailyAccess } from './access/TarotDailyAccess';
 import { TarotInterpretationAiAccess } from './access/TarotInterpretationAiAccess';
@@ -10,10 +11,12 @@ import { TarotQuestionCardAccess } from './access/TarotQuestionCardAccess';
 import { TarotSpreadAccess } from './access/TarotSpreadAccess';
 import { UserAccess } from './access/UserAccess';
 import { AuthService } from './logic/AuthService';
+import { ECPayService } from './logic/ECPayService';
 import { GoogleService } from './logic/GoogleService';
 import { OpenAiService } from './logic/OpenAiService';
 import { TarotService } from './logic/TarotService';
 import { UserService } from './logic/UserService';
+import { ECPayTradeEntity } from './model/entity/ECPayTradeEntity';
 import { TarotCardEntity } from './model/entity/TarotCardEntity';
 import { TarotDailyEntity } from './model/entity/TarotDailyEntity';
 import { TarotInterpretationAiEntity } from './model/entity/TarotInterpretationAiEntity';
@@ -28,6 +31,7 @@ const container: Container = new Container();
 container.bind(Database).toSelf().inSingletonScope();
 
 // db entities
+container.bind<Function>(dbEntitiesBindingId).toFunction(ECPayTradeEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotCardEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotDailyEntity);
 container
@@ -49,6 +53,7 @@ container.bind(TarotQuestionAccess).toSelf();
 container.bind(TarotQuestionCardAccess).toSelf();
 container.bind(TarotSpreadAccess).toSelf();
 container.bind(UserAccess).toSelf();
+container.bind(ECPayTradeAccess).toSelf();
 
 // service
 container.bind(AuthService).toSelf();
@@ -56,6 +61,7 @@ container.bind(GoogleService).toSelf();
 container.bind(OpenAiService).toSelf();
 container.bind(TarotService).toSelf();
 container.bind(UserService).toSelf();
+container.bind(ECPayService).toSelf();
 
 // AWS
 container.bind(Lambda).toDynamicValue(() => new Lambda());

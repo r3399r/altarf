@@ -9,7 +9,7 @@ export const successOutput = <T>(res: T): LambdaOutput => ({
   headers: {
     'Access-Control-Allow-Origin': '*', // Required for CORS support to work,
   },
-  body: JSON.stringify(res),
+  body: typeof res === 'string' ? res : JSON.stringify(res),
 });
 
 export const errorOutput = (e: unknown): LambdaOutput => {

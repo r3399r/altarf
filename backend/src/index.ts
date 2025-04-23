@@ -6,6 +6,7 @@ import { TarotEvent } from './model/api/Tarot';
 import { GatewayTimeoutError } from './model/error/5XX/GatewayTimeoutError';
 import { LambdaContext, LambdaEvent, LambdaOutput } from './model/Lambda';
 import auth from './routes/auth';
+import ecpay from './routes/ecpay';
 import tarot from './routes/tarot';
 import user from './routes/user';
 import { errorOutput, initLambda, successOutput } from './utils/LambdaHelper';
@@ -29,6 +30,9 @@ const apiProcess = async (event: LambdaEvent): Promise<LambdaOutput> => {
         break;
       case 'user':
         res = await user(event);
+        break;
+      case 'ecpay':
+        res = await ecpay(event);
         break;
     }
 
