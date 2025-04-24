@@ -12,14 +12,18 @@ type Props = {
 
 const Step3Pick = ({ onSend }: Props) => {
   const { pickedSpread } = useSelector((rootState: RootState) => rootState.tarot);
-  const [visibleCard, setVisibleCard] = useState<Set<number>>(new Set());
+  const [numPickedCards, setPickedCardList] = useState<number>(0);
   const isReady = useMemo(
-    () =>
-      pickedSpread === null ? false : visibleCard.size === Number(pickedSpread.drawnCardCount),
-    [pickedSpread, visibleCard],
+    () => (!pickedSpread ? false : numPickedCards === Number(pickedSpread.drawnCardCount)),
+    [pickedSpread, numPickedCards],
   );
 
   if (!pickedSpread) return <>Something went wrong, please redo</>;
+
+  const onClick = () => {
+    if (isReady) onSend();
+    else setPickedCardList(numPickedCards + 1);
+  };
 
   return (
     <>
@@ -29,27 +33,15 @@ const Step3Pick = ({ onSend }: Props) => {
             key={i}
             src={PicCardBack}
             className={classNames('rounded-md border-4 border-white', {
-              invisible: !visibleCard.has(i),
+              invisible: i >= numPickedCards,
             })}
           />
         ))}
       </div>
       <StarTitle title={`此牌陣需抽 ${pickedSpread.drawnCardCount} 張牌`} />
       <div className="mt-10 text-center">
-        <Button
-          onClick={() => {
-            if (isReady) onSend();
-            else
-              for (let i = 0; i < Number(pickedSpread.drawnCardCount); i++)
-                if (!visibleCard.has(i)) {
-                  const newSet = new Set(visibleCard);
-                  newSet.add(i);
-                  setVisibleCard(newSet);
-                  break;
-                }
-          }}
-        >
-          {isReady ? '我選好了' : `抽第 ${visibleCard.size + 1} 張牌`}
+        <Button onClick={onClick}>
+          {isReady ? '我選好了' : `抽第 ${numPickedCards + 1} 張牌`}
         </Button>
       </div>
     </>
