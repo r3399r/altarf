@@ -7,13 +7,13 @@ export type TarotEvent = {
   id: string;
 };
 
-export type PostTarotQuestionAiRequest = {
+export type PostTarotQuestionRequest = {
   spreadId: string;
   question: string;
   card: CardDisplay[];
 };
 
-export type PostTarotQuestionAiResponse = TarotQuestion;
+export type PostTarotQuestionResponse = TarotQuestion;
 
 export type GetTaortDailyResponse = TarotDaily & {
   name: string;

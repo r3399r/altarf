@@ -1,4 +1,3 @@
-import { Lambda } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
 import { Not } from 'typeorm';
 import { TarotCardAccess } from 'src/access/TarotCardAccess';
@@ -11,8 +10,8 @@ import {
   GetTaortDailyResponse,
   GetTarotBasicInfoResponse,
   GetTarotQuestionResponse,
-  PostTarotQuestionAiRequest,
-  PostTarotQuestionAiResponse,
+  PostTarotQuestionRequest,
+  PostTarotQuestionResponse,
   TarotEvent,
 } from 'src/model/api/Tarot';
 import { AiSupportedSpread } from 'src/model/constant/Tarot';
@@ -37,8 +36,8 @@ export class TarotService {
   private tarotCards: TarotCard[] | null = null;
   private tarotSpreads: TarotSpread[] | null = null;
 
-  @inject(Lambda)
-  private readonly lambda!: Lambda;
+  // @inject(Lambda)
+  // private readonly lambda!: Lambda;
 
   @inject(OpenAiService)
   private readonly openAiService!: OpenAiService;
@@ -251,9 +250,9 @@ export class TarotService {
     return await this.tarotQuestionAccess.findOneByIdOrFail(id);
   }
 
-  public async askQuestionToAi(
-    data: PostTarotQuestionAiRequest
-  ): Promise<PostTarotQuestionAiResponse> {
+  public async genNewQuestion(
+    data: PostTarotQuestionRequest
+  ): Promise<PostTarotQuestionResponse> {
     await this.validateSpread(data.spreadId, data.card, true);
 
     const user = await this.getUserInfo();
@@ -266,15 +265,15 @@ export class TarotService {
       card: data.card,
     });
 
-    await this.lambda
-      .invoke({
-        FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-ai-agent`,
-        Payload: JSON.stringify({
-          id: tarotQuestion.id,
-        }),
-        InvocationType: 'Event',
-      })
-      .promise();
+    // await this.lambda
+    //   .invoke({
+    //     FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-ai-agent`,
+    //     Payload: JSON.stringify({
+    //       id: tarotQuestion.id,
+    //     }),
+    //     InvocationType: 'Event',
+    //   })
+    //   .promise();
 
     return tarotQuestion;
   }

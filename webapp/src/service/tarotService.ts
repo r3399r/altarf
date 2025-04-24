@@ -13,7 +13,7 @@ export const sendTarotQuestion = async () => {
     pickedCardNum.push(num);
   }
 
-  const res = await tarotEndpoint.postTarotQuestionAi({
+  const res = await tarotEndpoint.postTarotQuestion({
     spreadId: pickedSpread.id,
     question,
     card: pickedCardNum.map((v) => ({
