@@ -70,9 +70,6 @@ const Wallet = () => {
     },
   ];
 
-  // if(showEcpay)
-  // return <div dangerouslySetInnerHTML={{ __html: ecpayHtml }} />
-
   return (
     <>
       <H2 className="mt-10 mb-[26px] sm:mt-20">餘額與儲值</H2>

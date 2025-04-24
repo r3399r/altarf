@@ -10,7 +10,7 @@ const useFetch = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const state = location.state as TarotQuestion | null;
-  const intervalRef = useRef<number | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [result, setResult] = useState<TarotQuestion | null>(state);
 
   useEffect(() => {
