@@ -14,7 +14,6 @@ import {
   PostTarotQuestionResponse,
   TarotEvent,
 } from 'src/model/api/Tarot';
-import { AiSupportedSpread } from 'src/model/constant/Tarot';
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
 import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
@@ -77,10 +76,6 @@ export class TarotService {
       });
 
     return this.tarotSpreads;
-  }
-
-  private isSpreadAiSupported(spreadId: string) {
-    return Object.keys(AiSupportedSpread).includes(spreadId);
   }
 
   public async questionReplyFromAi(data: TarotEvent) {
@@ -230,18 +225,12 @@ export class TarotService {
     if (user.balance < 0) throw new BadRequestError('balance is less than 0');
   }
 
-  private async validateSpread(
-    spreadId: string,
-    card: CardDisplay[],
-    needAi: boolean = false
-  ) {
+  private async validateSpread(spreadId: string, card: CardDisplay[]) {
     const spreads = await this.getAllTarotSpreads();
     const spread = spreads.find((v) => v.id === spreadId);
     if (!spread) throw new BadRequestError('spread not found');
     if (Number(spread.drawnCardCount) !== card.length)
       throw new BadRequestError('card count not match');
-    if (needAi && !this.isSpreadAiSupported(spreadId))
-      throw new BadRequestError('this spread doese not support AI');
   }
 
   public async getTarotQuestionById(
@@ -253,7 +242,7 @@ export class TarotService {
   public async genNewQuestion(
     data: PostTarotQuestionRequest
   ): Promise<PostTarotQuestionResponse> {
-    await this.validateSpread(data.spreadId, data.card, true);
+    await this.validateSpread(data.spreadId, data.card);
 
     const user = await this.getUserInfo();
     this.checkUserQuota(user);
@@ -280,13 +269,8 @@ export class TarotService {
 
   public async getBasicInfo(): Promise<GetTarotBasicInfoResponse> {
     const tarotSpread = await this.getAllTarotSpreads();
-    const spread = tarotSpread.map((v) => ({
-      ...v,
-      aiSupported: this.isSpreadAiSupported(v.id),
-    }));
-
     const tarotCard = await this.getAllTarotCards();
 
-    return { spread, card: tarotCard };
+    return { spread: tarotSpread, card: tarotCard };
   }
 }

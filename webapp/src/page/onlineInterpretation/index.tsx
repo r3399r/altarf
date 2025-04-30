@@ -1,9 +1,9 @@
-import classNames from 'classnames';
 import { format } from 'date-fns';
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts';
 import IcLink from 'src/assets/ic-link.svg';
 import IcLoader from 'src/assets/ic-loader.svg';
 import IcShare from 'src/assets/ic-share.svg';
+import Canvas from 'src/components/Canvas';
 import StarDivision from 'src/components/StarDivision';
 import Body from 'src/components/typography/Body';
 import H2 from 'src/components/typography/H2';
@@ -26,7 +26,15 @@ const OnlineInterpretation = () => {
           )}
         </Body>
       </div>
-      <div className="mt-16 flex flex-wrap justify-center gap-[28px] sm:gap-[60px]">
+      <Canvas
+        cardList={result.card.map((v) => ({
+          id: v.cardId,
+          reversed: v.reversal,
+        }))}
+        showCardBack={false}
+        spreadId={result.spreadId}
+      />
+      {/* <div className="mt-16 flex flex-wrap justify-center gap-[28px] sm:gap-[60px]">
         {result.card.map((v) => (
           <div key={v.id} className="flex w-[90px] flex-col items-center sm:w-[132px]">
             <img
@@ -40,7 +48,7 @@ const OnlineInterpretation = () => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
       <div className="mt-10 rounded-[8px] bg-background-surface-overlay-normal px-8 py-4">
         <H3 className="mb-2">我的問題：</H3>
         <Body>{result.question}</Body>

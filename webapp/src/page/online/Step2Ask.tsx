@@ -5,7 +5,7 @@ import Textarea from 'src/components/Textarea';
 import useTarotInfo from 'src/hook/useTarotInfo';
 import { RootState } from 'src/redux/store';
 import { setPickedSpread, setQuestion } from 'src/redux/tarotSlice';
-import Spread from './Spread';
+import SpreadItem from './SpreadItem';
 import StarTitle from './StarTitle';
 
 type Props = {
@@ -22,20 +22,18 @@ const Step2Ask = ({ onNext }: Props) => {
   );
 
   return (
-    <>
+    <div className="mt-10 sm:mt-20">
       <StarTitle title="選擇一種牌陣" />
       <div className="mt-8 mb-10 flex flex-wrap justify-around gap-x-10 gap-y-8 sm:mb-[58px] md:mb-20">
-        {spreadList
-          ?.filter((v) => v.aiSupported)
-          .map((v) => (
-            <Spread
-              key={v.id}
-              title={v.name}
-              desc={v.description}
-              onClick={() => dispatch(setPickedSpread(v))}
-              selected={pickedSpread?.id === v.id}
-            ></Spread>
-          ))}
+        {spreadList?.map((v) => (
+          <SpreadItem
+            key={v.id}
+            title={v.name}
+            desc={v.description}
+            onClick={() => dispatch(setPickedSpread(v))}
+            selected={pickedSpread?.id === v.id}
+          ></SpreadItem>
+        ))}
       </div>
       <StarTitle title="敘述你的問題" />
       <Textarea
@@ -49,7 +47,7 @@ const Step2Ask = ({ onNext }: Props) => {
           我準備好抽牌了
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -9,7 +9,7 @@ type Props = {
   selected: boolean;
 };
 
-const Spread = ({ title, desc, onClick, selected }: Props) => (
+const SpreadItem = ({ title, desc, onClick, selected }: Props) => (
   <div className="w-[120px] pb-[11px] text-center">
     <img
       src={IcSpread}
@@ -26,4 +26,4 @@ const Spread = ({ title, desc, onClick, selected }: Props) => (
   </div>
 );
 
-export default Spread;
+export default SpreadItem;

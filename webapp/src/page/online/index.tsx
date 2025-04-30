@@ -4,13 +4,13 @@ import Step3Pick from './Step3Pick';
 import useFlow from './useFlow';
 
 const Online = () => {
-  const { step, goToStep2, goToStep3, onSend } = useFlow();
+  const { step, goToStep2, goToStep3, onSend, onPick } = useFlow();
 
   return (
-    <div className="mt-10 sm:mt-20">
+    <div>
       {step === 1 && <Step1Agree onNext={goToStep2} />}
       {step === 2 && <Step2Ask onNext={goToStep3} />}
-      {step === 3 && <Step3Pick onSend={onSend} />}
+      {step === 3 && <Step3Pick onSend={onSend} onPick={onPick} />}
     </div>
   );
 };

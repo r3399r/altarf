@@ -1,7 +1,8 @@
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
-import { CardDisplay, Spread } from 'src/model/Tarot';
+import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
+import { CardDisplay } from 'src/model/Tarot';
 
 export type TarotEvent = {
   id: string;
@@ -20,7 +21,7 @@ export type GetTaortDailyResponse = TarotDaily & {
 };
 
 export type GetTarotBasicInfoResponse = {
-  spread: Spread[];
+  spread: TarotSpread[];
   card: TarotCard[];
 };
 

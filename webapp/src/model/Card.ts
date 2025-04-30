@@ -1,4 +1,4 @@
-export type CardDisplay = {
+export type PickedCard = {
   id: string;
   reversed: boolean;
 };
