@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import PicCardBack from 'src/assets/pic-card-back.svg';
 import H4 from 'src/components/typography/H4';
 import { PickedCard } from 'src/model/Card';
+import Body from './typography/Body';
 
 type Props = {
   spreadId: string;
@@ -24,13 +25,18 @@ const Canvas = ({ spreadId, cardList, showCardBack }: Props) => {
           })}
         />
       ) : (
-        <img
-          src={`/card/${thisCard.id}.jpg`}
-          className={classNames('aspect-4/7 h-30 rounded-md border-4 border-white', {
-            'rotate-180': thisCard.reversed,
-            [className]: !!className,
-          })}
-        />
+        <div className="relative">
+          <img
+            src={`/card/${thisCard.id}.jpg`}
+            className={classNames('aspect-4/7 h-30 rounded-md border-4 border-white', {
+              'rotate-180': thisCard.reversed,
+              [className]: !!className,
+            })}
+          />
+          <Body size="s" className="absolute flex w-full items-center justify-center">
+            {thisCard.name}
+          </Body>
+        </div>
       )
     ) : (
       <div

@@ -52,7 +52,7 @@ const useFlow = () => {
     dispatch(
       setPickedCardList([
         ...(pickedCardList ?? []),
-        { id: filterdCardList[num].id, reversed: randomBoolean() },
+        { ...filterdCardList[num], reversed: randomBoolean() },
       ]),
     );
   };

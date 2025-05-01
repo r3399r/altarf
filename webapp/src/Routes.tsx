@@ -1,11 +1,14 @@
+import { lazy } from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import AppLayout from './AppLayout';
 import { Page } from './constant/Page';
-import Daily from './page/daily';
-import Online from './page/online';
-import OnlineInterpretation from './page/onlineInterpretation';
-import Records from './page/records';
-import Wallet from './page/wallet';
+
+// Lazy-loaded components
+const Daily = lazy(() => import('./page/daily'));
+const Online = lazy(() => import('./page/online'));
+const OnlineInterpretation = lazy(() => import('./page/onlineInterpretation'));
+const Records = lazy(() => import('./page/records'));
+const Wallet = lazy(() => import('./page/wallet'));
 
 const AppRoutes = () => {
   const router = createBrowserRouter([

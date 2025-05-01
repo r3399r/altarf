@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts';
 import IcLink from 'src/assets/ic-link.svg';
 import IcLoader from 'src/assets/ic-loader.svg';
@@ -6,7 +5,6 @@ import IcShare from 'src/assets/ic-share.svg';
 import Canvas from 'src/components/Canvas';
 import StarDivision from 'src/components/StarDivision';
 import Body from 'src/components/typography/Body';
-import H2 from 'src/components/typography/H2';
 import H3 from 'src/components/typography/H3';
 import useFetch from './useFetch';
 
@@ -17,38 +15,15 @@ const OnlineInterpretation = () => {
 
   return (
     <>
-      <div className="mt-10 flex items-center justify-between sm:mt-20">
-        <H2>占卜結果</H2>
-        <Body size="m">
-          {format(
-            result.createdAt ? new Date(result.createdAt) : new Date(),
-            'yyyy/MM/dd HH:mm:ss',
-          )}
-        </Body>
-      </div>
       <Canvas
         cardList={result.card.map((v) => ({
           id: v.cardId,
+          name: v.card.name,
           reversed: v.reversal,
         }))}
         showCardBack={false}
         spreadId={result.spreadId}
       />
-      {/* <div className="mt-16 flex flex-wrap justify-center gap-[28px] sm:gap-[60px]">
-        {result.card.map((v) => (
-          <div key={v.id} className="flex w-[90px] flex-col items-center sm:w-[132px]">
-            <img
-              src={`/card/${v.cardId}.jpg`}
-              className={classNames('h-[200px] rounded-md border-4 border-white', {
-                'rotate-180': v.reversal,
-              })}
-            />
-            <div className="mt-5 text-center">
-              <Body>{v.card.name}</Body>
-            </div>
-          </div>
-        ))}
-      </div> */}
       <div className="mt-10 rounded-[8px] bg-background-surface-overlay-normal px-8 py-4">
         <H3 className="mb-2">我的問題：</H3>
         <Body>{result.question}</Body>
