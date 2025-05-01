@@ -1,11 +1,14 @@
+import { useDispatch } from 'react-redux';
 import ecpayEndpoint from 'src/api/ecpayEndpoint';
 import Button from 'src/components/Button';
 import Table from 'src/components/Table';
 import H2 from 'src/components/typography/H2';
 import H3 from 'src/components/typography/H3';
 import H4 from 'src/components/typography/H4';
+import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
 
 const Wallet = () => {
+  const dispatch = useDispatch();
   const balance = 100; // Current balance
   const records = [
     { id: '1', date: '2024/07/25 16:19:03', deposit: 40, balance: 100 },
@@ -19,18 +22,20 @@ const Wallet = () => {
   ];
 
   const onClick = () => {
+    dispatch(startWaiting());
     ecpayEndpoint
       .getEcpayPayment({
-        totalAmount: '30000',
-        tradeDesc: '促銷方案',
-        itemName: 'Apple iphone 15',
-        returnUrl: 'https://lookout-test.celestialstudio.net/api/ecpay/notify',
+        totalAmount: '300',
+        tradeDesc: '塔羅費用',
+        itemName: '儲值',
+        returnUrl: `${location.origin}/api/ecpay/notify`,
       })
       .then((r) => {
         // Create a temporary form element
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'; // ECPay endpoint
+        form.target = '_blank';
 
         // Append all input fields to the form
         Object.keys(r.data).forEach((key) => {
@@ -48,6 +53,9 @@ const Wallet = () => {
       })
       .catch((error) => {
         console.error('Error fetching ecpayHtml:', error);
+      })
+      .finally(() => {
+        dispatch(finishWaiting());
       });
   };
 
