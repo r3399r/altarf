@@ -28,6 +28,8 @@
   --color-border-accent: var(--color-border-accent);
   --color-border-table-thead: var(--color-border-table-thead);
   --color-border-table-tbody: var(--color-border-table-tbody);
+
+  --color-icon-primary: var(--color-icon-primary);
 }
 
 [data-theme='primary'] {
@@ -60,4 +62,6 @@
   --color-border-accent: theme(color-grey-500);
   --color-border-table-thead: theme(color-grey-700);
   --color-border-table-tbody: theme(color-grey-800);
+
+  --color-icon-primary: theme(color-beige-300);
 }
