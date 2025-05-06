@@ -1,40 +1,37 @@
 import crypto from 'crypto';
 import { format } from 'date-fns';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
+import { ECPayTradeAccess } from 'src/access/ECPayTradeAccess';
+import { ECPayTradeItemAccess } from 'src/access/ECPayTradeItemAccess';
 import {
   GetECPayPaymentParams,
   GetECPayPaymentResponse,
 } from 'src/model/api/ECPay';
+import { ECPayTradeStatus } from 'src/model/constant/ECPay';
+import { ECPayOrderResult } from 'src/model/ECPay';
+import { ECPayTradeEntity } from 'src/model/entity/ECPayTradeEntity';
+import { UserService } from './UserService';
 
 @injectable()
 export class ECPayService {
-  public async createPayment(
-    params: GetECPayPaymentParams
-  ): Promise<GetECPayPaymentResponse> {
-    const tradeNo = 'cs' + Date.now().toString();
-    const tradeDate = format(Date.now(), 'yyyy/MM/dd HH:mm:ss');
+  @inject(UserService)
+  private readonly userService!: UserService;
 
-    const ecpayParams = {
-      MerchantID: process.env.ECPAY_MERCHANT_ID ?? '',
-      MerchantTradeNo: tradeNo,
-      MerchantTradeDate: tradeDate,
-      PaymentType: 'aio',
-      TotalAmount: params.totalAmount,
-      TradeDesc: params.tradeDesc,
-      ItemName: params.itemName,
-      ReturnURL: params.returnUrl,
-      ChoosePayment: 'ALL',
-      EncryptType: '1',
-    };
+  @inject(ECPayTradeItemAccess)
+  private readonly ecpayTradeItemAccess!: ECPayTradeItemAccess;
 
-    const sortedKeys = [
-      'HashKey',
-      ...Object.keys(ecpayParams).sort(),
-      'HashIV',
-    ];
+  @inject(ECPayTradeAccess)
+  private readonly ecpayTradeAccess!: ECPayTradeAccess;
+
+  private async getUserInfo() {
+    return await this.userService.getUserEntity();
+  }
+
+  private genMacValue(params: { [key: string]: string }) {
+    const sortedKeys = ['HashKey', ...Object.keys(params).sort(), 'HashIV'];
     const allParams = {
       HashKey: process.env.ECPAY_HASH_KEY ?? '',
-      ...ecpayParams,
+      ...params,
       HashIV: process.env.ECPAY_HASH_IV ?? '',
     };
 
@@ -44,21 +41,77 @@ export class ECPayService {
     const encodedDataString = encodeURIComponent(dataString)
       .replace(/%20/g, '+')
       .toLowerCase();
-    const hash = crypto
+
+    return crypto
       .createHash('sha256')
       .update(encodedDataString)
       .digest('hex')
       .toUpperCase();
+  }
+
+  public async createPayment(
+    params: GetECPayPaymentParams
+  ): Promise<GetECPayPaymentResponse> {
+    const user = await this.getUserInfo();
+    const ecpayTradeItem = await this.ecpayTradeItemAccess.findOneByIdOrFail(
+      params.ecpayTradeItemId
+    );
+
+    const tradeNo = 'CS' + Date.now().toString();
+    const tradeDate = new Date().toISOString();
+
+    const ecpayTradeEntity = new ECPayTradeEntity();
+    ecpayTradeEntity.userId = user.id;
+    ecpayTradeEntity.tradeNo = tradeNo;
+    ecpayTradeEntity.tradeDate = tradeDate;
+    ecpayTradeEntity.ecpayTradeItemId = ecpayTradeItem.id;
+    ecpayTradeEntity.status = ECPayTradeStatus.CREATED;
+    const newEcpayTradeEntity =
+      await this.ecpayTradeAccess.save(ecpayTradeEntity);
+
+    const ecpayParams = {
+      MerchantID: process.env.ECPAY_MERCHANT_ID ?? '',
+      MerchantTradeNo: tradeNo,
+      MerchantTradeDate: format(new Date(tradeDate), 'yyyy/MM/dd HH:mm:ss'),
+      PaymentType: 'aio',
+      TotalAmount: ecpayTradeItem.amount,
+      TradeDesc: ecpayTradeItem.description,
+      ItemName: ecpayTradeItem.name,
+      ReturnURL: params.returnUrl,
+      ChoosePayment: 'ALL',
+      EncryptType: '1',
+      CustomField1: newEcpayTradeEntity.id,
+    };
 
     return {
       ...ecpayParams,
-      CheckMacValue: hash,
+      CheckMacValue: this.genMacValue(ecpayParams),
     };
   }
 
   public async handleNotify(params: string) {
     const urlParams = new URLSearchParams(params);
-    const result = Object.fromEntries(urlParams.entries());
+    const result = Object.fromEntries(urlParams.entries()) as ECPayOrderResult;
     console.log(result);
+    const { CheckMacValue, ...restParams } = result;
+
+    if (CheckMacValue !== this.genMacValue(restParams)) {
+      console.error('Invalid CheckMacValue');
+
+      return;
+    }
+
+    const ecpayTradeEntity = await this.ecpayTradeAccess.findOneByIdOrFail(
+      result.CustomField1
+    );
+    ecpayTradeEntity.tradeAmount = result.TradeAmt;
+    ecpayTradeEntity.paymentDate = result.PaymentDate;
+    ecpayTradeEntity.paymentType = result.PaymentType;
+    ecpayTradeEntity.paymentTypeChargeFee = result.PaymentTypeChargeFee;
+    ecpayTradeEntity.returnCode = result.RtnCode;
+    ecpayTradeEntity.returnMessage = result.RtnMsg;
+    ecpayTradeEntity.status =
+      result.RtnCode === '1' ? ECPayTradeStatus.PAID : ECPayTradeStatus.FAILED;
+    await this.ecpayTradeAccess.save(ecpayTradeEntity);
   }
 }

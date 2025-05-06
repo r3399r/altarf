@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { FindManyOptions } from 'typeorm';
+import { FindOneOptions } from 'typeorm';
 import {
   ECPayTrade,
   ECPayTradeEntity,
@@ -14,11 +14,23 @@ export class ECPayTradeAccess {
   @inject(Database)
   private readonly database!: Database;
 
-  public async find(options?: FindManyOptions<ECPayTrade>) {
+  public async findOneOrFail(options?: FindOneOptions<ECPayTrade>) {
     const qr = await this.database.getQueryRunner();
 
-    return await qr.manager.find<ECPayTrade>(ECPayTradeEntity.name, {
+    return await qr.manager.findOneOrFail<ECPayTrade>(ECPayTradeEntity.name, {
       ...options,
     });
+  }
+
+  public async findOneByIdOrFail(id: string) {
+    return await this.findOneOrFail({ where: { id } });
+  }
+
+  public async save(data: ECPayTrade) {
+    const qr = await this.database.getQueryRunner();
+    const entity = new ECPayTradeEntity();
+    Object.assign(entity, data);
+
+    return await qr.manager.save(entity);
   }
 }

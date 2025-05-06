@@ -1,7 +1,5 @@
 export type GetECPayPaymentParams = {
-  totalAmount: string;
-  tradeDesc: string;
-  itemName: string;
+  ecpayTradeItemId: string;
   returnUrl: string;
 };
 

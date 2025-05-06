@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS ECPAY_TRADE (
+	id UUID NOT NULL DEFAULT gen_random_uuid(),
+	user_id UUID NOT NULL,
+	trade_no VARCHAR(255) NOT NULL,
+	trade_date TIMESTAMP NOT NULL,
+	ecpay_trade_item_id UUID NOT NULL,
+	status VARCHAR(255) NOT NULL,
+	trade_amount INT8 NULL,
+	payment_date VARCHAR(255) NULL,
+	payment_type VARCHAR(255) NULL,
+	payment_type_charge_fee INT8 NULL,
+	return_code INT8 NULL,
+	return_message VARCHAR(255) NULL,
+	created_at TIMESTAMP NULL,
+	updated_at TIMESTAMP NULL,
+	PRIMARY KEY (id),
+	UNIQUE (trade_no),
+	FOREIGN KEY (ecpay_trade_item_id) REFERENCES ECPAY_TRADE_ITEM(id),
+	FOREIGN KEY (user_id) REFERENCES "user"(id)
+);

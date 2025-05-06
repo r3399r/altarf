@@ -1,40 +1,77 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, Generated } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  Generated,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
+import { ECPayTradeItemEntity } from './ECPayTradeItemEntity';
+import { User, UserEntity } from './UserEntity';
 
 export type ECPayTrade = {
   id: string;
-  merchantTradeNo: string;
-  merchantTradeDate: string;
-  totalAmount: string;
-  tradeDesc: string;
-  itemName: string;
+  tradeNo: string;
+  tradeDate: string;
+  ecpayTradeItemId: string;
   status: string;
-  createdAt: string;
+  tradeAmount: string | null;
+  paymentDate: string | null;
+  paymentType: string | null;
+  paymentTypeChargeFee: string | null;
+  returnCode: string | null;
+  returnMessage: string | null;
+  createdAt: string | null;
   updatedAt: string | null;
 };
 
-@Entity('ecpay_trade')
+@Entity({ name: 'ecpay_trade' })
 export class ECPayTradeEntity implements ECPayTrade {
   @Column({ primary: true })
   @Generated('uuid')
   id!: string;
 
-  @Column({ name: 'merchant_trade_no', type: 'text' })
-  merchantTradeNo!: string;
+  @Column({ type: 'uuid', name: 'user_id' })
+  userId!: string;
 
-  @Column({ name: 'merchant_trade_date', type: 'timestamp' })
-  merchantTradeDate!: string;
+  @ManyToOne(() => UserEntity)
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
 
-  @Column({ name: 'total_amount', type: 'text' })
-  totalAmount!: string;
+  @Column({ type: 'text', name: 'trade_no' })
+  tradeNo!: string;
 
-  @Column({ name: 'trade_desc', type: 'text' })
-  tradeDesc!: string;
+  @Column({ type: 'timestamp', name: 'trade_date' })
+  tradeDate!: string;
 
-  @Column({ name: 'item_name', type: 'text' })
-  itemName!: string;
+  @Column({ type: 'uuid', name: 'ecpay_trade_item_id' })
+  ecpayTradeItemId!: string;
+
+  @ManyToOne(() => ECPayTradeItemEntity)
+  @JoinColumn({ name: 'ecpay_trade_item_id' })
+  ecpayTradeItem!: ECPayTradeItemEntity;
 
   @Column({ type: 'text' })
   status!: string;
+
+  @Column({ type: 'int8', name: 'trade_amount', nullable: true })
+  tradeAmount: string | null = null;
+
+  @Column({ type: 'text', name: 'payment_date', nullable: true })
+  paymentDate: string | null = null;
+
+  @Column({ type: 'text', name: 'payment_type', nullable: true })
+  paymentType: string | null = null;
+
+  @Column({ type: 'int8', name: 'payment_type_charge_fee', nullable: true })
+  paymentTypeChargeFee: string | null = null;
+
+  @Column({ type: 'int8', name: 'return_code', nullable: true })
+  returnCode: string | null = null;
+
+  @Column({ type: 'text', name: 'return_message', nullable: true })
+  returnMessage: string | null = null;
 
   @Column({ type: 'timestamp', name: 'created_at', default: null })
   createdAt!: string;

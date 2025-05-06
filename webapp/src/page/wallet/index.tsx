@@ -25,10 +25,9 @@ const Wallet = () => {
     dispatch(startWaiting());
     ecpayEndpoint
       .getEcpayPayment({
-        totalAmount: '300',
-        tradeDesc: '塔羅費用',
-        itemName: '儲值',
+        ecpayTradeItemId: '50e6e8fd-b1c8-4274-82e9-dbd3567ecf00',
         returnUrl: `${location.origin}/api/ecpay/notify`,
+        // returnUrl: 'https://lookout-test.celestialstudio.net/api/ecpay/notify',
       })
       .then((r) => {
         // Create a temporary form element
