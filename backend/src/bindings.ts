@@ -11,6 +11,7 @@ import { TarotQuestionAccess } from './access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from './access/TarotQuestionCardAccess';
 import { TarotSpreadAccess } from './access/TarotSpreadAccess';
 import { UserAccess } from './access/UserAccess';
+import { UserBalanceAccess } from './access/UserBalanceAccess';
 import { AuthService } from './logic/AuthService';
 import { ECPayService } from './logic/ECPayService';
 import { GoogleService } from './logic/GoogleService';
@@ -25,6 +26,7 @@ import { TarotInterpretationAiEntity } from './model/entity/TarotInterpretationA
 import { TarotQuestionCardEntity } from './model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from './model/entity/TarotQuestionEntity';
 import { TarotSpreadEntity } from './model/entity/TarotSpreadEntity';
+import { UserBalanceEntity } from './model/entity/UserBalanceEntity';
 import { UserEntity } from './model/entity/UserEntity';
 import { Database, dbEntitiesBindingId } from './utils/Database';
 
@@ -46,6 +48,7 @@ container
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotQuestionEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotSpreadEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(UserEntity);
+container.bind<Function>(dbEntitiesBindingId).toFunction(UserBalanceEntity);
 
 // db access
 container.bind(DbAccess).toSelf();
@@ -58,6 +61,7 @@ container.bind(TarotQuestionAccess).toSelf();
 container.bind(TarotQuestionCardAccess).toSelf();
 container.bind(TarotSpreadAccess).toSelf();
 container.bind(UserAccess).toSelf();
+container.bind(UserBalanceAccess).toSelf();
 
 // service
 container.bind(AuthService).toSelf();
