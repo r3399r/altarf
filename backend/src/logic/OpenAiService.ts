@@ -14,7 +14,7 @@ export class OpenAiService {
       url: REQUEST_URL,
       data: {
         messages,
-        model: 'gpt-4o',
+        model: 'gpt-4o-mini',
       },
       headers: { Authorization: `Bearer ${process.env.OPENAI_KEY}` },
     });

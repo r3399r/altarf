@@ -3,13 +3,17 @@ import { format } from 'date-fns';
 import { inject, injectable } from 'inversify';
 import { ECPayTradeAccess } from 'src/access/ECPayTradeAccess';
 import { ECPayTradeItemAccess } from 'src/access/ECPayTradeItemAccess';
+import { UserAccess } from 'src/access/UserAccess';
+import { UserBalanceAccess } from 'src/access/UserBalanceAccess';
 import {
   GetECPayPaymentParams,
   GetECPayPaymentResponse,
 } from 'src/model/api/ECPay';
+import { BalanceTransactionType } from 'src/model/constant/Balance';
 import { ECPayTradeStatus } from 'src/model/constant/ECPay';
 import { ECPayOrderResult } from 'src/model/ECPay';
 import { ECPayTradeEntity } from 'src/model/entity/ECPayTradeEntity';
+import { UserBalanceEntity } from 'src/model/entity/UserBalanceEntity';
 import { UserService } from './UserService';
 
 @injectable()
@@ -17,11 +21,17 @@ export class ECPayService {
   @inject(UserService)
   private readonly userService!: UserService;
 
+  @inject(UserBalanceAccess)
+  private readonly userBalanceAccess!: UserBalanceAccess;
+
   @inject(ECPayTradeItemAccess)
   private readonly ecpayTradeItemAccess!: ECPayTradeItemAccess;
 
   @inject(ECPayTradeAccess)
   private readonly ecpayTradeAccess!: ECPayTradeAccess;
+
+  @inject(UserAccess)
+  private readonly userAccess!: UserAccess;
 
   private async getUserInfo() {
     return await this.userService.getUserEntity();
@@ -74,7 +84,7 @@ export class ECPayService {
       MerchantTradeNo: tradeNo,
       MerchantTradeDate: format(new Date(tradeDate), 'yyyy/MM/dd HH:mm:ss'),
       PaymentType: 'aio',
-      TotalAmount: ecpayTradeItem.amount,
+      TotalAmount: ecpayTradeItem.price,
       TradeDesc: ecpayTradeItem.description,
       ItemName: ecpayTradeItem.name,
       ReturnURL: params.returnUrl,
@@ -104,6 +114,9 @@ export class ECPayService {
     const ecpayTradeEntity = await this.ecpayTradeAccess.findOneByIdOrFail(
       result.CustomField1
     );
+    const ecpayTradeItem = ecpayTradeEntity.ecpayTradeItem;
+    const user = ecpayTradeEntity.user;
+
     ecpayTradeEntity.tradeAmount = result.TradeAmt;
     ecpayTradeEntity.paymentDate = result.PaymentDate;
     ecpayTradeEntity.paymentType = result.PaymentType;
@@ -113,5 +126,21 @@ export class ECPayService {
     ecpayTradeEntity.status =
       result.RtnCode === '1' ? ECPayTradeStatus.PAID : ECPayTradeStatus.FAILED;
     await this.ecpayTradeAccess.save(ecpayTradeEntity);
+
+    if (result.RtnCode === '1') {
+      user.balance += Number(ecpayTradeItem.amount);
+      await this.userAccess.save(user);
+
+      const userBalanceEntity = new UserBalanceEntity();
+      userBalanceEntity.userId = user.id;
+      userBalanceEntity.transactionType = BalanceTransactionType.DEPOSIT;
+      userBalanceEntity.amount = Number(ecpayTradeItem.amount);
+      userBalanceEntity.balance = user.balance;
+      userBalanceEntity.description = 'ECPay';
+      userBalanceEntity.transactedAt = new Date(
+        result.PaymentDate
+      ).toISOString();
+      await this.userBalanceAccess.save(userBalanceEntity);
+    }
   }
 }

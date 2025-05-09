@@ -18,6 +18,10 @@ export class ECPayTradeAccess {
     const qr = await this.database.getQueryRunner();
 
     return await qr.manager.findOneOrFail<ECPayTrade>(ECPayTradeEntity.name, {
+      relations: {
+        user: true,
+        ecpayTradeItem: true,
+      },
       ...options,
     });
   }

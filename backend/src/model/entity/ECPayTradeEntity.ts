@@ -12,9 +12,12 @@ import { User, UserEntity } from './UserEntity';
 
 export type ECPayTrade = {
   id: string;
+  userId: string;
+  user: User;
   tradeNo: string;
   tradeDate: string;
   ecpayTradeItemId: string;
+  ecpayTradeItem: ECPayTradeItemEntity;
   status: string;
   tradeAmount: string | null;
   paymentDate: string | null;

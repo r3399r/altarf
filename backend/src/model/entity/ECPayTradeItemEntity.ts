@@ -5,6 +5,7 @@ export type ECPayTradeItem = {
   name: string;
   description: string;
   amount: string;
+  price: string;
   createdAt: string | null;
   updatedAt: string | null;
   deletedAt: string | null;
@@ -24,6 +25,9 @@ export class ECPayTradeItemEntity implements ECPayTradeItem {
 
   @Column({ type: 'int8' })
   amount!: string;
+
+  @Column({ type: 'int8' })
+  price!: string;
 
   @Column({ type: 'timestamp', name: 'created_at', default: null })
   createdAt!: string;
