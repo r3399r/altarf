@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS tarot_card (
-	id STRING NOT NULL,
+    id STRING NOT NULL,
     name STRING NOT NULL,
-	PRIMARY KEY (id)
+    PRIMARY KEY (id)
 );
