@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { FindManyOptions } from 'typeorm';
 import {
   UserBalance,
   UserBalanceEntity,
@@ -19,5 +20,16 @@ export class UserBalanceAccess {
     Object.assign(entity, data);
 
     return await qr.manager.save(entity);
+  }
+
+  public async findAndCount(options?: FindManyOptions<UserBalance>) {
+    const qr = await this.database.getQueryRunner();
+
+    return await qr.manager.findAndCount<UserBalance>(UserBalanceEntity.name, {
+      relations: {
+        user: true,
+      },
+      ...options,
+    });
   }
 }

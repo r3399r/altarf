@@ -1,8 +1,18 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, Generated } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  Generated,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
+import { User, UserEntity } from './UserEntity';
 
 export type UserBalance = {
   id: string;
   userId: string;
+  user: User;
   transactionType: string;
   amount: number;
   balance: number;
@@ -20,6 +30,10 @@ export class UserBalanceEntity implements UserBalance {
 
   @Column({ type: 'uuid', name: 'user_id' })
   userId!: string;
+
+  @ManyToOne(() => UserEntity)
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
 
   @Column({ type: 'text', name: 'transaction_type' })
   transactionType!: string;

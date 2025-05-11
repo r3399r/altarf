@@ -1,7 +1,14 @@
 import { inject, injectable } from 'inversify';
 import { UserAccess } from 'src/access/UserAccess';
-import { GetUserResponse } from 'src/model/api/User';
+import { UserBalanceAccess } from 'src/access/UserBalanceAccess';
+import {
+  GetUserResponse,
+  GetUserTransactionResponse,
+} from 'src/model/api/User';
+import { LIMIT, OFFSET } from 'src/model/constant/Pagination';
 import { User, UserEntity } from 'src/model/entity/UserEntity';
+import { PaginationParams } from 'src/model/Pagination';
+import { genPagination } from 'src/utils/paginator';
 import { GoogleService } from './GoogleService';
 
 /**
@@ -14,6 +21,9 @@ export class UserService {
 
   @inject(GoogleService)
   private readonly googleService!: GoogleService;
+
+  @inject(UserBalanceAccess)
+  private readonly userBalanceAccess!: UserBalanceAccess;
 
   public async getUserDetail(): Promise<GetUserResponse> {
     const info = await this.googleService.getUserInfo();
@@ -38,5 +48,32 @@ export class UserService {
     return await this.userAccess.findOneOrFail({
       where: { email: info.email },
     });
+  }
+
+  public async getUserTransactionList(
+    params: PaginationParams | null
+  ): Promise<GetUserTransactionResponse> {
+    const user = await this.getUserEntity();
+
+    const limit = params?.limit ? Number(params.limit) : LIMIT;
+    const offset = params?.offset ? Number(params.offset) : OFFSET;
+    const [userBalance, total] = await this.userBalanceAccess.findAndCount({
+      where: { userId: user.id },
+      order: { transactedAt: 'DESC' },
+      take: limit,
+      skip: offset,
+    });
+
+    return {
+      data: userBalance.map((v) => ({
+        id: v.id,
+        transactionType: v.transactionType,
+        amount: v.amount,
+        balance: v.balance,
+        description: v.description,
+        transactedAt: v.transactedAt,
+      })),
+      paginate: genPagination(total, limit, offset),
+    };
   }
 }
