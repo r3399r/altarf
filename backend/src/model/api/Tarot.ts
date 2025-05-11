@@ -2,6 +2,7 @@ import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
 import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
+import { Paginate, PaginationParams } from 'src/model/Pagination';
 import { CardDisplay } from 'src/model/Tarot';
 
 export type TarotEvent = {
@@ -25,4 +26,10 @@ export type GetTarotBasicInfoResponse = {
   card: TarotCard[];
 };
 
-export type GetTarotQuestionResponse = TarotQuestion;
+export type GetTarotQuestionIdResponse = TarotQuestion;
+
+export type GetTarotQuestionParams = PaginationParams;
+
+export type GetTarotQuestionResponse = Paginate<
+  Pick<TarotQuestion, 'id' | 'question' | 'spread' | 'createdAt'>
+>;

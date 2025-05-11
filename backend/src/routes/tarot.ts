@@ -1,6 +1,9 @@
 import { bindings } from 'src/bindings';
 import { TarotService } from 'src/logic/TarotService';
-import { PostTarotQuestionRequest } from 'src/model/api/Tarot';
+import {
+  GetTarotQuestionParams,
+  PostTarotQuestionRequest,
+} from 'src/model/api/Tarot';
 import { BadRequestError } from 'src/model/error';
 import { LambdaEvent } from 'src/model/Lambda';
 
@@ -53,6 +56,10 @@ const tarotQuestion = async () => {
 
       return await service.genNewQuestion(
         JSON.parse(event.body) as PostTarotQuestionRequest
+      );
+    case 'GET':
+      return await service.getTarotQuestionList(
+        event.queryStringParameters as GetTarotQuestionParams | null
       );
   }
 

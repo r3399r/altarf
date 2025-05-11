@@ -9,11 +9,14 @@ import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
 import {
   GetTaortDailyResponse,
   GetTarotBasicInfoResponse,
+  GetTarotQuestionIdResponse,
+  GetTarotQuestionParams,
   GetTarotQuestionResponse,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
   TarotEvent,
 } from 'src/model/api/Tarot';
+import { LIMIT, OFFSET } from 'src/model/constant/Pagination';
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
 import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
@@ -23,6 +26,7 @@ import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
 import { CardDisplay } from 'src/model/Tarot';
+import { genPagination } from 'src/utils/paginator';
 import { random } from 'src/utils/random';
 import { OpenAiService } from './OpenAiService';
 import { UserService } from './UserService';
@@ -235,7 +239,7 @@ export class TarotService {
 
   public async getTarotQuestionById(
     id: string
-  ): Promise<GetTarotQuestionResponse> {
+  ): Promise<GetTarotQuestionIdResponse> {
     return await this.tarotQuestionAccess.findOneByIdOrFail(id);
   }
 
@@ -272,5 +276,30 @@ export class TarotService {
     const tarotCard = await this.getAllTarotCards();
 
     return { spread: tarotSpread, card: tarotCard };
+  }
+
+  public async getTarotQuestionList(
+    params: GetTarotQuestionParams | null
+  ): Promise<GetTarotQuestionResponse> {
+    const user = await this.getUserInfo();
+
+    const limit = params?.limit ? Number(params.limit) : LIMIT;
+    const offset = params?.offset ? Number(params.offset) : OFFSET;
+    const [tarotQuestion, total] = await this.tarotQuestionAccess.findAndCount({
+      where: { userId: user.id },
+      order: { createdAt: 'DESC' },
+      take: limit,
+      skip: offset,
+    });
+
+    return {
+      data: tarotQuestion.map((v) => ({
+        id: v.id,
+        question: v.question,
+        spread: v.spread,
+        createdAt: v.createdAt,
+      })),
+      paginate: genPagination(total, limit, offset),
+    };
   }
 }

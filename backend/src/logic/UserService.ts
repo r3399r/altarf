@@ -3,11 +3,11 @@ import { UserAccess } from 'src/access/UserAccess';
 import { UserBalanceAccess } from 'src/access/UserBalanceAccess';
 import {
   GetUserResponse,
+  GetUserTransactionParams,
   GetUserTransactionResponse,
 } from 'src/model/api/User';
 import { LIMIT, OFFSET } from 'src/model/constant/Pagination';
 import { User, UserEntity } from 'src/model/entity/UserEntity';
-import { PaginationParams } from 'src/model/Pagination';
 import { genPagination } from 'src/utils/paginator';
 import { GoogleService } from './GoogleService';
 
@@ -51,7 +51,7 @@ export class UserService {
   }
 
   public async getUserTransactionList(
-    params: PaginationParams | null
+    params: GetUserTransactionParams | null
   ): Promise<GetUserTransactionResponse> {
     const user = await this.getUserEntity();
 
