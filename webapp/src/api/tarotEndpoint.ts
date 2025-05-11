@@ -2,7 +2,7 @@ import http from 'src/api/http';
 import {
   GetTaortDailyResponse,
   GetTarotBasicInfoResponse,
-  GetTarotQuestionResponse,
+  GetTarotQuestionIdResponse,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/backend/api/Tarot';
@@ -17,7 +17,7 @@ const postTarotQuestion = async (data: PostTarotQuestionRequest) =>
 const getTarotBasicInfo = async () => await http.get<GetTarotBasicInfoResponse>('tarot/basic-info');
 
 const getTarotQuestionId = async (id: string) =>
-  await http.get<GetTarotQuestionResponse>(`tarot/question/${id}`);
+  await http.get<GetTarotQuestionIdResponse>(`tarot/question/${id}`);
 
 export default {
   getTarotDaily,
