@@ -16,6 +16,7 @@ import { AuthService } from './logic/AuthService';
 import { ECPayService } from './logic/ECPayService';
 import { GoogleService } from './logic/GoogleService';
 import { OpenAiService } from './logic/OpenAiService';
+import { TarotAgentService } from './logic/TarotAgentService';
 import { TarotService } from './logic/TarotService';
 import { UserService } from './logic/UserService';
 import { ECPayTradeEntity } from './model/entity/ECPayTradeEntity';
@@ -68,6 +69,7 @@ container.bind(AuthService).toSelf();
 container.bind(GoogleService).toSelf();
 container.bind(OpenAiService).toSelf();
 container.bind(TarotService).toSelf();
+container.bind(TarotAgentService).toSelf();
 container.bind(UserService).toSelf();
 container.bind(ECPayService).toSelf();
 

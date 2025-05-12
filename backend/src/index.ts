@@ -1,6 +1,7 @@
 import { SQS } from 'aws-sdk';
 import { DbAccess } from './access/DbAccess';
 import { bindings } from './bindings';
+import { TarotAgentService } from './logic/TarotAgentService';
 import { TarotService } from './logic/TarotService';
 import { TarotEvent } from './model/api/Tarot';
 import { GatewayTimeoutError } from './model/error/5XX/GatewayTimeoutError';
@@ -106,9 +107,9 @@ export const aiAgent = async (event: TarotEvent, _context: LambdaContext) => {
   await db.startTransaction();
   initLambda();
   try {
-    const service = bindings.get(TarotService);
+    const service = bindings.get(TarotAgentService);
 
-    await service.questionReplyFromAi(event);
+    await service.genTarotInterpretation(event);
     await db.commitTransaction();
 
     return;

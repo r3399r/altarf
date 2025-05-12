@@ -21,6 +21,8 @@ export default async (lambdaEvent: LambdaEvent) => {
       return await tarotQuestion();
     case '/api/tarot/question/{id}':
       return await tarotQuestionId();
+    case '/api/tarot/question/{id}/ai':
+      return await tarotQuestionIdAi();
     case '/api/tarot/daily':
       return await tarotDaily();
   }
@@ -32,17 +34,6 @@ const tarotBasicInfo = async () => {
   switch (event.httpMethod) {
     case 'GET':
       return await service.getBasicInfo();
-  }
-
-  throw new Error('unexpected httpMethod');
-};
-
-const tarotQuestionId = async () => {
-  if (event.pathParameters === null)
-    throw new BadRequestError('pathParameters should not be empty');
-  switch (event.httpMethod) {
-    case 'GET':
-      return await service.getTarotQuestionById(event.pathParameters.id);
   }
 
   throw new Error('unexpected httpMethod');
@@ -61,6 +52,28 @@ const tarotQuestion = async () => {
       return await service.getTarotQuestionList(
         event.queryStringParameters as GetTarotQuestionParams | null
       );
+  }
+
+  throw new Error('unexpected httpMethod');
+};
+
+const tarotQuestionId = async () => {
+  if (event.pathParameters === null)
+    throw new BadRequestError('pathParameters should not be empty');
+  switch (event.httpMethod) {
+    case 'GET':
+      return await service.getTarotQuestionById(event.pathParameters.id);
+  }
+
+  throw new Error('unexpected httpMethod');
+};
+
+const tarotQuestionIdAi = async () => {
+  if (event.pathParameters === null)
+    throw new BadRequestError('pathParameters should not be empty');
+  switch (event.httpMethod) {
+    case 'POST':
+      return await service.invokeTarotAiAgent(event.pathParameters.id);
   }
 
   throw new Error('unexpected httpMethod');

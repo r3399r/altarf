@@ -1,8 +1,8 @@
+import { Lambda } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
 import { Not } from 'typeorm';
 import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
-import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
 import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
@@ -14,12 +14,10 @@ import {
   GetTarotQuestionResponse,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
-  TarotEvent,
 } from 'src/model/api/Tarot';
 import { LIMIT, OFFSET } from 'src/model/constant/Pagination';
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
-import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
 import { TarotQuestionCardEntity } from 'src/model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from 'src/model/entity/TarotQuestionEntity';
 import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
@@ -39,14 +37,11 @@ export class TarotService {
   private tarotCards: TarotCard[] | null = null;
   private tarotSpreads: TarotSpread[] | null = null;
 
-  // @inject(Lambda)
-  // private readonly lambda!: Lambda;
+  @inject(Lambda)
+  private readonly lambda!: Lambda;
 
   @inject(OpenAiService)
   private readonly openAiService!: OpenAiService;
-
-  @inject(TarotInterpretationAiAccess)
-  private readonly tarotInterpretationAiAccess!: TarotInterpretationAiAccess;
 
   @inject(TarotQuestionAccess)
   private readonly tarotQuestionAccess!: TarotQuestionAccess;
@@ -80,47 +75,6 @@ export class TarotService {
       });
 
     return this.tarotSpreads;
-  }
-
-  public async questionReplyFromAi(data: TarotEvent) {
-    const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(
-      data.id
-    );
-
-    const now = new Date().getTime();
-
-    let content =
-      '你現在是塔羅占卜師，我會給你問題，以及我抽到的牌卡，你會給我清晰的觀點，如果抽到負面的牌卡，你會為我加油打氣，並且提供我建議，盡可能寫多一點，以唐綺陽的語氣來回答我的問題，不要自稱唐綺陽。';
-
-    switch (tarotQuestion.spreadId) {
-      case 'SINGLE':
-        break;
-      case 'LINEAR':
-        content += '三張牌分別代表「過去」、「現在」、「未來」，';
-        break;
-    }
-    content += `我想問「${tarotQuestion.question}」`;
-
-    const translateCards = tarotQuestion.card.map((v) =>
-      v.reversal ? '逆位的' : '正位的' + v.card.name
-    );
-    content += `我抽到${translateCards.map((v) => `「${v}」`).join('、')}`;
-    console.log(content);
-
-    const chatCompletion = await this.openAiService.chatCompletion([
-      { role: 'user', content },
-    ]);
-    const elapsedTime = new Date().getTime() - now;
-
-    const tarotInterpretationAi = new TarotInterpretationAiEntity();
-    tarotInterpretationAi.questionId = tarotQuestion.id;
-    tarotInterpretationAi.interpretation =
-      chatCompletion.choices[0].message.content;
-    tarotInterpretationAi.promptTokens = chatCompletion.usage.prompt_tokens;
-    tarotInterpretationAi.completionTokens =
-      chatCompletion.usage.completion_tokens;
-    tarotInterpretationAi.elapsedTime = elapsedTime;
-    await this.tarotInterpretationAiAccess.save(tarotInterpretationAi);
   }
 
   public async getTarotDaily(tarotId?: string): Promise<GetTaortDailyResponse> {
@@ -249,26 +203,13 @@ export class TarotService {
     await this.validateSpread(data.spreadId, data.card);
 
     const user = await this.getUserInfo();
-    this.checkUserQuota(user);
 
-    const tarotQuestion = await this.createTarotQuestion({
+    return await this.createTarotQuestion({
       question: data.question,
       spreadId: data.spreadId,
       userId: user.id,
       card: data.card,
     });
-
-    // await this.lambda
-    //   .invoke({
-    //     FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-ai-agent`,
-    //     Payload: JSON.stringify({
-    //       id: tarotQuestion.id,
-    //     }),
-    //     InvocationType: 'Event',
-    //   })
-    //   .promise();
-
-    return tarotQuestion;
   }
 
   public async getBasicInfo(): Promise<GetTarotBasicInfoResponse> {
@@ -301,5 +242,30 @@ export class TarotService {
       })),
       paginate: genPagination(total, limit, offset),
     };
+  }
+
+  public async invokeTarotAiAgent(id: string) {
+    const user = await this.getUserInfo();
+    this.checkUserQuota(user);
+
+    const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(id);
+    if (tarotQuestion.userId !== user.id)
+      throw new BadRequestError('userId not match');
+
+    if (
+      tarotQuestion.spreadId !== 'SINGLE' &&
+      tarotQuestion.spreadId !== 'LINEAR'
+    )
+      throw new BadRequestError('spreadId is not SINGLE or LINEAR');
+
+    await this.lambda
+      .invoke({
+        FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-ai-agent`,
+        Payload: JSON.stringify({
+          id: tarotQuestion.id,
+        }),
+        InvocationType: 'Event',
+      })
+      .promise();
   }
 }
