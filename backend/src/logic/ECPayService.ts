@@ -3,11 +3,11 @@ import { format } from 'date-fns';
 import { inject, injectable } from 'inversify';
 import { ECPayTradeAccess } from 'src/access/ECPayTradeAccess';
 import { ECPayTradeItemAccess } from 'src/access/ECPayTradeItemAccess';
+import { ECPayTradeStatus } from 'src/constant/ECPay';
 import {
   GetECPayPaymentParams,
   GetECPayPaymentResponse,
 } from 'src/model/api/ECPay';
-import { ECPayTradeStatus } from 'src/model/constant/ECPay';
 import { ECPayOrderResult } from 'src/model/ECPay';
 import { ECPayTradeEntity } from 'src/model/entity/ECPayTradeEntity';
 import { UserService } from './UserService';

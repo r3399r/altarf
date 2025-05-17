@@ -1,13 +1,13 @@
 import { inject, injectable } from 'inversify';
 import { UserAccess } from 'src/access/UserAccess';
 import { UserBalanceAccess } from 'src/access/UserBalanceAccess';
+import { BalanceTransactionType } from 'src/constant/Balance';
+import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import {
   GetUserResponse,
   GetUserTransactionParams,
   GetUserTransactionResponse,
 } from 'src/model/api/User';
-import { BalanceTransactionType } from 'src/model/constant/Balance';
-import { LIMIT, OFFSET } from 'src/model/constant/Pagination';
 import { UserBalanceEntity } from 'src/model/entity/UserBalanceEntity';
 import { User, UserEntity } from 'src/model/entity/UserEntity';
 import { genPagination } from 'src/utils/paginator';

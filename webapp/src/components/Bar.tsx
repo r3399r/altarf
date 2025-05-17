@@ -11,6 +11,7 @@ import { Page } from 'src/constant/Page';
 import { RootState } from 'src/redux/store';
 import { finishWaiting, setBalance, setEmail, startWaiting } from 'src/redux/uiSlice';
 import { login } from 'src/service/authService';
+import { bnFormat } from 'src/utils/bignumber';
 import Button from './Button';
 import Menu from './Menu';
 import Body from './typography/Body';
@@ -65,7 +66,7 @@ const Bar = () => {
       <div className="absolute top-0 right-0 sm:top-2">
         {isLogin ? (
           <div className="relative flex items-center gap-6">
-            <Body className="text-text-primary">{`餘額: ${balance ?? '-'} 點`}</Body>
+            <Body className="text-text-primary">{`餘額: ${bnFormat(balance) ?? '-'} 點`}</Body>
             <img
               src={IcAccount}
               className="h-6 cursor-pointer sm:h-auto"

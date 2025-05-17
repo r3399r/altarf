@@ -7,6 +7,7 @@ import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAcc
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
 import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
+import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import {
   GetTaortDailyResponse,
   GetTarotBasicInfoResponse,
@@ -17,7 +18,6 @@ import {
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/api/Tarot';
-import { LIMIT, OFFSET } from 'src/model/constant/Pagination';
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
 import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';

@@ -10,6 +10,8 @@
   --color-text-input-subtle-disabled: var(--color-text-input-subtle-disabled);
   --color-text-input-helper: var(--color-text-input-helper);
   --color-text-table-thead: var(--color-text-table-thead);
+  --color-text-pagination-normal: var(--color-text-pagination-normal);
+  --color-text-pagination-focus: var(--color-text-pagination-focus);
 
   --color-background-surface-body: var(--color-background-surface-body);
   --color-background-surface-overlay-normal: var(--color-background-surface-overlay-normal);
@@ -20,6 +22,8 @@
   --color-background-textfield-normal: var(--color-background-textfield-normal);
   --color-background-menu-normal: var(--color-background-menu-normal);
   --color-background-menu-hover: var(--color-background-menu-hover);
+  --color-background-pagination-focus: var(--color-background-pagination-focus);
+  --color-background-pagination-hover: var(--color-background-pagination-hover);
 
   --color-border-tab: var(--color-border-tab);
   --color-border-content: var(--color-border-content);
@@ -44,6 +48,8 @@
   --color-text-input-subtle-disabled: theme(color-grey-700);
   --color-text-input-helper: theme(color-grey-300);
   --color-text-table-thead: theme(color-grey-500);
+  --color-text-pagination-normal: theme(color-grey-400);
+  --color-text-pagination-focus: theme(color-grey-900);
 
   --color-background-surface-body: theme(color-grey-900);
   --color-background-surface-overlay-normal: theme(color-grey-800);
@@ -54,6 +60,8 @@
   --color-background-textfield-normal: theme(color-grey-800);
   --color-background-menu-normal: theme(color-grey-800);
   --color-background-menu-hover: theme(color-grey-700);
+  --color-background-pagination-focus: theme(color-beige-300);
+  --color-background-pagination-hover: theme(color-grey-800);
 
   --color-border-tab: theme(color-beige-400);
   --color-border-content: theme(color-beige-300);

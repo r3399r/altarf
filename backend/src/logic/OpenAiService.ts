@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { injectable } from 'inversify';
+import { REQUEST_URL } from 'src/constant/OpenAi';
 import { Completion, Messages } from 'src/model/ChatGPT';
-import { REQUEST_URL } from 'src/model/constant/OpenAi';
 
 /**
  * Service class for OpenAi Api
