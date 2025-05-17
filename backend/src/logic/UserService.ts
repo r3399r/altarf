@@ -6,7 +6,9 @@ import {
   GetUserTransactionParams,
   GetUserTransactionResponse,
 } from 'src/model/api/User';
+import { BalanceTransactionType } from 'src/model/constant/Balance';
 import { LIMIT, OFFSET } from 'src/model/constant/Pagination';
+import { UserBalanceEntity } from 'src/model/entity/UserBalanceEntity';
 import { User, UserEntity } from 'src/model/entity/UserEntity';
 import { genPagination } from 'src/utils/paginator';
 import { GoogleService } from './GoogleService';
@@ -75,5 +77,47 @@ export class UserService {
       })),
       paginate: genPagination(total, limit, offset),
     };
+  }
+
+  public async depositForUser(
+    user: User,
+    amount: number,
+    description: string,
+    transactedAt?: Date
+  ) {
+    user.balance += amount;
+    await this.userAccess.save(user);
+
+    const userBalanceEntity = new UserBalanceEntity();
+    userBalanceEntity.userId = user.id;
+    userBalanceEntity.transactionType = BalanceTransactionType.DEPOSIT;
+    userBalanceEntity.amount = amount;
+    userBalanceEntity.balance = user.balance;
+    userBalanceEntity.description = description;
+    userBalanceEntity.transactedAt = transactedAt
+      ? transactedAt.toISOString()
+      : new Date().toISOString();
+    await this.userBalanceAccess.save(userBalanceEntity);
+  }
+
+  public async purchaseForUser(
+    user: User,
+    amount: number,
+    description: string,
+    transactedAt?: Date
+  ) {
+    user.balance -= amount;
+    await this.userAccess.save(user);
+
+    const userBalanceEntity = new UserBalanceEntity();
+    userBalanceEntity.userId = user.id;
+    userBalanceEntity.transactionType = BalanceTransactionType.PURCHASE;
+    userBalanceEntity.amount = amount;
+    userBalanceEntity.balance = user.balance;
+    userBalanceEntity.description = description;
+    userBalanceEntity.transactedAt = transactedAt
+      ? transactedAt.toISOString()
+      : new Date().toISOString();
+    await this.userBalanceAccess.save(userBalanceEntity);
   }
 }

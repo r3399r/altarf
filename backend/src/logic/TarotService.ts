@@ -246,7 +246,6 @@ export class TarotService {
 
   public async invokeTarotAiAgent(id: string) {
     const user = await this.getUserInfo();
-    this.checkUserQuota(user);
 
     const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(id);
     if (tarotQuestion.userId !== user.id)
@@ -257,6 +256,9 @@ export class TarotService {
       tarotQuestion.spreadId !== 'LINEAR'
     )
       throw new BadRequestError('spreadId is not SINGLE or LINEAR');
+
+    this.checkUserQuota(user);
+    await this.userService.purchaseForUser(user, 10, 'ask AI tarot question');
 
     await this.lambda
       .invoke({
