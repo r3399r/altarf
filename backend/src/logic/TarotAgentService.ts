@@ -2,7 +2,6 @@ import { inject, injectable } from 'inversify';
 import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotEvent } from 'src/model/api/Tarot';
-import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
 import { OpenAiService } from './OpenAiService';
 
 /**
@@ -13,15 +12,17 @@ export class TarotAgentService {
   @inject(OpenAiService)
   private readonly openAiService!: OpenAiService;
 
-  @inject(TarotQuestionAccess)
-  private readonly tarotQuestionAccess!: TarotQuestionAccess;
-
   @inject(TarotInterpretationAiAccess)
   private readonly tarotInterpretationAiAccess!: TarotInterpretationAiAccess;
 
+  @inject(TarotQuestionAccess)
+  private readonly tarotQuestionAccess!: TarotQuestionAccess;
+
   public async genTarotInterpretation(data: TarotEvent) {
+    const tarotInterpretationAi =
+      await this.tarotInterpretationAiAccess.findOneByIdOrFail(data.id);
     const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(
-      data.id
+      tarotInterpretationAi.questionId
     );
 
     const now = new Date().getTime();
@@ -49,8 +50,6 @@ export class TarotAgentService {
     ]);
     const elapsedTime = new Date().getTime() - now;
 
-    const tarotInterpretationAi = new TarotInterpretationAiEntity();
-    tarotInterpretationAi.questionId = tarotQuestion.id;
     tarotInterpretationAi.interpretation =
       chatCompletion.choices[0].message.content;
     tarotInterpretationAi.promptTokens = chatCompletion.usage.prompt_tokens;

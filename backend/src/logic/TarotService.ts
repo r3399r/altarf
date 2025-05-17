@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import { Not } from 'typeorm';
 import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
+import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
 import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
@@ -12,12 +13,14 @@ import {
   GetTarotQuestionIdResponse,
   GetTarotQuestionParams,
   GetTarotQuestionResponse,
+  PostTarotQuestionIdAiResponse,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/api/Tarot';
 import { LIMIT, OFFSET } from 'src/model/constant/Pagination';
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
+import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
 import { TarotQuestionCardEntity } from 'src/model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from 'src/model/entity/TarotQuestionEntity';
 import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
@@ -60,6 +63,9 @@ export class TarotService {
 
   @inject(TarotDailyAccess)
   private readonly tarotDailyAccess!: TarotDailyAccess;
+
+  @inject(TarotInterpretationAiAccess)
+  private readonly tarotInterpretationAiAccess!: TarotInterpretationAiAccess;
 
   private async getAllTarotCards() {
     if (this.tarotCards === null)
@@ -244,7 +250,9 @@ export class TarotService {
     };
   }
 
-  public async invokeTarotAiAgent(id: string) {
+  public async invokeTarotAiAgent(
+    id: string
+  ): Promise<PostTarotQuestionIdAiResponse> {
     const user = await this.getUserInfo();
 
     const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(id);
@@ -260,14 +268,22 @@ export class TarotService {
     this.checkUserQuota(user);
     await this.userService.purchaseForUser(user, 10, 'ask AI tarot question');
 
+    const tarotInterpretationAi = new TarotInterpretationAiEntity();
+    tarotInterpretationAi.questionId = tarotQuestion.id;
+    const newEntity = await this.tarotInterpretationAiAccess.save(
+      tarotInterpretationAi
+    );
+
     await this.lambda
       .invoke({
         FunctionName: `${process.env.PROJECT}-${process.env.ENVR}-ai-agent`,
         Payload: JSON.stringify({
-          id: tarotQuestion.id,
+          id: newEntity.id,
         }),
         InvocationType: 'Event',
       })
       .promise();
+
+    return newEntity;
   }
 }

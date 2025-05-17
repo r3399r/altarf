@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { FindOneOptions } from 'typeorm';
 import {
   TarotInterpretationAi,
   TarotInterpretationAiEntity,
@@ -19,5 +20,20 @@ export class TarotInterpretationAiAccess {
     Object.assign(entity, data);
 
     return await qr.manager.save(entity);
+  }
+
+  public async findOneOrFail(options?: FindOneOptions<TarotInterpretationAi>) {
+    const qr = await this.database.getQueryRunner();
+
+    return await qr.manager.findOneOrFail<TarotInterpretationAi>(
+      TarotInterpretationAiEntity.name,
+      {
+        ...options,
+      }
+    );
+  }
+
+  public async findOneByIdOrFail(id: string) {
+    return await this.findOneOrFail({ where: { id } });
   }
 }

@@ -1,5 +1,6 @@
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
+import { TarotInterpretationAi } from 'src/model/entity/TarotInterpretationAiEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
 import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
 import { Paginate, PaginationParams } from 'src/model/Pagination';
@@ -33,3 +34,5 @@ export type GetTarotQuestionParams = PaginationParams;
 export type GetTarotQuestionResponse = Paginate<
   Pick<TarotQuestion, 'id' | 'question' | 'spread' | 'createdAt'>
 >;
+
+export type PostTarotQuestionIdAiResponse = TarotInterpretationAi;

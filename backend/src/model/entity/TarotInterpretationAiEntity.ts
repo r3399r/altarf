@@ -13,10 +13,10 @@ export type TarotInterpretationAi = {
   id: string;
   questionId: string;
   question: TarotQuestion;
-  interpretation: string;
-  promptTokens: number;
-  completionTokens: number;
-  elapsedTime: number;
+  interpretation: string | null;
+  promptTokens: number | null;
+  completionTokens: number | null;
+  elapsedTime: number | null;
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -35,16 +35,16 @@ export class TarotInterpretationAiEntity implements TarotInterpretationAi {
   question!: TarotQuestion;
 
   @Column({ type: 'text' })
-  interpretation!: string;
+  interpretation: string | null = null;
 
   @Column({ type: 'float8', name: 'prompt_tokens' })
-  promptTokens!: number;
+  promptTokens: number | null = null;
 
   @Column({ type: 'float8', name: 'completion_tokens' })
-  completionTokens!: number;
+  completionTokens: number | null = null;
 
   @Column({ type: 'float8', name: 'elapsed_time' })
-  elapsedTime!: number;
+  elapsedTime: number | null = null;
 
   @Column({ type: 'timestamp', name: 'created_at', default: null })
   createdAt!: string;
