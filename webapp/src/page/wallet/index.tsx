@@ -24,8 +24,8 @@ const Wallet = () => {
     ecpayEndpoint
       .getEcpayPayment({
         ecpayTradeItemId: '50e6e8fd-b1c8-4274-82e9-dbd3567ecf00',
-        // returnUrl: `${location.origin}/api/ecpay/notify`,
-        returnUrl: 'https://lookout-test.celestialstudio.net/api/ecpay/notify',
+        returnUrl: `${location.origin}/api/ecpay/notify`,
+        // returnUrl: 'https://lookout-test.celestialstudio.net/api/ecpay/notify',
       })
       .then((r) => {
         // Create a temporary form element
