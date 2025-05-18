@@ -52,12 +52,13 @@ const Pagination: React.FC<PaginationProps> = ({ page, totalPages, onPageChange 
           className={classNames(
             'flex h-8 w-8 items-center justify-center rounded-full text-text-pagination-normal',
             {
-              '!bg-background-pagination-focus !text-text-pagination-focus': p === page,
+              '!cursor-default !bg-background-pagination-focus !text-text-pagination-focus':
+                p === page,
               'cursor-pointer hover:bg-background-pagination-hover': typeof p === 'number',
             },
           )}
           onClick={() => {
-            if (typeof p === 'number') onPageChange(p);
+            if (typeof p === 'number' && p !== page) onPageChange(p);
           }}
         >
           {p}

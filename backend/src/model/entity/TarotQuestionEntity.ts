@@ -28,7 +28,7 @@ export type TarotQuestion = {
   user: User;
   card: TarotQuestionCard[];
   interpretationAi: TarotInterpretationAi[];
-  createdAt: string | null;
+  createdAt: string;
   updatedAt: string | null;
 };
 

@@ -19,7 +19,9 @@ const postTarotQuestion = async (data: PostTarotQuestionRequest) =>
 const getTarotBasicInfo = async () => await http.get<GetTarotBasicInfoResponse>('tarot/basic-info');
 
 const getTarotQuestion = async (params: GetTarotQuestionParams) =>
-  await http.get<GetTarotQuestionResponse, GetTarotQuestionParams>('tarot/question/', { params });
+  await http.authGet<GetTarotQuestionResponse, GetTarotQuestionParams>('tarot/question', {
+    params,
+  });
 
 const getTarotQuestionId = async (id: string) =>
   await http.get<GetTarotQuestionIdResponse>(`tarot/question/${id}`);

@@ -11,7 +11,7 @@ import H4 from 'src/components/typography/H4';
 import { BalanceTransactionType } from 'src/constant/backend/Balance';
 import { GetUserTransactionResponse } from 'src/model/backend/api/User';
 import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
-import { bnFormat } from 'src/utils/bignumber';
+import { bn, bnFormat } from 'src/utils/bignumber';
 import useFetch from './useFetch';
 
 const Wallet = () => {
@@ -71,7 +71,9 @@ const Wallet = () => {
     {
       header: '消費',
       accessor: (row: GetUserTransactionResponse['data'][0]) =>
-        row.transactionType === BalanceTransactionType.PURCHASE ? bnFormat(row.amount) : '',
+        row.transactionType === BalanceTransactionType.PURCHASE
+          ? bn(row.amount).negated().toFormat()
+          : '',
       className: 'text-right',
     },
     {
