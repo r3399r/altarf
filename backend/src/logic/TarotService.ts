@@ -27,6 +27,7 @@ import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
 import { CardDisplay } from 'src/model/Tarot';
+import { compare } from 'src/utils/compare';
 import { genPagination } from 'src/utils/paginator';
 import { random } from 'src/utils/random';
 import { OpenAiService } from './OpenAiService';
@@ -76,11 +77,12 @@ export class TarotService {
 
   private async getAllTarotSpreads() {
     if (this.tarotSpreads === null)
-      this.tarotSpreads = await this.tarotSpreadAccess.find({
-        order: { seqNo: 'asc' },
-      });
+      this.tarotSpreads = await this.tarotSpreadAccess.find();
 
-    return this.tarotSpreads;
+    return this.tarotSpreads.sort(compare('seqNo', 'asc')).map((v) => ({
+      ...v,
+      isAiSupport: v.id === 'SINGLE' || v.id === 'LINEAR',
+    }));
   }
 
   public async getTarotDaily(tarotId?: string): Promise<GetTaortDailyResponse> {

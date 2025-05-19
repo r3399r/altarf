@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TarotCard } from 'src/model/backend/entity/TarotCardEntity';
-import { TarotSpread } from 'src/model/backend/entity/TarotSpreadEntity';
+import { CustomTarotSpread } from 'src/model/backend/Tarot';
 import { PickedCard } from 'src/model/Card';
 
 export type TarotState = {
-  spreadList: TarotSpread[] | null;
+  spreadList: CustomTarotSpread[] | null;
   cardList: TarotCard[] | null;
-  pickedSpread: TarotSpread | null;
+  pickedSpread: CustomTarotSpread | null;
   pickedCardList: PickedCard[] | null;
   question: string | null;
 };
@@ -23,13 +23,13 @@ export const tarotSlice = createSlice({
   name: 'tarot',
   initialState,
   reducers: {
-    setSpreadList: (state: TarotState, action: PayloadAction<TarotSpread[]>) => {
+    setSpreadList: (state: TarotState, action: PayloadAction<CustomTarotSpread[]>) => {
       state.spreadList = action.payload;
     },
     setCardList: (state: TarotState, action: PayloadAction<TarotCard[]>) => {
       state.cardList = action.payload;
     },
-    setPickedSpread: (state: TarotState, action: PayloadAction<TarotSpread>) => {
+    setPickedSpread: (state: TarotState, action: PayloadAction<CustomTarotSpread>) => {
       state.pickedSpread = action.payload;
     },
     setPickedCardList: (state: TarotState, action: PayloadAction<PickedCard[]>) => {

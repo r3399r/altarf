@@ -2,9 +2,8 @@ import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { TarotInterpretationAi } from 'src/model/entity/TarotInterpretationAiEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
-import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
 import { Paginate, PaginationParams } from 'src/model/Pagination';
-import { CardDisplay } from 'src/model/Tarot';
+import { CardDisplay, CustomTarotSpread } from 'src/model/Tarot';
 
 export type TarotEvent = {
   id: string;
@@ -23,7 +22,7 @@ export type GetTaortDailyResponse = TarotDaily & {
 };
 
 export type GetTarotBasicInfoResponse = {
-  spread: TarotSpread[];
+  spread: CustomTarotSpread[];
   card: TarotCard[];
 };
 

@@ -24,12 +24,11 @@ const Step2Ask = ({ onNext }: Props) => {
   return (
     <div className="mt-10 sm:mt-20">
       <StarTitle title="選擇一種牌陣" />
-      <div className="mt-8 mb-10 flex flex-wrap justify-around gap-x-10 gap-y-8 sm:mb-[58px] md:mb-20">
+      <div className="mt-8 mb-14 flex flex-wrap justify-around gap-4 md:mb-10">
         {spreadList?.map((v) => (
           <SpreadItem
             key={v.id}
-            title={v.name}
-            desc={v.description}
+            tarotSpread={v}
             onClick={() => dispatch(setPickedSpread(v))}
             selected={pickedSpread?.id === v.id}
           ></SpreadItem>
