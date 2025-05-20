@@ -42,7 +42,13 @@ const OnlineInterpretation = () => {
           <Body className="whitespace-pre-line">{result.interpretationAi[0].interpretation}</Body>
         </StarDivision>
       )}
-      <Modal open={open} handleClose={() => setOpen(false)} title="AI 解牌">
+      <Modal
+        open={open}
+        handleClose={() => setOpen(false)}
+        title="AI 解牌"
+        cancelText="取消"
+        confirmText="繼續"
+      >
         <div>使用 AI 解牌需花費 10 點</div>
       </Modal>
     </>

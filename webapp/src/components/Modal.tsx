@@ -5,9 +5,11 @@ import H3 from './typography/H3';
 type Props = ModalProps & {
   handleClose: () => void;
   title: string;
+  cancelText?: string;
+  confirmText?: string;
 };
 
-const Modal = ({ children, handleClose, title, ...props }: Props) => {
+const Modal = ({ children, handleClose, title, cancelText, confirmText, ...props }: Props) => {
   const onCancel = () => {
     handleClose();
   };
@@ -30,10 +32,12 @@ const Modal = ({ children, handleClose, title, ...props }: Props) => {
         </div>
         <div className="p-4">{children}</div>
         <div className="mt-3 flex justify-end gap-6">
-          <Button appearance="secondary" onClick={onCancel}>
-            取消
-          </Button>
-          <Button onClick={onConfirm}>繼續</Button>
+          {cancelText && (
+            <Button appearance="secondary" onClick={onCancel}>
+              {cancelText}
+            </Button>
+          )}
+          {confirmText && <Button onClick={onConfirm}>{confirmText}</Button>}
         </div>
       </div>
     </MuiModal>
