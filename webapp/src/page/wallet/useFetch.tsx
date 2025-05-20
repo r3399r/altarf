@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import userEndpoint from 'src/api/userEndpoint';
 import { GetUserTransactionResponse } from 'src/model/backend/api/User';
 import { RootState } from 'src/redux/store';
-import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
+import { finishWaiting, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
 
 const LIMIT = 10;
 
@@ -19,6 +19,9 @@ const useFetch = (page: number) => {
       .getUserTransaction({ limit: String(LIMIT), offset: String(offset) })
       .then((res) => {
         setResult(res.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMessage(e));
       })
       .finally(() => {
         dispatch(finishWaiting());

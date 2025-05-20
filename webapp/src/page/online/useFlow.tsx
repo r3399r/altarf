@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import tarotEndpoint from 'src/api/tarotEndpoint';
 import { RootState } from 'src/redux/store';
 import { clearPickedCardList, clearQuestion, setPickedCardList } from 'src/redux/tarotSlice';
-import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
+import { finishWaiting, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
 import { randomBoolean, randomInt } from 'src/utils/random';
 
 const useFlow = () => {
@@ -37,6 +37,9 @@ const useFlow = () => {
       .then((res) => {
         navigate(`/online/${res.data.id}`, { state: res.data });
         dispatch(clearQuestion());
+      })
+      .catch((e) => {
+        dispatch(setErrorMessage(e));
       })
       .finally(() => {
         dispatch(finishWaiting());

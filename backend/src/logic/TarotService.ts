@@ -188,7 +188,11 @@ export class TarotService {
   }
 
   private checkUserQuota(user: User) {
-    if (user.balance < 0) throw new BadRequestError('balance is less than 0');
+    if (user.balance < 0)
+      throw new BadRequestError(
+        'balance is less than 0',
+        'BALANCE_INSUFFICIENT'
+      );
   }
 
   private async validateSpread(spreadId: string, card: CardDisplay[]) {

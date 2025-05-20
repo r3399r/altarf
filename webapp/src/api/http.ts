@@ -2,7 +2,6 @@ import axios, { AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 import packageJson from '../../package.json'; // eslint-disable-line no-restricted-imports
 import { PostAuthRefreshRequest, PostAuthRefreshResponse } from 'src/model/backend/api/Auth';
 import { decrypt, encrypt } from 'src/utils/crypto';
-import eventEmitter from 'src/utils/eventEmitter';
 
 // eslint-disable-next-line
 type Options<D = any, P = any> = {
@@ -54,20 +53,13 @@ const checkAccessTokenAvailable = (accessToken: string) => {
 };
 
 const getNewAccessTokenByRefreshToken = async () => {
-  try {
-    const encryptedRefreshToken = localStorage.getItem('refreshToken');
-    if (!encryptedRefreshToken) throw new Error('no refresh token');
+  const encryptedRefreshToken = localStorage.getItem('refreshToken');
+  const refreshToken = decrypt(encryptedRefreshToken ?? '');
+  const token = await authEndpointRefreshToken({ refreshToken });
+  sessionStorage.setItem('accessToken', encrypt(token.accessToken));
+  sessionStorage.setItem('expiredAt', token.expiredAt);
 
-    const refreshToken = decrypt(encryptedRefreshToken);
-    const token = await authEndpointRefreshToken({ refreshToken });
-    sessionStorage.setItem('accessToken', encrypt(token.accessToken));
-    sessionStorage.setItem('expiredAt', token.expiredAt);
-
-    return token.accessToken;
-  } catch (e) {
-    eventEmitter.emit('sessionExpired');
-    throw e;
-  }
+  return token.accessToken;
 };
 
 // eslint-disable-next-line

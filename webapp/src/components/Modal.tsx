@@ -7,21 +7,34 @@ type Props = ModalProps & {
   title: string;
   cancelText?: string;
   confirmText?: string;
+  handleCancel?: () => void;
+  handleConfirm?: () => void;
 };
 
-const Modal = ({ children, handleClose, title, cancelText, confirmText, ...props }: Props) => {
+const Modal = ({
+  children,
+  handleClose,
+  title,
+  cancelText,
+  confirmText,
+  handleCancel,
+  handleConfirm,
+  ...props
+}: Props) => {
   const onCancel = () => {
+    if (handleCancel) handleCancel();
     handleClose();
   };
 
   const onConfirm = () => {
+    if (handleConfirm) handleConfirm();
     handleClose();
   };
 
   return (
     <MuiModal
       className="fixed inset-0 z-10 flex items-center justify-center"
-      onClose={() => handleClose()}
+      onClose={handleClose}
       {...props}
     >
       <div className="mx-4 w-full rounded-xl bg-background-surface-overlay-normal p-6 outline-none sm:mx-auto sm:w-[610px]">

@@ -1,10 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type UiState = {
   workload: number;
   isLogin: boolean;
   email: string | null;
   balance: number | null;
+  openErrorModal: boolean;
+  errorMessage: string;
 };
 
 const initialState: UiState = {
@@ -12,6 +14,8 @@ const initialState: UiState = {
   isLogin: !!localStorage.getItem('refreshToken'),
   email: null,
   balance: null,
+  openErrorModal: false,
+  errorMessage: '',
 };
 
 export const uiSlice = createSlice({
@@ -24,18 +28,34 @@ export const uiSlice = createSlice({
     finishWaiting: (state: UiState) => {
       state.workload = state.workload - 1;
     },
-    setIsLogin: (state: UiState, action) => {
+    setIsLogin: (state: UiState, action: PayloadAction<boolean>) => {
       state.isLogin = action.payload;
     },
-    setEmail: (state: UiState, action) => {
+    setEmail: (state: UiState, action: PayloadAction<string | null>) => {
       state.email = action.payload;
     },
-    setBalance: (state: UiState, action) => {
+    setBalance: (state: UiState, action: PayloadAction<number | null>) => {
       state.balance = action.payload;
+    },
+    setErrorMessage: (state: UiState, action: PayloadAction<string>) => {
+      state.openErrorModal = true;
+      state.errorMessage = action.payload;
+    },
+    dismissErrorModal: (state: UiState) => {
+      state.openErrorModal = false;
+      state.errorMessage = '';
     },
   },
 });
 
-export const { startWaiting, finishWaiting, setIsLogin, setEmail, setBalance } = uiSlice.actions;
+export const {
+  startWaiting,
+  finishWaiting,
+  setIsLogin,
+  setEmail,
+  setBalance,
+  setErrorMessage,
+  dismissErrorModal,
+} = uiSlice.actions;
 
 export default uiSlice.reducer;

@@ -29,18 +29,22 @@ export class GoogleService {
   }
 
   public async getNewAccessToken(refreshToken: string) {
-    const res = await axios.request<RefreshTokenResponse>({
-      method: 'POST',
-      url: 'https://oauth2.googleapis.com/token',
-      params: {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-        client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
-        client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-      },
-    });
+    try {
+      const res = await axios.request<RefreshTokenResponse>({
+        method: 'POST',
+        url: 'https://oauth2.googleapis.com/token',
+        params: {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+          client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+          client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+        },
+      });
 
-    return res.data;
+      return res.data;
+    } catch (e) {
+      throw new UnauthorizedError('google unauthorized');
+    }
   }
 
   public async getUserInfo(): Promise<UserInfo> {

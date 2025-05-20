@@ -24,6 +24,7 @@ export const errorOutput = (e: unknown): LambdaOutput => {
       status: error.status,
       name: error.name,
       message: error.message,
+      code: error.code,
     }),
   };
 };

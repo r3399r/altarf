@@ -9,8 +9,8 @@ import Body from 'src/components/typography/Body';
 import H3 from 'src/components/typography/H3';
 import useFetch from './useFetch';
 
-const OnlineInterpretation = () => {
-  const { result, url } = useFetch();
+const OnlineResult = () => {
+  const { result, url, askAi } = useFetch();
   const [open, setOpen] = useState(false);
 
   if (result === null) return <></>;
@@ -48,6 +48,7 @@ const OnlineInterpretation = () => {
         title="AI 解牌"
         cancelText="取消"
         confirmText="繼續"
+        handleConfirm={askAi}
       >
         <div>使用 AI 解牌需花費 10 點</div>
       </Modal>
@@ -55,4 +56,4 @@ const OnlineInterpretation = () => {
   );
 };
 
-export default OnlineInterpretation;
+export default OnlineResult;

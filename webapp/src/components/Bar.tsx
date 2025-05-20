@@ -9,7 +9,13 @@ import IcGoogle from 'src/assets/ic-google.svg';
 import PicLogo from 'src/assets/pic-logo.svg';
 import { Page } from 'src/constant/Page';
 import { RootState } from 'src/redux/store';
-import { finishWaiting, setBalance, setEmail, startWaiting } from 'src/redux/uiSlice';
+import {
+  finishWaiting,
+  setBalance,
+  setEmail,
+  setErrorMessage,
+  startWaiting,
+} from 'src/redux/uiSlice';
 import { login } from 'src/service/authService';
 import { bnFormat } from 'src/utils/bignumber';
 import Button from './Button';
@@ -51,6 +57,9 @@ const Bar = () => {
         .then((res) => {
           dispatch(setEmail(res.data.email));
           dispatch(setBalance(res.data.balance));
+        })
+        .catch((e) => {
+          dispatch(setErrorMessage(e));
         })
         .finally(() => {
           dispatch(finishWaiting());

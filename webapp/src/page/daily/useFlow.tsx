@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import tarotEndpoint from 'src/api/tarotEndpoint';
 import { GetTaortDailyResponse } from 'src/model/backend/api/Tarot';
-import { finishWaiting, startWaiting } from 'src/redux/uiSlice';
+import { finishWaiting, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
 
 const useFlow = () => {
   const dispatch = useDispatch();
@@ -15,6 +15,9 @@ const useFlow = () => {
       .getTarotDaily()
       .then((res) => {
         setDrawnCard(res.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMessage(e));
       })
       .finally(() => {
         dispatch(finishWaiting());
