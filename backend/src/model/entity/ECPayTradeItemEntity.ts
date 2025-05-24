@@ -6,7 +6,7 @@ export type ECPayTradeItem = {
   description: string;
   amount: string;
   price: string;
-  createdAt: string | null;
+  createdAt: string;
   updatedAt: string | null;
   deletedAt: string | null;
 };

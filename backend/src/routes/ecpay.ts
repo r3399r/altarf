@@ -16,6 +16,8 @@ export default async (lambdaEvent: LambdaEvent) => {
       return await handlePayment();
     case '/api/ecpay/notify':
       return await handleNotify();
+    case '/api/ecpay/items':
+      return await handleItems();
   }
 
   throw new BadRequestError('unexpected resource');
@@ -43,6 +45,15 @@ const handleNotify = async () => {
       await service.handleNotify(event.body);
 
       return '1|OK';
+  }
+
+  throw new Error('unexpected httpMethod');
+};
+
+const handleItems = async () => {
+  switch (event.httpMethod) {
+    case 'GET':
+      return await service.getItems();
   }
 
   throw new Error('unexpected httpMethod');

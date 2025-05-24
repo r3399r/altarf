@@ -1,3 +1,5 @@
+import { ECPayTradeItem } from 'src/model/entity/ECPayTradeItemEntity';
+
 export type GetECPayPaymentParams = {
   ecpayTradeItemId: string;
   returnUrl: string;
@@ -16,3 +18,5 @@ export type GetECPayPaymentResponse = {
   EncryptType: string;
   CheckMacValue: string;
 };
+
+export type GetECPayItemsResponse = ECPayTradeItem[];

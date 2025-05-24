@@ -1,10 +1,12 @@
 import crypto from 'crypto';
 import { format } from 'date-fns';
 import { inject, injectable } from 'inversify';
+import { IsNull } from 'typeorm';
 import { ECPayTradeAccess } from 'src/access/ECPayTradeAccess';
 import { ECPayTradeItemAccess } from 'src/access/ECPayTradeItemAccess';
 import { ECPayTradeStatus } from 'src/constant/ECPay';
 import {
+  GetECPayItemsResponse,
   GetECPayPaymentParams,
   GetECPayPaymentResponse,
 } from 'src/model/api/ECPay';
@@ -124,5 +126,16 @@ export class ECPayService {
         'ECPay',
         new Date(result.PaymentDate)
       );
+  }
+
+  public async getItems(): Promise<GetECPayItemsResponse> {
+    return await this.ecpayTradeItemAccess.find({
+      where: {
+        deletedAt: IsNull(),
+      },
+      order: {
+        amount: 'ASC',
+      },
+    });
   }
 }
