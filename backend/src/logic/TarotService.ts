@@ -269,7 +269,10 @@ export class TarotService {
       tarotQuestion.spreadId !== 'SINGLE' &&
       tarotQuestion.spreadId !== 'LINEAR'
     )
-      throw new BadRequestError('spreadId is not SINGLE or LINEAR');
+      throw new BadRequestError(
+        'spreadId is not SINGLE or LINEAR',
+        'SPREAD_NOT_SUPPORT_AI'
+      );
 
     this.checkUserQuota(user);
     await this.userService.purchaseForUser(user, 10, 'ask AI tarot question');

@@ -68,6 +68,9 @@ const postTarotQuestionIdAi = async (id: string) => {
     return await http.authPost<PostTarotQuestionIdAiResponse>(`tarot/question/${id}/ai`);
   } catch (e) {
     const error = axiosError(e);
+    if (error.response?.data.code === 'BALANCE_INSUFFICIENT') throw '餘額不足，請先儲值';
+    if (error.response?.data.code === 'SPREAD_NOT_SUPPORT_AI') throw '此牌陣不支援 AI 解牌';
+
     throw defaultErrorMessage(error);
   }
 };
