@@ -9,7 +9,7 @@ const LIMIT = 10;
 
 const useFetch = (page: number) => {
   const dispatch = useDispatch();
-  const [result, setResult] = useState<GetUserTransactionResponse>();
+  const [transactions, setTransactions] = useState<GetUserTransactionResponse>();
   const { balance } = useSelector((state: RootState) => state.ui);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const useFetch = (page: number) => {
     userEndpoint
       .getUserTransaction({ limit: String(LIMIT), offset: String(offset) })
       .then((res) => {
-        setResult(res.data);
+        setTransactions(res.data);
       })
       .catch((e) => {
         dispatch(setErrorMessage(e));
@@ -28,7 +28,7 @@ const useFetch = (page: number) => {
       });
   }, [dispatch, page]);
 
-  return { result, balance };
+  return { transactions, balance };
 };
 
 export default useFetch;

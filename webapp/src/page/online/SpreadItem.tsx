@@ -14,7 +14,7 @@ const SpreadItem = ({ tarotSpread, onClick, selected }: Props) => (
     className={classNames(
       'flex w-full cursor-pointer items-center gap-3 rounded-lg border border-border-spread-normal p-4 sm:w-[calc(50%-8px)] md:w-[calc((100%-32px)/3)]',
       {
-        '!border-border-spread-active bg-grey-800': selected,
+        '!border-border-spread-active bg-background-surface-list': selected,
       },
     )}
     onClick={onClick}

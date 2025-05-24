@@ -9,6 +9,7 @@ const Online = lazy(() => import('./page/online'));
 const OnlineResult = lazy(() => import('./page/onlineResult'));
 const Records = lazy(() => import('./page/records'));
 const Wallet = lazy(() => import('./page/wallet'));
+const Deposit = lazy(() => import('./page/deposit'));
 
 const AppRoutes = () => {
   const router = createBrowserRouter([
@@ -20,6 +21,7 @@ const AppRoutes = () => {
         { path: Page.Daily, element: <Daily /> },
         { path: Page.Records, element: <Records /> },
         { path: Page.Wallet, element: <Wallet /> },
+        { path: Page.Deposit, element: <Deposit /> },
         { path: '/*', element: <Navigate to={Page.Online} /> },
       ],
     },

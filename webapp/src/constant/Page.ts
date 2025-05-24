@@ -3,4 +3,5 @@ export enum Page {
   Daily = '/daily',
   Records = '/records',
   Wallet = '/wallet',
+  Deposit = '/wallet/deposit',
 }

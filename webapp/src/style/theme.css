@@ -17,6 +17,7 @@
   --color-text-pagination-focus: var(--color-text-pagination-focus);
 
   --color-background-surface-body: var(--color-background-surface-body);
+  --color-background-surface-list: var(--color-background-surface-list);
   --color-background-surface-overlay-normal: var(--color-background-surface-overlay-normal);
   --color-background-button-primary-normal: var(--color-background-button-primary-normal);
   --color-background-button-primary-hover: var(--color-background-button-primary-hover);
@@ -60,6 +61,7 @@
   --color-text-pagination-focus: theme(color-grey-900);
 
   --color-background-surface-body: theme(color-grey-900);
+  --color-background-surface-list: theme(color-grey-850);
   --color-background-surface-overlay-normal: theme(color-grey-800);
   --color-background-button-primary-normal: theme(color-beige-300);
   --color-background-button-primary-hover: theme(color-beige-100);
