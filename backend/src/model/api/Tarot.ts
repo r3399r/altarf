@@ -3,7 +3,11 @@ import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { TarotInterpretationAi } from 'src/model/entity/TarotInterpretationAiEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
 import { Paginate, PaginationParams } from 'src/model/Pagination';
-import { CardDisplay, CustomTarotSpread } from 'src/model/Tarot';
+import {
+  CardDisplay,
+  CustomTarotSpread,
+  TarotInterpretation,
+} from 'src/model/Tarot';
 
 export type TarotEvent = {
   id: string;
@@ -26,7 +30,12 @@ export type GetTarotBasicInfoResponse = {
   card: TarotCard[];
 };
 
-export type GetTarotQuestionIdResponse = TarotQuestion;
+export type GetTarotQuestionIdResponse = Omit<
+  TarotQuestion,
+  'interpretationAi'
+> & {
+  interpretation: TarotInterpretation[];
+};
 
 export type GetTarotQuestionParams = PaginationParams;
 

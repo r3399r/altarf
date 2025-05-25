@@ -8,3 +8,11 @@ export type CardDisplay = {
 export type CustomTarotSpread = TarotSpread & {
   isAiSupport: boolean;
 };
+
+export type TarotInterpretation = {
+  id: string;
+  interpretation: string | null;
+  askedAt: string | null;
+  repliedAt: string | null;
+  isAi: boolean;
+};

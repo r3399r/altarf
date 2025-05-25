@@ -206,7 +206,21 @@ export class TarotService {
   public async getTarotQuestionById(
     id: string
   ): Promise<GetTarotQuestionIdResponse> {
-    return await this.tarotQuestionAccess.findOneByIdOrFail(id);
+    const { interpretationAi, ...tarotQuestion } =
+      await this.tarotQuestionAccess.findOneByIdOrFail(id);
+
+    return {
+      ...tarotQuestion,
+      interpretation: interpretationAi
+        .map((v) => ({
+          id: v.id,
+          interpretation: v.interpretation,
+          askedAt: v.createdAt,
+          repliedAt: v.updatedAt,
+          isAi: true,
+        }))
+        .sort(compare('repliedAt', 'desc', true)),
+    };
   }
 
   public async genNewQuestion(

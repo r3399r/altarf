@@ -35,7 +35,7 @@ const useFlow = () => {
         card: pickedCardList,
       })
       .then((res) => {
-        navigate(`/online/${res.data.id}`, { state: res.data });
+        navigate(`/online/${res.data.id}`);
         dispatch(clearQuestion());
       })
       .catch((e) => {
