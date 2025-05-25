@@ -23,6 +23,7 @@ export type PostTarotQuestionResponse = TarotQuestion;
 
 export type GetTaortDailyResponse = TarotDaily & {
   name: string;
+  drawnAt: string;
 };
 
 export type GetTarotBasicInfoResponse = {

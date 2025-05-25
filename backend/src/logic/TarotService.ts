@@ -1,6 +1,5 @@
 import { Lambda } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
-import { Not } from 'typeorm';
 import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
 import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
@@ -85,40 +84,28 @@ export class TarotService {
     }));
   }
 
-  public async getTarotDaily(tarotId?: string): Promise<GetTaortDailyResponse> {
+  public async getTarotDaily(): Promise<GetTaortDailyResponse> {
     const tartCards = await this.getAllTarotCards();
     const pickedCard = tartCards[random(tartCards.length)];
     const reversal = random(2) === 1 ? true : false;
     const pickedDaily = await this.tarotDailyAccess.find({
       where: {
-        id: tarotId ? Not(tarotId) : undefined,
         cardId: pickedCard.id,
         reversal,
       },
-      order: { lastReadAt: 'asc' },
     });
 
     if (pickedDaily.length <= 0)
       throw new InternalServerError('there is no daily tarot');
 
-    const unreadTarot = pickedDaily.find((v) => v.lastReadAt === null);
-    if (unreadTarot) {
-      unreadTarot.lastReadAt = new Date().toISOString();
-      await this.tarotDailyAccess.save(unreadTarot);
-
-      return {
-        ...unreadTarot,
-        name: pickedCard.name,
-      };
-    }
-
-    // return earliest read tarot
-    pickedDaily[0].lastReadAt = new Date().toISOString();
-    await this.tarotDailyAccess.save(pickedDaily[0]);
+    const firstTarot = pickedDaily.sort(compare('lastReadAt', 'asc', true))[0];
+    firstTarot.lastReadAt = new Date().toISOString();
+    await this.tarotDailyAccess.save(firstTarot);
 
     return {
-      ...pickedDaily[0],
+      ...firstTarot,
       name: pickedCard.name,
+      drawnAt: new Date().toISOString(),
     };
   }
 

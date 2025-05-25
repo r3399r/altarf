@@ -82,7 +82,7 @@ const tarotQuestionIdAi = async () => {
 const tarotDaily = async () => {
   switch (event.httpMethod) {
     case 'GET':
-      return await service.getTarotDaily(event.queryStringParameters?.tarotId);
+      return await service.getTarotDaily();
   }
 
   throw new Error('unexpected httpMethod');

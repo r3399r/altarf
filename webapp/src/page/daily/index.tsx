@@ -7,9 +7,9 @@ import Body from 'src/components/typography/Body';
 import useFlow from './useFlow';
 
 const Daily = () => {
-  const { isDrawn, drawnCard, onDraw } = useFlow();
+  const { drawable, drawnCard, onDraw } = useFlow();
 
-  if (isDrawn)
+  if (!drawable)
     return (
       <div>
         <div className="relative mt-10 flex items-center justify-center sm:mt-[80px]">
