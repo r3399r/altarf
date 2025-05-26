@@ -24,7 +24,7 @@ const SpreadItem = ({ tarotSpread, onClick, selected }: Props) => (
       <Body bold>{tarotSpread.name}</Body>
       <Body size="m">{tarotSpread.description}</Body>
       <Body size="m" className="text-text-secondary">
-        {tarotSpread.isAiSupport ? 'AI解牌/真人解牌' : '真人解牌'}
+        {tarotSpread.isAiSupport ? '抽牌/AI解牌' : '僅抽牌'}
       </Body>
     </div>
   </div>

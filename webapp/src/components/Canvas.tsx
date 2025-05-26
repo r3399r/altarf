@@ -33,8 +33,11 @@ const Canvas = ({ spreadId, cardList, showCardBack }: Props) => {
               [className]: !!className,
             })}
           />
-          <Body size="s" className="absolute flex w-full items-center justify-center">
-            {thisCard.name}
+          <Body
+            size="s"
+            className="absolute flex w-full items-center justify-center whitespace-nowrap"
+          >
+            {thisCard.name} ({thisCard.reversed ? '逆位' : '正位'})
           </Body>
         </div>
       )

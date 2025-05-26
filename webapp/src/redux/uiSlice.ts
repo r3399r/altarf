@@ -7,6 +7,7 @@ export type UiState = {
   balance: number | null;
   openErrorModal: boolean;
   errorMessage: string;
+  snackbarMessage: string | null;
 };
 
 const initialState: UiState = {
@@ -16,6 +17,7 @@ const initialState: UiState = {
   balance: null,
   openErrorModal: false,
   errorMessage: '',
+  snackbarMessage: null,
 };
 
 export const uiSlice = createSlice({
@@ -45,6 +47,9 @@ export const uiSlice = createSlice({
       state.openErrorModal = false;
       state.errorMessage = '';
     },
+    setSnackbarMessage: (state: UiState, action: PayloadAction<string | null>) => {
+      state.snackbarMessage = action.payload;
+    },
   },
 });
 
@@ -56,6 +61,7 @@ export const {
   setBalance,
   setErrorMessage,
   dismissErrorModal,
+  setSnackbarMessage,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

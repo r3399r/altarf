@@ -1,6 +1,6 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import classNames from 'classnames';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import userEndpoint from 'src/api/userEndpoint';
@@ -26,10 +26,16 @@ const Bar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const [tab, setTab] = useState(location.pathname === '/daily' ? 1 : 0);
   const { isLogin, balance } = useSelector((rootState: RootState) => rootState.ui);
   const [menuVisible, setMenuVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const tab = useMemo(() => {
+    if (location.pathname.startsWith(Page.Online)) return 0;
+    if (location.pathname.startsWith(Page.Daily)) return 1;
+
+    return 2;
+  }, [location.pathname]);
 
   const onLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => login(tokenResponse.code),
@@ -111,10 +117,7 @@ const Bar = () => {
           className={classNames('mx-6 cursor-pointer py-4 sm:leading-9', {
             'border-b border-b-border-tab text-text-tab-focus': tab === 0,
           })}
-          onClick={() => {
-            setTab(0);
-            navigate(Page.Online);
-          }}
+          onClick={() => navigate(Page.Online)}
         >
           線上解牌
         </Body>
@@ -123,10 +126,7 @@ const Bar = () => {
           className={classNames('mx-6 cursor-pointer py-4 sm:leading-9', {
             'border-b border-b-border-tab text-text-tab-focus': tab === 1,
           })}
-          onClick={() => {
-            setTab(1);
-            navigate(Page.Daily);
-          }}
+          onClick={() => navigate(Page.Daily)}
         >
           每日塔羅
         </Body>
