@@ -23,14 +23,15 @@ const Records = () => {
       ),
     },
     {
-      header: '牌陣',
+      header: '項目',
       accessor: (row: GetTarotQuestionResponse['data'][0]) => (
-        <Body size="m">{row.spread.name}</Body>
+        <>
+          <Body size="m">線上解牌</Body>
+          <Body size="s" className="text-text-input-subtle">
+            題目: {row.question}
+          </Body>
+        </>
       ),
-    },
-    {
-      header: '問題',
-      accessor: (row: GetTarotQuestionResponse['data'][0]) => <Body size="m">{row.question}</Body>,
     },
     {
       accessor: (row: GetTarotQuestionResponse['data'][0]) => (
