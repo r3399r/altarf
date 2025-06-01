@@ -31,10 +31,9 @@ const Table = <T,>({ data, columns, rowKey }: TableProps<T>) => (
       ))}
     </div>
     {data.map((row) => (
-      <div key={rowKey(row)} className="flex items-center border-b border-border-table-tbody">
+      <div key={rowKey(row)} className="flex border-b border-border-table-tbody">
         {columns.map((column, index) => (
-          <Body
-            size="m"
+          <div
             key={index}
             style={{ width: `calc(100% / ${columns.length})` }}
             className={classNames('px-3 py-4', {
@@ -42,7 +41,7 @@ const Table = <T,>({ data, columns, rowKey }: TableProps<T>) => (
             })}
           >
             {column.accessor(row)}
-          </Body>
+          </div>
         ))}
       </div>
     ))}

@@ -16,7 +16,7 @@ const useFlow = () => {
     startOfDay.setHours(0, 0, 0, 0);
 
     return new Date(parsed.drawnAt) < startOfDay;
-  }, [drawnCard]);
+  }, []);
 
   useEffect(() => {
     const tarotDaily = localStorage.getItem('tarotDaily');

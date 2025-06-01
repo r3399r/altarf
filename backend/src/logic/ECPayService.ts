@@ -123,7 +123,7 @@ export class ECPayService {
       await this.userService.depositForUser(
         user,
         Number(ecpayTradeItem.amount),
-        'ECPay',
+        '',
         new Date(result.PaymentDate)
       );
   }

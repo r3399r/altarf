@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Pagination from 'src/components/Pagination';
 import Table from 'src/components/Table';
+import Body from 'src/components/typography/Body';
 import H2 from 'src/components/typography/H2';
 import H3 from 'src/components/typography/H3';
 import H4 from 'src/components/typography/H4';
@@ -21,26 +22,47 @@ const Wallet = () => {
   const columns = [
     {
       header: '時間',
-      accessor: (row: GetUserTransactionResponse['data'][0]) =>
-        format(row.transactedAt, 'yyyy/MM/dd HH:mm:ss'),
+      accessor: (row: GetUserTransactionResponse['data'][0]) => (
+        <Body size="m">{format(row.transactedAt, 'yyyy/MM/dd HH:mm:ss')}</Body>
+      ),
     },
     {
       header: '儲值',
-      accessor: (row: GetUserTransactionResponse['data'][0]) =>
-        row.transactionType === BalanceTransactionType.DEPOSIT ? bnFormat(row.amount) : '',
+      accessor: (row: GetUserTransactionResponse['data'][0]) => (
+        <>
+          {row.transactionType === BalanceTransactionType.DEPOSIT && (
+            <div>
+              <Body size="m">{bnFormat(row.amount)}</Body>
+              <Body size="s" className="text-text-note-deposit">
+                {row.description}
+              </Body>
+            </div>
+          )}
+        </>
+      ),
       className: 'text-right',
     },
     {
       header: '消費',
-      accessor: (row: GetUserTransactionResponse['data'][0]) =>
-        row.transactionType === BalanceTransactionType.PURCHASE
-          ? bn(row.amount).negated().toFormat()
-          : '',
+      accessor: (row: GetUserTransactionResponse['data'][0]) => (
+        <>
+          {row.transactionType === BalanceTransactionType.PURCHASE && (
+            <div>
+              <Body size="m">{bn(row.amount).negated().toFormat()}</Body>
+              <Body size="s" className="text-text-note-spend">
+                {row.description}
+              </Body>
+            </div>
+          )}
+        </>
+      ),
       className: 'text-right',
     },
     {
       header: '餘額',
-      accessor: (row: GetUserTransactionResponse['data'][0]) => bnFormat(row.balance),
+      accessor: (row: GetUserTransactionResponse['data'][0]) => (
+        <Body size="m">{bnFormat(row.balance)}</Body>
+      ),
       className: 'text-right',
     },
   ];

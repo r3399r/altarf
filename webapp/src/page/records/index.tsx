@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Pagination from 'src/components/Pagination';
 import Table from 'src/components/Table';
+import Body from 'src/components/typography/Body';
 import H2 from 'src/components/typography/H2';
 import { Page } from 'src/constant/Page';
 import { GetTarotQuestionResponse } from 'src/model/backend/api/Tarot';
@@ -17,16 +18,19 @@ const Records = () => {
   const columns = [
     {
       header: '時間',
-      accessor: (row: GetTarotQuestionResponse['data'][0]) =>
-        format(new Date(row.createdAt), 'yyyy/MM/dd HH:mm:ss'),
+      accessor: (row: GetTarotQuestionResponse['data'][0]) => (
+        <Body size="m">{format(new Date(row.createdAt), 'yyyy/MM/dd HH:mm:ss')}</Body>
+      ),
     },
     {
       header: '牌陣',
-      accessor: (row: GetTarotQuestionResponse['data'][0]) => row.spread.name,
+      accessor: (row: GetTarotQuestionResponse['data'][0]) => (
+        <Body size="m">{row.spread.name}</Body>
+      ),
     },
     {
       header: '問題',
-      accessor: (row: GetTarotQuestionResponse['data'][0]) => row.question,
+      accessor: (row: GetTarotQuestionResponse['data'][0]) => <Body size="m">{row.question}</Body>,
     },
     {
       accessor: (row: GetTarotQuestionResponse['data'][0]) => (

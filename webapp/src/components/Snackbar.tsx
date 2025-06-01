@@ -18,7 +18,7 @@ const Snackbar = () => {
     <MuiSnackbar
       classes={{ root: '!bottom-[100px]' }}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      open={snackbarMessage !== undefined}
+      open={snackbarMessage !== null}
       onClose={onClose}
       autoHideDuration={2000}
     >

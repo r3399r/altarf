@@ -81,7 +81,9 @@ const Bar = () => {
       <div className="absolute top-0 right-0 sm:top-2">
         {isLogin ? (
           <div className="relative flex items-center gap-6">
-            <Body className="text-text-primary">{`餘額: ${bnFormat(balance) ?? '-'} 點`}</Body>
+            <div className="rounded-sm bg-background-surface-list px-3 py-2">
+              <Body className="text-text-primary">{`餘額: ${bnFormat(balance) ?? '-'} 點`}</Body>
+            </div>
             <img
               src={IcAccount}
               className="h-6 cursor-pointer sm:h-auto"

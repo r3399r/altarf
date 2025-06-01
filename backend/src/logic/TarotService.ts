@@ -276,7 +276,7 @@ export class TarotService {
       );
 
     this.checkUserQuota(user);
-    await this.userService.purchaseForUser(user, 10, 'ask AI tarot question');
+    await this.userService.purchaseForUser(user, 10, 'AI解牌');
 
     const tarotInterpretationAi = new TarotInterpretationAiEntity();
     tarotInterpretationAi.questionId = tarotQuestion.id;
