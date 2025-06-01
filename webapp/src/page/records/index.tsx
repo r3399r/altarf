@@ -27,7 +27,7 @@ const Records = () => {
       accessor: (row: GetTarotQuestionResponse['data'][0]) => (
         <>
           <Body size="m">線上解牌</Body>
-          <Body size="s" className="text-text-input-subtle">
+          <Body size="s" className="line-clamp-2 text-text-input-subtle">
             題目: {row.question}
           </Body>
         </>

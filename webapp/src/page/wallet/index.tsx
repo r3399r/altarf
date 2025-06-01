@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +11,7 @@ import H3 from 'src/components/typography/H3';
 import H4 from 'src/components/typography/H4';
 import { BalanceTransactionType } from 'src/constant/backend/Balance';
 import { Page } from 'src/constant/Page';
+import useMediaQuery from 'src/hook/useMediaQuery';
 import { GetUserTransactionResponse } from 'src/model/backend/api/User';
 import { bn, bnFormat } from 'src/utils/bignumber';
 import useFetch from './useFetch';
@@ -18,6 +20,67 @@ const Wallet = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const { transactions, balance } = useFetch(page);
+  const { isMobile } = useMediaQuery();
+
+  const columnDepositPurchase = isMobile
+    ? [
+        {
+          header: '儲值/消費',
+          accessor: (row: GetUserTransactionResponse['data'][0]) => (
+            <div>
+              <Body size="m">
+                {row.transactionType === BalanceTransactionType.DEPOSIT
+                  ? bnFormat(row.amount)
+                  : bn(row.amount).negated().toFormat()}
+              </Body>
+              <Body
+                size="s"
+                className={classNames({
+                  'text-text-note-deposit': row.transactionType === BalanceTransactionType.DEPOSIT,
+                  'text-text-note-spend': row.transactionType === BalanceTransactionType.PURCHASE,
+                })}
+              >
+                {row.description}
+              </Body>
+            </div>
+          ),
+          className: 'text-right',
+        },
+      ]
+    : [
+        {
+          header: '儲值',
+          accessor: (row: GetUserTransactionResponse['data'][0]) => (
+            <>
+              {row.transactionType === BalanceTransactionType.DEPOSIT && (
+                <div>
+                  <Body size="m">{bnFormat(row.amount)}</Body>
+                  <Body size="s" className="text-text-note-deposit">
+                    {row.description}
+                  </Body>
+                </div>
+              )}
+            </>
+          ),
+          className: 'text-right',
+        },
+        {
+          header: '消費',
+          accessor: (row: GetUserTransactionResponse['data'][0]) => (
+            <>
+              {row.transactionType === BalanceTransactionType.PURCHASE && (
+                <div>
+                  <Body size="m">{bn(row.amount).negated().toFormat()}</Body>
+                  <Body size="s" className="text-text-note-spend">
+                    {row.description}
+                  </Body>
+                </div>
+              )}
+            </>
+          ),
+          className: 'text-right',
+        },
+      ];
 
   const columns = [
     {
@@ -26,38 +89,7 @@ const Wallet = () => {
         <Body size="m">{format(row.transactedAt, 'yyyy/MM/dd HH:mm:ss')}</Body>
       ),
     },
-    {
-      header: '儲值',
-      accessor: (row: GetUserTransactionResponse['data'][0]) => (
-        <>
-          {row.transactionType === BalanceTransactionType.DEPOSIT && (
-            <div>
-              <Body size="m">{bnFormat(row.amount)}</Body>
-              <Body size="s" className="text-text-note-deposit">
-                {row.description}
-              </Body>
-            </div>
-          )}
-        </>
-      ),
-      className: 'text-right',
-    },
-    {
-      header: '消費',
-      accessor: (row: GetUserTransactionResponse['data'][0]) => (
-        <>
-          {row.transactionType === BalanceTransactionType.PURCHASE && (
-            <div>
-              <Body size="m">{bn(row.amount).negated().toFormat()}</Body>
-              <Body size="s" className="text-text-note-spend">
-                {row.description}
-              </Body>
-            </div>
-          )}
-        </>
-      ),
-      className: 'text-right',
-    },
+    ...columnDepositPurchase,
     {
       header: '餘額',
       accessor: (row: GetUserTransactionResponse['data'][0]) => (
