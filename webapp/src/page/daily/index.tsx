@@ -7,28 +7,28 @@ import Body from 'src/components/typography/Body';
 import useFlow from './useFlow';
 
 const Daily = () => {
-  const { drawable, drawnCard, onDraw } = useFlow();
+  const { drawnCard, onDraw } = useFlow();
 
-  if (!drawable)
+  if (drawnCard)
     return (
       <div>
         <div className="relative mt-10 flex items-center justify-center sm:mt-[80px]">
           <img src={IcCardFrame} className="w-full sm:w-[640px] md:w-[696px]" />
           <img
-            src={`/card/${drawnCard?.cardId}.jpg`}
+            src={`/card/${drawnCard.cardId}.jpg`}
             className={classNames(
               'absolute top-1/2 left-1/2 h-[calc(100%-24px)] w-auto -translate-1/2 rounded-md border-4 border-white sm:h-[calc(100%-36px)]',
               {
-                'rotate-180': drawnCard?.reversal,
+                'rotate-180': drawnCard.reversal,
               },
             )}
           />
         </div>
         <StarDivision
           className="mt-[53px] px-4 py-6 pt-10"
-          title={`${drawnCard?.name} (${drawnCard?.reversal ? '逆位' : '正位'})`}
+          title={`${drawnCard.name} (${drawnCard.reversal ? '逆位' : '正位'})`}
         >
-          <Body className="whitespace-pre-line">{drawnCard?.interpretation}</Body>
+          <Body className="whitespace-pre-line">{drawnCard.interpretation}</Body>
         </StarDivision>
       </div>
     );
