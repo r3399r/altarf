@@ -4,10 +4,14 @@ import PicDraw from 'src/assets/pic-draw.svg';
 import PicShadow from 'src/assets/pic-shadow.svg';
 import StarDivision from 'src/components/StarDivision';
 import Body from 'src/components/typography/Body';
+import useMediaQuery from 'src/hook/useMediaQuery';
 import useFlow from './useFlow';
+
+const drawnHint = '今天已經抽過牌，請等到明天 00:00 再進行下一次抽牌';
 
 const Daily = () => {
   const { drawnCard, onDraw } = useFlow();
+  const { isMobile } = useMediaQuery();
 
   if (drawnCard)
     return (
@@ -30,6 +34,21 @@ const Daily = () => {
         >
           <Body className="whitespace-pre-line">{drawnCard.interpretation}</Body>
         </StarDivision>
+        {!isMobile && (
+          <div className="mt-8 flex items-center justify-center">
+            <Body bold className="bg-background-surface-overlay-normal px-4 py-3">
+              {drawnHint}
+            </Body>
+          </div>
+        )}
+        {isMobile && (
+          <Body
+            bold
+            className="fixed bottom-0 left-0 w-full bg-background-surface-overlay-normal px-4 py-3 text-center"
+          >
+            {drawnHint}
+          </Body>
+        )}
       </div>
     );
 
