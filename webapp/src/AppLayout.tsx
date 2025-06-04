@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Bar from './components/Bar';
-import ErrorModal from './components/ErrorModal';
+import ModalError from './components/ModalError';
 import Snackbar from './components/Snackbar';
 import { logout } from './service/authService';
 import emitter from './utils/eventEmitter';
@@ -27,7 +27,7 @@ const AppLayout = () => {
       <div className="mx-4 mb-20 sm:mx-10 md:mx-auto md:w-[900px]">
         <Outlet />
       </div>
-      <ErrorModal />
+      <ModalError />
       <Snackbar />
     </>
   );

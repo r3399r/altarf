@@ -20,6 +20,7 @@ import { login } from 'src/service/authService';
 import { bnFormat } from 'src/utils/bignumber';
 import Button from './Button';
 import Menu from './Menu';
+import ModalQuotaDesc from './ModalQuotaDesc';
 import Body from './typography/Body';
 
 const Bar = () => {
@@ -28,6 +29,7 @@ const Bar = () => {
   const location = useLocation();
   const { isLogin, balance } = useSelector((rootState: RootState) => rootState.ui);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const tab = useMemo(() => {
@@ -81,7 +83,10 @@ const Bar = () => {
       <div className="absolute top-0 right-0 sm:top-2">
         {isLogin ? (
           <div className="relative flex items-center gap-6">
-            <div className="rounded-sm bg-background-surface-list px-3 py-2">
+            <div
+              className="cursor-pointer rounded-sm bg-background-surface-list px-3 py-2"
+              onClick={() => setOpen(true)}
+            >
               <Body className="text-text-primary">{`餘額: ${bnFormat(balance) ?? '-'} 點`}</Body>
             </div>
             <img
@@ -133,6 +138,7 @@ const Bar = () => {
           每日塔羅
         </Body>
       </div>
+      <ModalQuotaDesc open={open} onClose={() => setOpen(false)} />
     </div>
   );
 };

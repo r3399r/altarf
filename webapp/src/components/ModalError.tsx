@@ -3,7 +3,7 @@ import { RootState } from 'src/redux/store';
 import { dismissErrorModal } from 'src/redux/uiSlice';
 import Modal from './Modal';
 
-const ErrorModal = () => {
+const ModalError = () => {
   const dispatch = useDispatch();
   const { openErrorModal: open, errorMessage } = useSelector((state: RootState) => state.ui);
 
@@ -18,4 +18,4 @@ const ErrorModal = () => {
   );
 };
 
-export default ErrorModal;
+export default ModalError;
