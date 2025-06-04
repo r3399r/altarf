@@ -1,7 +1,9 @@
 import { lazy } from 'react';
+import { useSelector } from 'react-redux';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import AppLayout from './AppLayout';
 import { Page } from './constant/Page';
+import { RootState } from './redux/store';
 
 // Lazy-loaded components
 const Daily = lazy(() => import('./page/daily'));
@@ -12,6 +14,12 @@ const Wallet = lazy(() => import('./page/wallet'));
 const Deposit = lazy(() => import('./page/deposit'));
 
 const AppRoutes = () => {
+  const { isLogin } = useSelector((rootState: RootState) => rootState.ui);
+  const authRouter = [
+    { path: Page.Records, element: <Records /> },
+    { path: Page.Wallet, element: <Wallet /> },
+    { path: Page.Deposit, element: <Deposit /> },
+  ];
   const router = createBrowserRouter([
     {
       element: <AppLayout />,
@@ -19,9 +27,7 @@ const AppRoutes = () => {
         { path: Page.Online, element: <Online /> },
         { path: `${Page.Online}/:id`, element: <OnlineResult /> },
         { path: Page.Daily, element: <Daily /> },
-        { path: Page.Records, element: <Records /> },
-        { path: Page.Wallet, element: <Wallet /> },
-        { path: Page.Deposit, element: <Deposit /> },
+        ...(isLogin ? authRouter : []),
         { path: '/*', element: <Navigate to={Page.Online} /> },
       ],
     },

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { AI_COST, POINT_FOR_NEW_USER, POINT_MONTHLY } from 'src/constant/backend/Balance';
 import { Page } from 'src/constant/Page';
 import Modal from './Modal';
 import Body from './typography/Body';
@@ -24,10 +25,10 @@ const ModalQuotaDesc = ({ open, onClose }: Props) => {
         <Body bold>免費贈送</Body>
         <ul className="mt-2 list-disc space-y-1 pl-5 marker:text-text-primary">
           <li>
-            新加入用戶贈送 <span className="text-text-primary">100</span> 點
+            新加入用戶即贈送 <span className="text-text-primary">{POINT_FOR_NEW_USER}</span> 點
           </li>
           <li>
-            加入後，每月 1 日贈送 <span className="text-text-primary">30</span> 點
+            加入後，每月 1 日贈送 <span className="text-text-primary">{POINT_MONTHLY}</span> 點
           </li>
         </ul>
         <Body bold className="mt-6">
@@ -38,8 +39,8 @@ const ModalQuotaDesc = ({ open, onClose }: Props) => {
             每日塔羅: <span className="text-text-primary">免費</span>
           </li>
           <li>
-            線上解牌: AI解牌每次 <span className="text-text-primary">10</span> 點；真人解牌每次{' '}
-            <span className="text-text-primary">150</span> 點
+            線上解牌: AI解牌每次 <span className="text-text-primary">{AI_COST}</span>{' '}
+            點；真人解牌每次 <span className="text-text-primary">85</span> 點
           </li>
         </ul>
       </>

@@ -1,7 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { UserAccess } from 'src/access/UserAccess';
 import { UserBalanceAccess } from 'src/access/UserBalanceAccess';
-import { BalanceTransactionType } from 'src/constant/Balance';
+import {
+  BalanceTransactionType,
+  POINT_FOR_NEW_USER,
+} from 'src/constant/Balance';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import {
   GetUserResponse,
@@ -39,6 +42,8 @@ export class UserService {
       newUser.balance = 0;
 
       user = await this.userAccess.save(newUser);
+
+      await this.depositForUser(user, POINT_FOR_NEW_USER, '新加入贈點');
     }
 
     return user;
