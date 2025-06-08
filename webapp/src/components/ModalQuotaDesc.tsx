@@ -1,5 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { AI_COST, POINT_FOR_NEW_USER, POINT_MONTHLY } from 'src/constant/backend/Balance';
+import {
+  AI_COST,
+  HUMAN_COST,
+  POINT_FOR_NEW_USER,
+  POINT_MONTHLY,
+} from 'src/constant/backend/Balance';
 import { Page } from 'src/constant/Page';
 import Modal from './Modal';
 import Body from './typography/Body';
@@ -40,7 +45,7 @@ const ModalQuotaDesc = ({ open, onClose }: Props) => {
           </li>
           <li>
             線上解牌: AI解牌每次 <span className="text-text-primary">{AI_COST}</span>{' '}
-            點；真人解牌每次 <span className="text-text-primary">85</span> 點
+            點；真人解牌每次 <span className="text-text-primary">{HUMAN_COST}</span> 點
           </li>
         </ul>
       </>

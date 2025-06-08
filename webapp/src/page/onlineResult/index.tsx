@@ -8,6 +8,7 @@ import Modal from 'src/components/Modal';
 import StarDivision from 'src/components/StarDivision';
 import Body from 'src/components/typography/Body';
 import H3 from 'src/components/typography/H3';
+import { AI_COST } from 'src/constant/backend/Balance';
 import { setSnackbarMessage } from 'src/redux/uiSlice';
 import ResultItem from './ResultItem';
 import useFetch from './useFetch';
@@ -63,7 +64,7 @@ const OnlineResult = () => {
         confirmText="繼續"
         handleConfirm={askAi}
       >
-        <div>使用 AI 解牌需花費 10 點</div>
+        <div>使用 AI 解牌需花費 {AI_COST} 點</div>
       </Modal>
       {/* <Modal
         open={openHumanConfirm}

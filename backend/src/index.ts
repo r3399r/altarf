@@ -9,6 +9,7 @@ import { LambdaContext, LambdaEvent, LambdaOutput } from './model/Lambda';
 import auth from './routes/auth';
 import ecpay from './routes/ecpay';
 import tarot from './routes/tarot';
+import tarotReader from './routes/tarotReader';
 import user from './routes/user';
 import { errorOutput, initLambda, successOutput } from './utils/LambdaHelper';
 
@@ -28,6 +29,9 @@ const apiProcess = async (event: LambdaEvent): Promise<LambdaOutput> => {
         break;
       case 'tarot':
         res = await tarot(event);
+        break;
+      case 'tarot-reader':
+        res = await tarotReader(event);
         break;
       case 'user':
         res = await user(event);

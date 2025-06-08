@@ -7,6 +7,7 @@ import { ECPayTradeItemAccess } from './access/ECPayTradeItemAccess';
 import { TarotCardAccess } from './access/TarotCardAccess';
 import { TarotDailyAccess } from './access/TarotDailyAccess';
 import { TarotInterpretationAiAccess } from './access/TarotInterpretationAiAccess';
+import { TarotInterpretationHumanAccess } from './access/TarotInterpretationHumanAccess';
 import { TarotQuestionAccess } from './access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from './access/TarotQuestionCardAccess';
 import { TarotSpreadAccess } from './access/TarotSpreadAccess';
@@ -17,6 +18,7 @@ import { ECPayService } from './logic/ECPayService';
 import { GoogleService } from './logic/GoogleService';
 import { OpenAiService } from './logic/OpenAiService';
 import { TarotAgentService } from './logic/TarotAgentService';
+import { TarotReaderService } from './logic/TarotReaderService';
 import { TarotService } from './logic/TarotService';
 import { UserService } from './logic/UserService';
 import { ECPayTradeEntity } from './model/entity/ECPayTradeEntity';
@@ -24,6 +26,7 @@ import { ECPayTradeItemEntity } from './model/entity/ECPayTradeItemEntity';
 import { TarotCardEntity } from './model/entity/TarotCardEntity';
 import { TarotDailyEntity } from './model/entity/TarotDailyEntity';
 import { TarotInterpretationAiEntity } from './model/entity/TarotInterpretationAiEntity';
+import { TarotInterpretationHumanEntity } from './model/entity/TarotInterpretationHumanEntity';
 import { TarotQuestionCardEntity } from './model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from './model/entity/TarotQuestionEntity';
 import { TarotSpreadEntity } from './model/entity/TarotSpreadEntity';
@@ -45,6 +48,9 @@ container
   .toFunction(TarotInterpretationAiEntity);
 container
   .bind<Function>(dbEntitiesBindingId)
+  .toFunction(TarotInterpretationHumanEntity);
+container
+  .bind<Function>(dbEntitiesBindingId)
   .toFunction(TarotQuestionCardEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotQuestionEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotSpreadEntity);
@@ -56,6 +62,7 @@ container.bind(DbAccess).toSelf();
 container.bind(ECPayTradeAccess).toSelf();
 container.bind(ECPayTradeItemAccess).toSelf();
 container.bind(TarotInterpretationAiAccess).toSelf();
+container.bind(TarotInterpretationHumanAccess).toSelf();
 container.bind(TarotCardAccess).toSelf();
 container.bind(TarotDailyAccess).toSelf();
 container.bind(TarotQuestionAccess).toSelf();
@@ -69,6 +76,7 @@ container.bind(AuthService).toSelf();
 container.bind(GoogleService).toSelf();
 container.bind(OpenAiService).toSelf();
 container.bind(TarotService).toSelf();
+container.bind(TarotReaderService).toSelf();
 container.bind(TarotAgentService).toSelf();
 container.bind(UserService).toSelf();
 container.bind(ECPayService).toSelf();

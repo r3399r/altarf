@@ -9,3 +9,6 @@ export const POINT_FOR_NEW_USER = 100;
 export const POINT_MONTHLY = 20;
 
 export const AI_COST = 5;
+
+// TOBE: should be set per reader
+export const HUMAN_COST = 85;

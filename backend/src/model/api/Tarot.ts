@@ -1,6 +1,7 @@
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { TarotInterpretationAi } from 'src/model/entity/TarotInterpretationAiEntity';
+import { TarotInterpretationHuman } from 'src/model/entity/TarotInterpretationHumanEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
 import { Paginate, PaginationParams } from 'src/model/Pagination';
 import {
@@ -45,3 +46,5 @@ export type GetTarotQuestionResponse = Paginate<
 >;
 
 export type PostTarotQuestionIdAiResponse = TarotInterpretationAi;
+
+export type PostTarotQuestionIdHumanResponse = TarotInterpretationHuman;

@@ -3,10 +3,13 @@ import { inject, injectable } from 'inversify';
 import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
 import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
+import { TarotInterpretationHumanAccess } from 'src/access/TarotInterpretationHumanAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
 import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
+import { AI_COST, HUMAN_COST } from 'src/constant/Balance';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
+import { InterpretationHumanStatus } from 'src/constant/Tarot';
 import {
   GetTaortDailyResponse,
   GetTarotBasicInfoResponse,
@@ -14,12 +17,14 @@ import {
   GetTarotQuestionParams,
   GetTarotQuestionResponse,
   PostTarotQuestionIdAiResponse,
+  PostTarotQuestionIdHumanResponse,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/api/Tarot';
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
 import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
+import { TarotInterpretationHumanEntity } from 'src/model/entity/TarotInterpretationHumanEntity';
 import { TarotQuestionCardEntity } from 'src/model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from 'src/model/entity/TarotQuestionEntity';
 import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
@@ -66,6 +71,9 @@ export class TarotService {
 
   @inject(TarotInterpretationAiAccess)
   private readonly tarotInterpretationAiAccess!: TarotInterpretationAiAccess;
+
+  @inject(TarotInterpretationHumanAccess)
+  private readonly tarotInterpretationHumanAccess!: TarotInterpretationHumanAccess;
 
   private async getAllTarotCards() {
     if (this.tarotCards === null)
@@ -276,7 +284,7 @@ export class TarotService {
       );
 
     this.checkUserQuota(user);
-    await this.userService.purchaseForUser(user, 10, 'AI解牌');
+    await this.userService.purchaseForUser(user, AI_COST, 'AI解牌');
 
     const tarotInterpretationAi = new TarotInterpretationAiEntity();
     tarotInterpretationAi.questionId = tarotQuestion.id;
@@ -295,5 +303,29 @@ export class TarotService {
       .promise();
 
     return newEntity;
+  }
+
+  public async askHumanTarotQuestion(
+    id: string
+  ): Promise<PostTarotQuestionIdHumanResponse> {
+    const user = await this.getUserInfo();
+
+    const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(id);
+    if (tarotQuestion.userId !== user.id)
+      throw new BadRequestError('userId not match');
+
+    this.checkUserQuota(user);
+    await this.userService.purchaseForUser(user, HUMAN_COST, '真人解牌');
+
+    const reader = await this.userService.getReader();
+
+    const tarotInterpretationHuman = new TarotInterpretationHumanEntity();
+    tarotInterpretationHuman.questionId = tarotQuestion.id;
+    tarotInterpretationHuman.readerId = reader.id;
+    tarotInterpretationHuman.status = InterpretationHumanStatus.IN_PROGRESS;
+
+    return await this.tarotInterpretationHumanAccess.save(
+      tarotInterpretationHuman
+    );
   }
 }

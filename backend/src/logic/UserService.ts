@@ -125,4 +125,10 @@ export class UserService {
       : new Date().toISOString();
     await this.userBalanceAccess.save(userBalanceEntity);
   }
+
+  public async getReader() {
+    return await this.userAccess.findOneOrFail({
+      where: { role: 'reader' },
+    });
+  }
 }
