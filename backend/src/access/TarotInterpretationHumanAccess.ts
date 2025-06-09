@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { FindManyOptions } from 'typeorm';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 import {
   TarotInterpretationHuman,
   TarotInterpretationHumanEntity,
@@ -26,6 +26,23 @@ export class TarotInterpretationHumanAccess {
     const qr = await this.database.getQueryRunner();
 
     return await qr.manager.find<TarotInterpretationHuman>(
+      TarotInterpretationHumanEntity.name,
+      {
+        relations: {
+          question: true,
+          reader: true,
+        },
+        ...options,
+      }
+    );
+  }
+
+  public async findOneOrFail(
+    options?: FindOneOptions<TarotInterpretationHuman>
+  ) {
+    const qr = await this.database.getQueryRunner();
+
+    return await qr.manager.findOneOrFail<TarotInterpretationHuman>(
       TarotInterpretationHumanEntity.name,
       {
         relations: {

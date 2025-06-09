@@ -48,3 +48,11 @@ export type GetTarotQuestionResponse = Paginate<
 export type PostTarotQuestionIdAiResponse = TarotInterpretationAi;
 
 export type PostTarotQuestionIdHumanResponse = TarotInterpretationHuman;
+
+export type GetTarotReaderQuestionResponse = TarotInterpretationHuman[];
+
+export type PostTarotReaderQuestionIdRequest = {
+  interpretation: string;
+};
+
+export type PostTarotReaderQuestionIdResponse = TarotInterpretationHuman;
