@@ -17,6 +17,7 @@ export type TarotQuestionCard = {
   reversal: boolean;
   cardId: string;
   card: TarotCard;
+  sequence: string;
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -43,6 +44,9 @@ export class TarotQuestionCardEntity implements TarotQuestionCard {
   @ManyToOne(() => TarotCardEntity)
   @JoinColumn({ name: 'card_id' })
   card!: TarotCard;
+
+  @Column({ type: 'int8' })
+  sequence!: string;
 
   @Column({ type: 'timestamp', name: 'created_at', default: null })
   createdAt!: string;

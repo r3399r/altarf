@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import tarotEndpoint from 'src/api/tarotEndpoint';
+import { Page } from 'src/constant/Page';
 import { RootState } from 'src/redux/store';
 import { clearPickedCardList, clearQuestion, setPickedCardList } from 'src/redux/tarotSlice';
 import { finishWaiting, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
@@ -14,9 +15,14 @@ const useFlow = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState<number>(1);
+  const [id, setId] = useState<string>();
 
   const goToStep2 = () => setStep(2);
   const goToStep3 = () => setStep(3);
+
+  useEffect(() => {
+    if (id) navigate(`${Page.Online}/${id}`);
+  }, [id]);
 
   useEffect(
     () => () => {
@@ -35,7 +41,7 @@ const useFlow = () => {
         card: pickedCardList,
       })
       .then((res) => {
-        navigate(`/online/${res.data.id}`);
+        setId(res.data.id);
         dispatch(clearQuestion());
       })
       .catch((e) => {

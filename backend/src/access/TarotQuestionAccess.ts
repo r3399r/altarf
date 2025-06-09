@@ -40,7 +40,10 @@ export class TarotQuestionAccess {
   }
 
   public async findOneByIdOrFail(id: string) {
-    return await this.findOneOrFail({ where: { id } });
+    return await this.findOneOrFail({
+      where: { id },
+      order: { card: { sequence: 'ASC' } },
+    });
   }
 
   public async findAndCount(options?: FindManyOptions<TarotQuestion>) {

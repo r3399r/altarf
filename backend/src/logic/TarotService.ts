@@ -169,17 +169,18 @@ export class TarotService {
 
     const newTarotQuestion = await this.tarotQuestionAccess.save(tarotQuestion);
 
+    let n = 0;
     for (const card of data.card) {
       const tarotQuestionCard = new TarotQuestionCardEntity();
       tarotQuestionCard.questionId = newTarotQuestion.id;
       tarotQuestionCard.cardId = card.id;
       tarotQuestionCard.reversal = card.reversed;
+      tarotQuestionCard.sequence = String(n);
       await this.tarotQuestionCardAccess.save(tarotQuestionCard);
+      n++;
     }
 
-    return await this.tarotQuestionAccess.findOneByIdOrFail(
-      newTarotQuestion.id
-    );
+    return newTarotQuestion;
   }
 
   private checkUserQuota(user: User) {

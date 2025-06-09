@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS tarot_question_card (
     question_id UUID NOT NULL,
     reversal BOOLEAN NOT NULL, 
     card_id STRING NOT NULL,
+    sequence INT8 NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
     PRIMARY KEY (id),

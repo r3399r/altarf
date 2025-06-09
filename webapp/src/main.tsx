@@ -1,4 +1,5 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import Loader from './components/Loader.tsx';
@@ -12,7 +13,9 @@ document.documentElement.setAttribute('data-theme', 'primary');
 createRoot(document.getElementById('root')!).render(
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
     <Provider store={store}>
-      <AppRoutes />
+      <Suspense fallback={<Loader />}>
+        <AppRoutes />
+      </Suspense>
       <Loader />
     </Provider>
   </GoogleOAuthProvider>,
