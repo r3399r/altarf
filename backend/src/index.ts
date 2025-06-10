@@ -13,6 +13,8 @@ import tarotReader from './routes/tarotReader';
 import user from './routes/user';
 import { errorOutput, initLambda, successOutput } from './utils/LambdaHelper';
 
+export { monthlyGift } from './eventBridge/monthlyGift';
+
 const apiProcess = async (event: LambdaEvent): Promise<LambdaOutput> => {
   const db = bindings.get(DbAccess);
   let output: LambdaOutput;

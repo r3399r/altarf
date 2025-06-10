@@ -131,4 +131,10 @@ export class UserService {
       where: { role: 'reader' },
     });
   }
+
+  public async getUserList() {
+    return await this.userAccess.find({
+      where: { role: 'user' },
+    });
+  }
 }

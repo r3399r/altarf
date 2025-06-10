@@ -911,6 +911,33 @@ Resources:
           DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
           DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
           DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
+  LambdaMonthlyGift:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures: [arm64]
+      Handler: index.monthlyGift
+      Runtime: nodejs20.x
+      FunctionName: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      Role: !GetAtt ExecutionRole.Arn
+      CodeUri: ../../lib/src
+      MemorySize: 160
+      Layers: [!Ref LambdaLayer]
+      Environment:
+        Variables:
+          PROJECT: !Sub ${Project}
+          ENVR: !Sub ${TargetEnvr}
+          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
+          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
+          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
+          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
+  InvokePermissionMonthlyGift:
+    Type: AWS::Lambda::Permission
+    DependsOn: [EventBridgeMonthlyGift, LambdaMonthlyGift]
+    Properties:
+      FunctionName: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt EventBridgeMonthlyGift.Arn
   LambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
@@ -1023,3 +1050,16 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub ${Project}-${TargetEnvr}-storage
+  #######################
+  ##### EventBridge #####
+  #######################
+  EventBridgeMonthlyGift:
+    Type: AWS::Events::Rule
+    DependsOn: [LambdaMonthlyGift]
+    Properties:
+      Name: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      ScheduleExpression: cron(5 0 1 * ? *)
+      State: ENABLED
+      Targets: 
+        - Arn: !GetAtt LambdaMonthlyGift.Arn
+          Id: !Sub ${Project}-${TargetEnvr}-monthly-gift
