@@ -920,7 +920,8 @@ Resources:
       FunctionName: !Sub ${Project}-${TargetEnvr}-monthly-gift
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
-      MemorySize: 160
+      MemorySize: 128
+      Timeout: 30
       Layers: [!Ref LambdaLayer]
       Environment:
         Variables:
