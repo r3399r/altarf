@@ -4,4 +4,5 @@ export enum Page {
   Records = '/records',
   Wallet = '/wallet',
   Deposit = '/wallet/deposit',
+  Backstage = '/backstage',
 }

@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export type UiState = {
   workload: number;
   isLogin: boolean;
+  isReader: boolean | null;
   email: string | null;
   balance: number | null;
   openErrorModal: boolean;
@@ -13,6 +14,7 @@ export type UiState = {
 const initialState: UiState = {
   workload: 0,
   isLogin: !!localStorage.getItem('refreshToken'),
+  isReader: null,
   email: null,
   balance: null,
   openErrorModal: false,
@@ -32,6 +34,9 @@ export const uiSlice = createSlice({
     },
     setIsLogin: (state: UiState, action: PayloadAction<boolean>) => {
       state.isLogin = action.payload;
+    },
+    setIsReader: (state: UiState, action: PayloadAction<boolean>) => {
+      state.isReader = action.payload;
     },
     setEmail: (state: UiState, action: PayloadAction<string | null>) => {
       state.email = action.payload;
@@ -57,6 +62,7 @@ export const {
   startWaiting,
   finishWaiting,
   setIsLogin,
+  setIsReader,
   setEmail,
   setBalance,
   setErrorMessage,

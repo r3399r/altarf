@@ -14,6 +14,7 @@ import {
   setBalance,
   setEmail,
   setErrorMessage,
+  setIsReader,
   startWaiting,
 } from 'src/redux/uiSlice';
 import { login } from 'src/service/authService';
@@ -65,6 +66,7 @@ const Bar = () => {
         .then((res) => {
           dispatch(setEmail(res.data.email));
           dispatch(setBalance(res.data.balance));
+          dispatch(setIsReader(res.data.role === 'reader'));
         })
         .catch((e) => {
           dispatch(setErrorMessage(e));

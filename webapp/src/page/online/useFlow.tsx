@@ -22,7 +22,7 @@ const useFlow = () => {
 
   useEffect(() => {
     if (id) navigate(`${Page.Online}/${id}`);
-  }, [id]);
+  }, [id, navigate]);
 
   useEffect(
     () => () => {
