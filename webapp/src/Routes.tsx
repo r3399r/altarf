@@ -12,7 +12,7 @@ const OnlineResult = lazy(() => import('./page/onlineResult'));
 const Records = lazy(() => import('./page/records'));
 const Wallet = lazy(() => import('./page/wallet'));
 const Deposit = lazy(() => import('./page/deposit'));
-const Backstage = lazy(() => import('./page/backstage'));
+const Reader = lazy(() => import('./page/reader'));
 
 const AppRoutes = () => {
   const { isLogin } = useSelector((rootState: RootState) => rootState.ui);
@@ -20,7 +20,7 @@ const AppRoutes = () => {
     { path: Page.Records, element: <Records /> },
     { path: Page.Wallet, element: <Wallet /> },
     { path: Page.Deposit, element: <Deposit /> },
-    { path: Page.Backstage, element: <Backstage /> },
+    { path: Page.Reader, element: <Reader /> },
   ];
   const router = createBrowserRouter([
     {
