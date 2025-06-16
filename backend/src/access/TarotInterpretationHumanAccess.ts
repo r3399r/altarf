@@ -29,7 +29,10 @@ export class TarotInterpretationHumanAccess {
       TarotInterpretationHumanEntity.name,
       {
         relations: {
-          question: true,
+          question: {
+            spread: true,
+            card: { card: true },
+          },
           reader: true,
         },
         ...options,

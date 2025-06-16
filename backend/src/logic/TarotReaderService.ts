@@ -28,7 +28,9 @@ export class TarotReaderService {
     return await this.tarotInterpretationHumanAccess.find({
       where: {
         readerId: user.id,
-        status: InterpretationHumanStatus.IN_PROGRESS,
+      },
+      order: {
+        createdAt: 'DESC',
       },
     });
   }
