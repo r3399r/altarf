@@ -1,21 +1,23 @@
 import { format } from 'date-fns';
 import Body from 'src/components/typography/Body';
+import { InterpretationHumanStatus } from 'src/constant/backend/Tarot';
 import { Page } from 'src/constant/Page';
+import { compare } from 'src/utils/compare';
 import Form from './Form';
 import useFetch from './useFetch';
 
 const Reader = () => {
-  const { result } = useFetch();
-
+  const { result, sendInterpretation } = useFetch();
+  console.log(result);
   if (!result) return <div>Loading...</div>;
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'OPEN':
+      case InterpretationHumanStatus.OPEN:
         return '開放中';
-      case 'IN_PROGRESS':
+      case InterpretationHumanStatus.IN_PROGRESS:
         return '等待解牌中';
-      case 'DONE':
+      case InterpretationHumanStatus.DONE:
         return '已完成';
       default:
         return '未知狀態';
@@ -46,9 +48,10 @@ const Reader = () => {
           </div>
           <div className="flex gap-2">
             <Body bold>抽牌</Body>
-            {v.question.card.map((o) => (
-              <Body>
-                ({o.sequence}){o.card.name}
+            {v.question.card.sort(compare('sequence')).map((o) => (
+              <Body key={o.id}>
+                ({Number(o.sequence) + 1}){o.reversal ? '逆-' : '正-'}
+                {o.card.name}
               </Body>
             ))}
           </div>
@@ -56,7 +59,15 @@ const Reader = () => {
             <Body bold>問題</Body>
             <Body>{v.question.question}</Body>
           </div>
-          <Form />
+          {v.status === InterpretationHumanStatus.IN_PROGRESS && (
+            <Form id={v.id} sendInterpretation={sendInterpretation} />
+          )}
+          {v.status === InterpretationHumanStatus.DONE && (
+            <div>
+              <Body bold>解牌</Body>
+              <Body>{v.interpretation}</Body>
+            </div>
+          )}
         </div>
       ))}
     </>

@@ -11,7 +11,25 @@ const useFetch = () => {
   const navigate = useNavigate();
   const { isReader } = useSelector((rootState: RootState) => rootState.ui);
   const [isReady, setIsReady] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [result, setResult] = useState<GetTarotReaderQuestionResponse>();
+
+  const sendInterpretation = (id: string, interpretation: string) => {
+    dispatch(startWaiting());
+    tarotReaderEndpoint
+      .postTarotReaderQuestionId(id, {
+        interpretation,
+      })
+      .then(() => {
+        setRefresh(!refresh);
+      })
+      .catch((e) => {
+        dispatch(setErrorMessage(e));
+      })
+      .finally(() => {
+        dispatch(finishWaiting());
+      });
+  };
 
   useEffect(() => {
     if (isReader === false) navigate('/online');
@@ -32,9 +50,9 @@ const useFetch = () => {
       .finally(() => {
         dispatch(finishWaiting());
       });
-  }, [isReady, dispatch]);
+  }, [isReady, dispatch, refresh]);
 
-  return { result };
+  return { result, sendInterpretation };
 };
 
 export default useFetch;

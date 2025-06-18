@@ -15,11 +15,11 @@ const getTarotReaderQuestion = async () => {
   }
 };
 
-const postTarotReaderQuestionId = async (id: string, params: PostTarotReaderQuestionIdRequest) => {
+const postTarotReaderQuestionId = async (id: string, data: PostTarotReaderQuestionIdRequest) => {
   try {
     return await http.authPost<PostTarotReaderQuestionIdResponse, PostTarotReaderQuestionIdRequest>(
       `tarot-reader/question/${id}`,
-      { params },
+      { data },
     );
   } catch (e) {
     const error = axiosError(e);

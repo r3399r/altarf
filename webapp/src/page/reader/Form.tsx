@@ -2,15 +2,20 @@ import { useForm } from 'react-hook-form';
 import Button from 'src/components/Button';
 import Body from 'src/components/typography/Body';
 
+type Props = {
+  id: string;
+  sendInterpretation: (id: string, interpretation: string) => void;
+};
+
 type FormData = {
   content: string;
 };
 
-const Form = () => {
+const Form = ({ id, sendInterpretation }: Props) => {
   const { register, handleSubmit } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    sendInterpretation(id, data.content);
   };
 
   return (
