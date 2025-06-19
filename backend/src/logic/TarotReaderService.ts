@@ -1,11 +1,14 @@
 import { inject, injectable } from 'inversify';
 import { TarotInterpretationHumanAccess } from 'src/access/TarotInterpretationHumanAccess';
+import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import { InterpretationHumanStatus } from 'src/constant/Tarot';
 import {
+  GetTarotReaderQuestionParams,
   GetTarotReaderQuestionResponse,
   PostTarotReaderQuestionIdRequest,
   PostTarotReaderQuestionIdResponse,
 } from 'src/model/api/Tarot';
+import { genPagination } from 'src/utils/paginator';
 import { UserService } from './UserService';
 
 /**
@@ -22,17 +25,25 @@ export class TarotReaderService {
     return await this.userService.getUserEntity();
   }
 
-  public async getQuestionListByReader(): Promise<GetTarotReaderQuestionResponse> {
+  public async getQuestionListByReader(
+    params: GetTarotReaderQuestionParams | null
+  ): Promise<GetTarotReaderQuestionResponse> {
     const user = await this.getUserInfo();
 
-    return await this.tarotInterpretationHumanAccess.find({
-      where: {
-        readerId: user.id,
-      },
-      order: {
-        createdAt: 'DESC',
-      },
-    });
+    const limit = params?.limit ? Number(params.limit) : LIMIT;
+    const offset = params?.offset ? Number(params.offset) : OFFSET;
+    const [data, total] =
+      await this.tarotInterpretationHumanAccess.findAndCount({
+        where: { readerId: user.id },
+        order: { createdAt: 'DESC' },
+        take: limit,
+        skip: offset,
+      });
+
+    return {
+      data,
+      paginate: genPagination(total, limit, offset),
+    };
   }
 
   public async replyTarotQuestionByReader(

@@ -34,7 +34,7 @@ export type GetTarotBasicInfoResponse = {
 
 export type GetTarotQuestionIdResponse = Omit<
   TarotQuestion,
-  'interpretationAi'
+  'interpretationAi' | 'interpretationHuman'
 > & {
   interpretation: TarotInterpretation[];
 };
@@ -49,7 +49,9 @@ export type PostTarotQuestionIdAiResponse = TarotInterpretationAi;
 
 export type PostTarotQuestionIdHumanResponse = TarotInterpretationHuman;
 
-export type GetTarotReaderQuestionResponse = TarotInterpretationHuman[];
+export type GetTarotReaderQuestionParams = PaginationParams;
+
+export type GetTarotReaderQuestionResponse = Paginate<TarotInterpretationHuman>;
 
 export type PostTarotReaderQuestionIdRequest = {
   interpretation: string;

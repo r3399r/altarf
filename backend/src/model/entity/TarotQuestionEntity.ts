@@ -13,6 +13,10 @@ import {
   TarotInterpretationAiEntity,
 } from './TarotInterpretationAiEntity';
 import {
+  TarotInterpretationHuman,
+  TarotInterpretationHumanEntity,
+} from './TarotInterpretationHumanEntity';
+import {
   TarotQuestionCard,
   TarotQuestionCardEntity,
 } from './TarotQuestionCardEntity';
@@ -28,6 +32,7 @@ export type TarotQuestion = {
   user: User;
   card: TarotQuestionCard[];
   interpretationAi: TarotInterpretationAi[];
+  interpretationHuman: TarotInterpretationHuman[];
   createdAt: string;
   updatedAt: string | null;
 };
@@ -66,6 +71,12 @@ export class TarotQuestionEntity implements TarotQuestion {
     (tarotInterpretationAi) => tarotInterpretationAi.question
   )
   interpretationAi!: TarotInterpretationAi[];
+
+  @OneToMany(
+    () => TarotInterpretationHumanEntity,
+    (tarotInterpretationHuman) => tarotInterpretationHuman.question
+  )
+  interpretationHuman!: TarotInterpretationHuman[];
 
   @Column({ type: 'timestamp', name: 'created_at', default: null })
   createdAt!: string;

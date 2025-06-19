@@ -1,6 +1,9 @@
 import { bindings } from 'src/bindings';
 import { TarotReaderService } from 'src/logic/TarotReaderService';
-import { PostTarotReaderQuestionIdRequest } from 'src/model/api/Tarot';
+import {
+  GetTarotQuestionParams,
+  PostTarotReaderQuestionIdRequest,
+} from 'src/model/api/Tarot';
 import { BadRequestError } from 'src/model/error';
 import { LambdaEvent } from 'src/model/Lambda';
 
@@ -24,7 +27,9 @@ export default async (lambdaEvent: LambdaEvent) => {
 const tarotReaderQuestion = async () => {
   switch (event.httpMethod) {
     case 'GET':
-      return await service.getQuestionListByReader();
+      return await service.getQuestionListByReader(
+        event.queryStringParameters as GetTarotQuestionParams | null
+      );
   }
 
   throw new Error('unexpected httpMethod');

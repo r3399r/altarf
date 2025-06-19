@@ -1,4 +1,6 @@
 import { format } from 'date-fns';
+import { useState } from 'react';
+import Pagination from 'src/components/Pagination';
 import Body from 'src/components/typography/Body';
 import { InterpretationHumanStatus } from 'src/constant/backend/Tarot';
 import { Page } from 'src/constant/Page';
@@ -7,8 +9,9 @@ import Form from './Form';
 import useFetch from './useFetch';
 
 const Reader = () => {
-  const { result, sendInterpretation } = useFetch();
-  console.log(result);
+  const [page, setPage] = useState(1);
+  const { result, sendInterpretation } = useFetch(page);
+
   if (!result) return <div>Loading...</div>;
 
   const getStatusText = (status: string) => {
@@ -26,7 +29,7 @@ const Reader = () => {
 
   return (
     <>
-      {result.map((v) => (
+      {result.data.map((v) => (
         <div key={v.id} className="border p-3">
           <div className="flex gap-2">
             <Body bold>ID</Body>
@@ -70,6 +73,13 @@ const Reader = () => {
           )}
         </div>
       ))}
+      <div className="mt-10">
+        <Pagination
+          page={page}
+          totalPages={result.paginate.totalPages}
+          onPageChange={(page) => setPage(page)}
+        />
+      </div>
     </>
   );
 };

@@ -202,20 +202,28 @@ export class TarotService {
   public async getTarotQuestionById(
     id: string
   ): Promise<GetTarotQuestionIdResponse> {
-    const { interpretationAi, ...tarotQuestion } =
+    const { interpretationAi, interpretationHuman, ...tarotQuestion } =
       await this.tarotQuestionAccess.findOneByIdOrFail(id);
+    const interpretation = [
+      ...interpretationAi.map((v) => ({
+        id: v.id,
+        interpretation: v.interpretation,
+        askedAt: v.createdAt,
+        repliedAt: v.updatedAt,
+        isAi: true,
+      })),
+      ...interpretationHuman.map((v) => ({
+        id: v.id,
+        interpretation: v.interpretation,
+        askedAt: v.createdAt,
+        repliedAt: v.updatedAt,
+        isAi: false,
+      })),
+    ].sort(compare('repliedAt', 'desc', true));
 
     return {
       ...tarotQuestion,
-      interpretation: interpretationAi
-        .map((v) => ({
-          id: v.id,
-          interpretation: v.interpretation,
-          askedAt: v.createdAt,
-          repliedAt: v.updatedAt,
-          isAi: true,
-        }))
-        .sort(compare('repliedAt', 'desc', true)),
+      interpretation,
     };
   }
 
@@ -319,6 +327,13 @@ export class TarotService {
     await this.userService.purchaseForUser(user, HUMAN_COST, '真人解牌');
 
     const reader = await this.userService.getReader();
+
+    const existedTarotInterpretation =
+      await this.tarotInterpretationHumanAccess.findOne({
+        where: { readerId: reader.id, questionId: tarotQuestion.id },
+      });
+    if (existedTarotInterpretation !== null)
+      throw new BadRequestError('already asked human interpretation');
 
     const tarotInterpretationHuman = new TarotInterpretationHumanEntity();
     tarotInterpretationHuman.questionId = tarotQuestion.id;

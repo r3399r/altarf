@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotEvent } from 'src/model/api/Tarot';
+import { compare } from 'src/utils/compare';
 import { OpenAiService } from './OpenAiService';
 
 /**
@@ -39,9 +40,9 @@ export class TarotAgentService {
     }
     content += `我想問「${tarotQuestion.question}」`;
 
-    const translateCards = tarotQuestion.card.map(
-      (v) => (v.reversal ? '逆位的' : '正位的') + v.card.name
-    );
+    const translateCards = tarotQuestion.card
+      .sort(compare('sequence'))
+      .map((v) => (v.reversal ? '逆位的' : '正位的') + v.card.name);
     content += `我抽到${translateCards.map((v) => `「${v}」`).join('、')}`;
     console.log(content);
 

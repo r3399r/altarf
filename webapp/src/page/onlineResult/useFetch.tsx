@@ -44,6 +44,21 @@ const useFetch = () => {
       });
   };
 
+  const askHuman = () => {
+    dispatch(startWaiting());
+    tarotEndpoint
+      .postTarotQuestionIdHuman(id ?? '')
+      .then(() => {
+        setRefresh(!refresh);
+      })
+      .catch((e) => {
+        dispatch(setErrorMessage(e));
+      })
+      .finally(() => {
+        dispatch(finishWaiting());
+      });
+  };
+
   const isAiSupport = spreadList?.find((v) => v.id === result?.spreadId)?.isAiSupport ?? false;
   const isOwner = result?.user.email === email;
 
@@ -51,6 +66,7 @@ const useFetch = () => {
     result,
     url: `${window.location.origin.toString()}${location.pathname}`,
     askAi,
+    askHuman,
     isAiSupport,
     isOwner,
   };

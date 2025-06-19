@@ -33,6 +33,7 @@ export class TarotQuestionAccess {
           user: true,
           card: { card: true },
           interpretationAi: true,
+          interpretationHuman: true,
         },
         ...options,
       }
@@ -42,7 +43,6 @@ export class TarotQuestionAccess {
   public async findOneByIdOrFail(id: string) {
     return await this.findOneOrFail({
       where: { id },
-      order: { card: { sequence: 'ASC' } },
     });
   }
 
@@ -55,8 +55,6 @@ export class TarotQuestionAccess {
         relations: {
           spread: true,
           user: true,
-          card: { card: true },
-          interpretationAi: true,
         },
         ...options,
       }

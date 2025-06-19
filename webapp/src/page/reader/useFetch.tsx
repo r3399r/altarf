@@ -6,7 +6,9 @@ import { GetTarotReaderQuestionResponse } from 'src/model/backend/api/Tarot';
 import { RootState } from 'src/redux/store';
 import { finishWaiting, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
 
-const useFetch = () => {
+const LIMIT = 10;
+
+const useFetch = (page: number) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isReader } = useSelector((rootState: RootState) => rootState.ui);
@@ -39,8 +41,9 @@ const useFetch = () => {
   useEffect(() => {
     if (!isReady) return;
     dispatch(startWaiting());
+    const offset = (page - 1) * LIMIT;
     tarotReaderEndpoint
-      .getTarotReaderQuestion()
+      .getTarotReaderQuestion({ limit: String(LIMIT), offset: String(offset) })
       .then((res) => {
         setResult(res.data);
       })
@@ -50,7 +53,7 @@ const useFetch = () => {
       .finally(() => {
         dispatch(finishWaiting());
       });
-  }, [isReady, dispatch, refresh]);
+  }, [isReady, dispatch, refresh, page]);
 
   return { result, sendInterpretation };
 };

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts';
 import { useDispatch } from 'react-redux';
 import IcShare from 'src/assets/ic-share.svg';
@@ -8,16 +8,20 @@ import Modal from 'src/components/Modal';
 import StarDivision from 'src/components/StarDivision';
 import Body from 'src/components/typography/Body';
 import H3 from 'src/components/typography/H3';
-import { AI_COST } from 'src/constant/backend/Balance';
+import { AI_COST, HUMAN_COST } from 'src/constant/backend/Balance';
 import { setSnackbarMessage } from 'src/redux/uiSlice';
 import ResultItem from './ResultItem';
 import useFetch from './useFetch';
 
 const OnlineResult = () => {
   const dispatch = useDispatch();
-  const { result, url, askAi, isAiSupport, isOwner } = useFetch();
+  const { result, url, askAi, askHuman, isAiSupport, isOwner } = useFetch();
   const [openAiConfirm, setOpenAiConfirm] = useState(false);
-  // const [openHumanConfirm, setOpenHumanConfirm] = useState(false);
+  const [openHumanConfirm, setOpenHumanConfirm] = useState(false);
+  const alreadyAskHuman = useMemo(
+    () => result?.interpretation.some((v) => v.isAi === false),
+    [result],
+  );
 
   if (!result) return <></>;
 
@@ -40,7 +44,9 @@ const OnlineResult = () => {
         {isOwner && (
           <div className="itemes-center flex justify-center gap-4">
             {isAiSupport && <Button onClick={() => setOpenAiConfirm(true)}>AI 解牌</Button>}
-            {/* <Button onClick={() => setOpenHumanConfirm(true)}>真人解牌</Button> */}
+            <Button onClick={() => setOpenHumanConfirm(true)} disabled={alreadyAskHuman}>
+              真人解牌
+            </Button>
           </div>
         )}
         <CopyToClipboard text={url} onCopy={() => dispatch(setSnackbarMessage('已複製連結'))}>
@@ -64,16 +70,18 @@ const OnlineResult = () => {
         confirmText="繼續"
         handleConfirm={askAi}
       >
-        <div>使用 AI 解牌需花費 {AI_COST} 點</div>
+        <div>AI 解牌需花費 {AI_COST} 點</div>
       </Modal>
-      {/* <Modal
+      <Modal
         open={openHumanConfirm}
         handleClose={() => setOpenHumanConfirm(false)}
         title="真人解牌"
-        confirmText="好"
+        cancelText="取消"
+        confirmText="繼續"
+        handleConfirm={askHuman}
       >
-        <div>真人解牌的功能尚未開放</div>
-      </Modal> */}
+        <div>真人解牌需花費 {HUMAN_COST} 點</div>
+      </Modal>
     </>
   );
 };

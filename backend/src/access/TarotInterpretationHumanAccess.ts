@@ -22,10 +22,12 @@ export class TarotInterpretationHumanAccess {
     return await qr.manager.save(entity);
   }
 
-  public async find(options?: FindManyOptions<TarotInterpretationHuman>) {
+  public async findAndCount(
+    options?: FindManyOptions<TarotInterpretationHuman>
+  ) {
     const qr = await this.database.getQueryRunner();
 
-    return await qr.manager.find<TarotInterpretationHuman>(
+    return await qr.manager.findAndCount<TarotInterpretationHuman>(
       TarotInterpretationHumanEntity.name,
       {
         relations: {
@@ -33,6 +35,21 @@ export class TarotInterpretationHumanAccess {
             spread: true,
             card: { card: true },
           },
+          reader: true,
+        },
+        ...options,
+      }
+    );
+  }
+
+  public async findOne(options?: FindOneOptions<TarotInterpretationHuman>) {
+    const qr = await this.database.getQueryRunner();
+
+    return await qr.manager.findOne<TarotInterpretationHuman>(
+      TarotInterpretationHumanEntity.name,
+      {
+        relations: {
+          question: true,
           reader: true,
         },
         ...options,
