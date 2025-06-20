@@ -66,7 +66,7 @@ export class TarotInterpretationHumanAccess {
       TarotInterpretationHumanEntity.name,
       {
         relations: {
-          question: true,
+          question: { user: true },
           reader: true,
         },
         ...options,

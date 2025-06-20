@@ -1,3 +1,4 @@
+import { SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
 import { TarotInterpretationHumanAccess } from 'src/access/TarotInterpretationHumanAccess';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
@@ -16,6 +17,8 @@ import { UserService } from './UserService';
  */
 @injectable()
 export class TarotReaderService {
+  @inject(SES)
+  private readonly ses!: SES;
   @inject(UserService)
   private readonly userService!: UserService;
   @inject(TarotInterpretationHumanAccess)
@@ -63,6 +66,28 @@ export class TarotReaderService {
     tarotInterpretation.interpretation = data.interpretation;
     tarotInterpretation.status = InterpretationHumanStatus.DONE;
     await this.tarotInterpretationHumanAccess.save(tarotInterpretation);
+
+    await this.ses
+      .sendEmail({
+        Destination: { ToAddresses: [tarotInterpretation.question.user.email] },
+        Message: {
+          Body: {
+            Text: {
+              Charset: 'UTF-8',
+              Data: 'Tarot Reader has replied to your question. Please check the result',
+            },
+            Html: {
+              Charset: 'UTF-8',
+              Data: 'Tarot Reader has replied to your question. Please check the result',
+            },
+          },
+          Subject: {
+            Data: 'Tarot Reader Reply',
+          },
+        },
+        Source: 'lookout-noreply@celestialstudio.net',
+      })
+      .promise();
 
     return tarotInterpretation;
   }

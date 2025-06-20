@@ -1,4 +1,4 @@
-import { Lambda } from 'aws-sdk';
+import { Lambda, SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
 import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
@@ -45,6 +45,8 @@ export class TarotService {
   private tarotCards: TarotCard[] | null = null;
   private tarotSpreads: TarotSpread[] | null = null;
 
+  @inject(SES)
+  private readonly ses!: SES;
   @inject(Lambda)
   private readonly lambda!: Lambda;
 
@@ -339,6 +341,28 @@ export class TarotService {
     tarotInterpretationHuman.questionId = tarotQuestion.id;
     tarotInterpretationHuman.readerId = reader.id;
     tarotInterpretationHuman.status = InterpretationHumanStatus.IN_PROGRESS;
+
+    await this.ses
+      .sendEmail({
+        Destination: { ToAddresses: [reader.email] },
+        Message: {
+          Body: {
+            Text: {
+              Charset: 'UTF-8',
+              Data: 'A new tarot question has been asked. Please check',
+            },
+            Html: {
+              Charset: 'UTF-8',
+              Data: 'A new tarot question has been asked. Please check',
+            },
+          },
+          Subject: {
+            Data: 'New Tarot Question comming',
+          },
+        },
+        Source: 'lookout-noreply@celestialstudio.net',
+      })
+      .promise();
 
     return await this.tarotInterpretationHumanAccess.save(
       tarotInterpretationHuman

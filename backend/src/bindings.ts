@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Lambda, SQS } from 'aws-sdk';
+import { Lambda, SES, SQS } from 'aws-sdk';
 import { Container } from 'inversify';
 import { DbAccess } from './access/DbAccess';
 import { ECPayTradeAccess } from './access/ECPayTradeAccess';
@@ -85,6 +85,7 @@ container.bind(ECPayService).toSelf();
 
 // AWS
 container.bind(Lambda).toDynamicValue(() => new Lambda());
+container.bind(SES).toDynamicValue(() => new SES());
 container.bind(SQS).toDynamicValue(() => new SQS());
 
 export { container as bindings };
