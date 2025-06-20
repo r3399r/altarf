@@ -15,10 +15,12 @@ import {
   setEmail,
   setErrorMessage,
   setIsReader,
+  setSnackbarMessage,
   startWaiting,
 } from 'src/redux/uiSlice';
 import { login } from 'src/service/authService';
 import { bnFormat } from 'src/utils/bignumber';
+import { isInAppBrowser } from 'src/utils/isInAppBrowser';
 import Button from './Button';
 import Menu from './Menu';
 import ModalQuotaDesc from './ModalQuotaDesc';
@@ -110,7 +112,11 @@ const Bar = () => {
             <Button
               appearance="secondary"
               className="!px-3 !py-[9.5px] !text-[14px]"
-              onClick={() => onLogin()}
+              onClick={() => {
+                if (isInAppBrowser())
+                  dispatch(setSnackbarMessage('請改用 Chrome 或 Safari 瀏覽器登入'));
+                else onLogin();
+              }}
             >
               <div className="flex items-center gap-1">
                 <img src={IcGoogle} />
