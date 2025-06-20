@@ -14,9 +14,11 @@ export class TarotTimerService {
     const users = await this.userService.getUserList();
 
     await Promise.all(
-      users.map((v) =>
-        this.userService.depositForUser(v, POINT_MONTHLY, '每月贈點')
-      )
+      users
+        .filter((v) => v.role === 'user')
+        .map((v) =>
+          this.userService.depositForUser(v, POINT_MONTHLY, '每月贈點')
+        )
     );
   }
 }
