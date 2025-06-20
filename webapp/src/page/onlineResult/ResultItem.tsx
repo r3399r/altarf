@@ -23,10 +23,10 @@ const ResultItem = ({ tarotInterpretation }: Props) => {
         </Body>
       </div>
       <Body className="whitespace-pre-line">
-        {interpretation === null && isAi === true && 'AI解牌中... 請稍候一下再重新整理頁面'}
         {interpretation === null &&
-          isAi === false &&
-          '塔羅師解牌中... 可能需要一段時間，請耐心等待'}
+          (isAi
+            ? 'AI解牌中... 請稍候一下再重新整理頁面。'
+            : '塔羅師解牌中... 可能需要一段時間，請耐心等待，有結果時會寄 Email 通知您。')}
         {interpretation !== null && interpretation}
       </Body>
     </div>

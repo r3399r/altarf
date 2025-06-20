@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 import tarotEndpoint from 'src/api/tarotEndpoint';
+import { AI_COST, HUMAN_COST } from 'src/constant/backend/Balance';
 import useTarotInfo from 'src/hook/useTarotInfo';
 import { GetTarotQuestionIdResponse } from 'src/model/backend/api/Tarot';
 import { RootState } from 'src/redux/store';
-import { finishWaiting, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
+import { finishWaiting, setBalance, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
 
 const useFetch = () => {
   const { id } = useParams();
@@ -13,7 +14,7 @@ const useFetch = () => {
   const location = useLocation();
   const [result, setResult] = useState<GetTarotQuestionIdResponse>();
   const { spreadList } = useTarotInfo();
-  const { email } = useSelector((rootState: RootState) => rootState.ui);
+  const { email, balance } = useSelector((rootState: RootState) => rootState.ui);
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const useFetch = () => {
       .postTarotQuestionIdAi(id ?? '')
       .then(() => {
         setRefresh(!refresh);
+        if (balance) dispatch(setBalance(balance - AI_COST));
       })
       .catch((e) => {
         dispatch(setErrorMessage(e));
@@ -50,6 +52,7 @@ const useFetch = () => {
       .postTarotQuestionIdHuman(id ?? '')
       .then(() => {
         setRefresh(!refresh);
+        if (balance) dispatch(setBalance(balance - HUMAN_COST));
       })
       .catch((e) => {
         dispatch(setErrorMessage(e));
