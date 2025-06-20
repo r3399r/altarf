@@ -10,6 +10,7 @@ import Body from 'src/components/typography/Body';
 import H3 from 'src/components/typography/H3';
 import { AI_COST, HUMAN_COST } from 'src/constant/backend/Balance';
 import { setSnackbarMessage } from 'src/redux/uiSlice';
+import { compare } from 'src/utils/compare';
 import ResultItem from './ResultItem';
 import useFetch from './useFetch';
 
@@ -28,7 +29,7 @@ const OnlineResult = () => {
   return (
     <>
       <Canvas
-        cardList={result.card.map((v) => ({
+        cardList={result.card.sort(compare('sequence')).map((v) => ({
           id: v.cardId,
           name: v.card.name,
           reversed: v.reversal,
