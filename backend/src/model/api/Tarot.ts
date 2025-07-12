@@ -1,14 +1,10 @@
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
-import { TarotInterpretationAi } from 'src/model/entity/TarotInterpretationAiEntity';
-import { TarotInterpretationHuman } from 'src/model/entity/TarotInterpretationHumanEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
+import { TarotReadingAi } from 'src/model/entity/TarotReadingAiEntity';
+import { TarotReadingHuman } from 'src/model/entity/TarotReadingHumanEntity';
 import { Paginate, PaginationParams } from 'src/model/Pagination';
-import {
-  CardDisplay,
-  CustomTarotSpread,
-  TarotInterpretation,
-} from 'src/model/Tarot';
+import { CardDisplay, CustomTarotSpread, TarotReading } from 'src/model/Tarot';
 
 export type TarotEvent = {
   id: string;
@@ -34,9 +30,9 @@ export type GetTarotBasicInfoResponse = {
 
 export type GetTarotQuestionIdResponse = Omit<
   TarotQuestion,
-  'interpretationAi' | 'interpretationHuman'
+  'readingAi' | 'readingHuman'
 > & {
-  interpretation: TarotInterpretation[];
+  reading: TarotReading[];
 };
 
 export type GetTarotQuestionParams = PaginationParams;
@@ -45,16 +41,16 @@ export type GetTarotQuestionResponse = Paginate<
   Pick<TarotQuestion, 'id' | 'question' | 'spread' | 'createdAt'>
 >;
 
-export type PostTarotQuestionIdAiResponse = TarotInterpretationAi;
+export type PostTarotQuestionIdAiResponse = TarotReadingAi;
 
-export type PostTarotQuestionIdHumanResponse = TarotInterpretationHuman;
+export type PostTarotQuestionIdHumanResponse = TarotReadingHuman;
 
 export type GetTarotReaderQuestionParams = PaginationParams;
 
-export type GetTarotReaderQuestionResponse = Paginate<TarotInterpretationHuman>;
+export type GetTarotReaderQuestionResponse = Paginate<TarotReadingHuman>;
 
 export type PostTarotReaderQuestionIdRequest = {
-  interpretation: string;
+  reading: string;
 };
 
-export type PostTarotReaderQuestionIdResponse = TarotInterpretationHuman;
+export type PostTarotReaderQuestionIdResponse = TarotReadingHuman;

@@ -803,9 +803,9 @@ Resources:
             "postTarotReaderQuestionId": {
               "type": "object",
               "properties": {
-                "interpretation":{"type": "string"}
+                "reading":{"type": "string"}
               },
-              "required": ["interpretation"]
+              "required": ["reading"]
             },
             "postAuth": {
               "type": "object",
@@ -852,10 +852,9 @@ Resources:
         Variables:
           PROJECT: !Sub ${Project}
           ENVR: !Sub ${TargetEnvr}
-          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
-          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
-          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
-          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
           LOGGER_QUEUE_URL: !Sub https://sqs.${AWS::Region}.amazonaws.com/${AWS::AccountId}/polaris-${TargetEnvr}-logger-queue
           GOOGLE_OAUTH_CLIENT_ID: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-google-oauth-client-id}}'
           GOOGLE_OAUTH_CLIENT_SECRET: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-google-oauth-client_secret}}'
@@ -887,10 +886,9 @@ Resources:
           PROJECT: !Sub ${Project}
           ENVR: !Sub ${TargetEnvr}
           OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai}}'
-          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
-          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
-          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
-          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
   LambdaTarotDailyFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -908,10 +906,9 @@ Resources:
           PROJECT: !Sub ${Project}
           ENVR: !Sub ${TargetEnvr}
           OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai}}'
-          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
-          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
-          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
-          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
   LambdaMonthlyGift:
     Type: AWS::Serverless::Function
     Properties:
@@ -928,10 +925,9 @@ Resources:
         Variables:
           PROJECT: !Sub ${Project}
           ENVR: !Sub ${TargetEnvr}
-          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
-          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
-          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
-          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
   InvokePermissionMonthlyGift:
     Type: AWS::Lambda::Permission
     DependsOn: [EventBridgeMonthlyGift, LambdaMonthlyGift]

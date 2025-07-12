@@ -1,34 +1,32 @@
 import { inject, injectable } from 'inversify';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import {
-  TarotInterpretationHuman,
-  TarotInterpretationHumanEntity,
-} from 'src/model/entity/TarotInterpretationHumanEntity';
+  TarotReadingHuman,
+  TarotReadingHumanEntity,
+} from 'src/model/entity/TarotReadingHumanEntity';
 import { Database } from 'src/utils/Database';
 
 /**
- * Access class for TarotInterpretationHuman model.
+ * Access class for TarotReadingHuman model.
  */
 @injectable()
-export class TarotInterpretationHumanAccess {
+export class TarotReadingHumanAccess {
   @inject(Database)
   private readonly database!: Database;
 
-  public async save(data: TarotInterpretationHuman) {
+  public async save(data: TarotReadingHuman) {
     const qr = await this.database.getQueryRunner();
-    const entity = new TarotInterpretationHumanEntity();
+    const entity = new TarotReadingHumanEntity();
     Object.assign(entity, data);
 
     return await qr.manager.save(entity);
   }
 
-  public async findAndCount(
-    options?: FindManyOptions<TarotInterpretationHuman>
-  ) {
+  public async findAndCount(options?: FindManyOptions<TarotReadingHuman>) {
     const qr = await this.database.getQueryRunner();
 
-    return await qr.manager.findAndCount<TarotInterpretationHuman>(
-      TarotInterpretationHumanEntity.name,
+    return await qr.manager.findAndCount<TarotReadingHuman>(
+      TarotReadingHumanEntity.name,
       {
         relations: {
           question: {
@@ -42,11 +40,11 @@ export class TarotInterpretationHumanAccess {
     );
   }
 
-  public async findOne(options?: FindOneOptions<TarotInterpretationHuman>) {
+  public async findOne(options?: FindOneOptions<TarotReadingHuman>) {
     const qr = await this.database.getQueryRunner();
 
-    return await qr.manager.findOne<TarotInterpretationHuman>(
-      TarotInterpretationHumanEntity.name,
+    return await qr.manager.findOne<TarotReadingHuman>(
+      TarotReadingHumanEntity.name,
       {
         relations: {
           question: true,
@@ -57,13 +55,11 @@ export class TarotInterpretationHumanAccess {
     );
   }
 
-  public async findOneOrFail(
-    options?: FindOneOptions<TarotInterpretationHuman>
-  ) {
+  public async findOneOrFail(options?: FindOneOptions<TarotReadingHuman>) {
     const qr = await this.database.getQueryRunner();
 
-    return await qr.manager.findOneOrFail<TarotInterpretationHuman>(
-      TarotInterpretationHumanEntity.name,
+    return await qr.manager.findOneOrFail<TarotReadingHuman>(
+      TarotReadingHumanEntity.name,
       {
         relations: {
           question: { user: true },

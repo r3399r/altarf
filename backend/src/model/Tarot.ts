@@ -9,9 +9,9 @@ export type CustomTarotSpread = TarotSpread & {
   isAiSupport: boolean;
 };
 
-export type TarotInterpretation = {
+export type TarotReading = {
   id: string;
-  interpretation: string | null;
+  reading: string | null;
   askedAt: string | null;
   repliedAt: string | null;
   isAi: boolean;

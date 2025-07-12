@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS user_balance (
-    id UUID NOT NULL DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL,
-    transaction_type STRING NOT NULL,
-    amount FLOAT NOT NULL,
-    balance FLOAT NOT NULL,
-    description STRING NULL,
-    transacted_at TIMESTAMP NOT NULL,
-    created_at TIMESTAMP NULL,
-    updated_at TIMESTAMP NULL,
+    id CHAR(36) NOT NULL DEFAULT (UUID()),
+    user_id CHAR(36) NOT NULL,
+    transaction_type VARCHAR(255) NOT NULL,
+    amount DOUBLE NOT NULL,
+    balance DOUBLE NOT NULL,
+    description TEXT NULL,
+    transacted_at DATETIME(3) NOT NULL,
+    created_at DATETIME(3) NULL,
+    updated_at DATETIME(3) NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES "user"(id)
+    FOREIGN KEY (user_id) REFERENCES user(id)
 );

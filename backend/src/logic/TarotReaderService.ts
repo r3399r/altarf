@@ -1,8 +1,8 @@
 import { SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
-import { TarotInterpretationHumanAccess } from 'src/access/TarotInterpretationHumanAccess';
+import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
-import { InterpretationHumanStatus } from 'src/constant/Tarot';
+import { ReadingHumanStatus } from 'src/constant/Tarot';
 import {
   GetTarotReaderQuestionParams,
   GetTarotReaderQuestionResponse,
@@ -21,8 +21,8 @@ export class TarotReaderService {
   private readonly ses!: SES;
   @inject(UserService)
   private readonly userService!: UserService;
-  @inject(TarotInterpretationHumanAccess)
-  private readonly tarotInterpretationHumanAccess!: TarotInterpretationHumanAccess;
+  @inject(TarotReadingHumanAccess)
+  private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
   private async getUserInfo() {
     return await this.userService.getUserEntity();
@@ -35,13 +35,12 @@ export class TarotReaderService {
 
     const limit = params?.limit ? Number(params.limit) : LIMIT;
     const offset = params?.offset ? Number(params.offset) : OFFSET;
-    const [data, total] =
-      await this.tarotInterpretationHumanAccess.findAndCount({
-        where: { readerId: user.id },
-        order: { createdAt: 'DESC' },
-        take: limit,
-        skip: offset,
-      });
+    const [data, total] = await this.tarotReadingHumanAccess.findAndCount({
+      where: { readerId: user.id },
+      order: { createdAt: 'DESC' },
+      take: limit,
+      skip: offset,
+    });
 
     return {
       data,
@@ -54,22 +53,21 @@ export class TarotReaderService {
     data: PostTarotReaderQuestionIdRequest
   ): Promise<PostTarotReaderQuestionIdResponse> {
     const user = await this.getUserInfo();
-    const tarotInterpretation =
-      await this.tarotInterpretationHumanAccess.findOneOrFail({
-        where: {
-          id,
-          status: InterpretationHumanStatus.IN_PROGRESS,
-          readerId: user.id,
-        },
-      });
+    const tarotReading = await this.tarotReadingHumanAccess.findOneOrFail({
+      where: {
+        id,
+        status: ReadingHumanStatus.IN_PROGRESS,
+        readerId: user.id,
+      },
+    });
 
-    tarotInterpretation.interpretation = data.interpretation;
-    tarotInterpretation.status = InterpretationHumanStatus.DONE;
-    await this.tarotInterpretationHumanAccess.save(tarotInterpretation);
+    tarotReading.reading = data.reading;
+    tarotReading.status = ReadingHumanStatus.DONE;
+    await this.tarotReadingHumanAccess.save(tarotReading);
 
     await this.ses
       .sendEmail({
-        Destination: { ToAddresses: [tarotInterpretation.question.user.email] },
+        Destination: { ToAddresses: [tarotReading.question.user.email] },
         Message: {
           Body: {
             Text: {
@@ -89,6 +87,6 @@ export class TarotReaderService {
       })
       .promise();
 
-    return tarotInterpretation;
+    return tarotReading;
   }
 }

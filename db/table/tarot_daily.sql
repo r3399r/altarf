@@ -1,11 +1,10 @@
 CREATE TABLE IF NOT EXISTS tarot_daily (
-    id UUID NOT NULL DEFAULT gen_random_uuid(),
-    card_id STRING NOT NULL,
-    interpretation STRING NOT NULL,
+    id CHAR(36) NOT NULL DEFAULT (UUID()),
+    card_id VARCHAR(255) NOT NULL,
+    reading TEXT NOT NULL,
     reversal BOOLEAN NOT NULL,
-    created_at TIMESTAMP NULL,
-    updated_at TIMESTAMP NULL,
-    last_read_at TIMESTAMP NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (card_id) REFERENCES tarot_card(id)
+    created_at DATETIME(3) NULL,
+    updated_at DATETIME(3) NULL,
+    last_read_at DATETIME(3) NULL,
+    PRIMARY KEY (id)
 );

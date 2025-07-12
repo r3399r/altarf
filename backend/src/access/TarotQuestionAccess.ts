@@ -32,8 +32,8 @@ export class TarotQuestionAccess {
           spread: true,
           user: true,
           card: { card: true },
-          interpretationAi: true,
-          interpretationHuman: true,
+          readingAi: true,
+          readingHuman: true,
         },
         ...options,
       }

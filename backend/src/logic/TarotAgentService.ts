@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
-import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
+import { TarotReadingAiAccess } from 'src/access/TarotReadingAiAccess';
 import { TarotEvent } from 'src/model/api/Tarot';
 import { compare } from 'src/utils/compare';
 import { OpenAiService } from './OpenAiService';
@@ -13,17 +13,18 @@ export class TarotAgentService {
   @inject(OpenAiService)
   private readonly openAiService!: OpenAiService;
 
-  @inject(TarotInterpretationAiAccess)
-  private readonly tarotInterpretationAiAccess!: TarotInterpretationAiAccess;
+  @inject(TarotReadingAiAccess)
+  private readonly tarotReadingAiAccess!: TarotReadingAiAccess;
 
   @inject(TarotQuestionAccess)
   private readonly tarotQuestionAccess!: TarotQuestionAccess;
 
-  public async genTarotInterpretation(data: TarotEvent) {
-    const tarotInterpretationAi =
-      await this.tarotInterpretationAiAccess.findOneByIdOrFail(data.id);
+  public async genTarotReading(data: TarotEvent) {
+    const tarotReadingAi = await this.tarotReadingAiAccess.findOneByIdOrFail(
+      data.id
+    );
     const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(
-      tarotInterpretationAi.questionId
+      tarotReadingAi.questionId
     );
 
     const now = new Date().getTime();
@@ -51,12 +52,10 @@ export class TarotAgentService {
     ]);
     const elapsedTime = new Date().getTime() - now;
 
-    tarotInterpretationAi.interpretation =
-      chatCompletion.choices[0].message.content;
-    tarotInterpretationAi.promptTokens = chatCompletion.usage.prompt_tokens;
-    tarotInterpretationAi.completionTokens =
-      chatCompletion.usage.completion_tokens;
-    tarotInterpretationAi.elapsedTime = elapsedTime;
-    await this.tarotInterpretationAiAccess.save(tarotInterpretationAi);
+    tarotReadingAi.reading = chatCompletion.choices[0].message.content;
+    tarotReadingAi.promptTokens = chatCompletion.usage.prompt_tokens;
+    tarotReadingAi.completionTokens = chatCompletion.usage.completion_tokens;
+    tarotReadingAi.elapsedTime = elapsedTime;
+    await this.tarotReadingAiAccess.save(tarotReadingAi);
   }
 }

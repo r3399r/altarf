@@ -2,14 +2,14 @@ import { Lambda, SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
 import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
-import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
-import { TarotInterpretationHumanAccess } from 'src/access/TarotInterpretationHumanAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
+import { TarotReadingAiAccess } from 'src/access/TarotReadingAiAccess';
+import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
 import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
 import { AI_COST, HUMAN_COST } from 'src/constant/Balance';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
-import { InterpretationHumanStatus } from 'src/constant/Tarot';
+import { ReadingHumanStatus } from 'src/constant/Tarot';
 import {
   GetTaortDailyResponse,
   GetTarotBasicInfoResponse,
@@ -23,10 +23,10 @@ import {
 } from 'src/model/api/Tarot';
 import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
-import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
-import { TarotInterpretationHumanEntity } from 'src/model/entity/TarotInterpretationHumanEntity';
 import { TarotQuestionCardEntity } from 'src/model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from 'src/model/entity/TarotQuestionEntity';
+import { TarotReadingAiEntity } from 'src/model/entity/TarotReadingAiEntity';
+import { TarotReadingHumanEntity } from 'src/model/entity/TarotReadingHumanEntity';
 import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
@@ -71,11 +71,11 @@ export class TarotService {
   @inject(TarotDailyAccess)
   private readonly tarotDailyAccess!: TarotDailyAccess;
 
-  @inject(TarotInterpretationAiAccess)
-  private readonly tarotInterpretationAiAccess!: TarotInterpretationAiAccess;
+  @inject(TarotReadingAiAccess)
+  private readonly tarotReadingAiAccess!: TarotReadingAiAccess;
 
-  @inject(TarotInterpretationHumanAccess)
-  private readonly tarotInterpretationHumanAccess!: TarotInterpretationHumanAccess;
+  @inject(TarotReadingHumanAccess)
+  private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
   private async getAllTarotCards() {
     if (this.tarotCards === null)
@@ -130,7 +130,7 @@ export class TarotService {
         const tarotDaily = new TarotDailyEntity();
         tarotDaily.cardId = card.id;
         tarotDaily.reversal = reversal;
-        tarotDaily.interpretation = await this.generateTarotDailyByCard(
+        tarotDaily.reading = await this.generateTarotDailyByCard(
           card.name,
           reversal
         );
@@ -204,19 +204,19 @@ export class TarotService {
   public async getTarotQuestionById(
     id: string
   ): Promise<GetTarotQuestionIdResponse> {
-    const { interpretationAi, interpretationHuman, ...tarotQuestion } =
+    const { readingAi, readingHuman, ...tarotQuestion } =
       await this.tarotQuestionAccess.findOneByIdOrFail(id);
-    const interpretation = [
-      ...interpretationAi.map((v) => ({
+    const reading = [
+      ...readingAi.map((v) => ({
         id: v.id,
-        interpretation: v.interpretation,
+        reading: v.reading,
         askedAt: v.createdAt,
         repliedAt: v.updatedAt,
         isAi: true,
       })),
-      ...interpretationHuman.map((v) => ({
+      ...readingHuman.map((v) => ({
         id: v.id,
-        interpretation: v.interpretation,
+        reading: v.reading,
         askedAt: v.createdAt,
         repliedAt: v.updatedAt,
         isAi: false,
@@ -225,7 +225,7 @@ export class TarotService {
 
     return {
       ...tarotQuestion,
-      interpretation,
+      reading,
     };
   }
 
@@ -297,11 +297,9 @@ export class TarotService {
     this.checkUserQuota(user);
     await this.userService.purchaseForUser(user, AI_COST, 'AI解牌');
 
-    const tarotInterpretationAi = new TarotInterpretationAiEntity();
-    tarotInterpretationAi.questionId = tarotQuestion.id;
-    const newEntity = await this.tarotInterpretationAiAccess.save(
-      tarotInterpretationAi
-    );
+    const tarotReadingAi = new TarotReadingAiEntity();
+    tarotReadingAi.questionId = tarotQuestion.id;
+    const newEntity = await this.tarotReadingAiAccess.save(tarotReadingAi);
 
     await this.lambda
       .invoke({
@@ -330,17 +328,16 @@ export class TarotService {
 
     const reader = await this.userService.getReader();
 
-    const existedTarotInterpretation =
-      await this.tarotInterpretationHumanAccess.findOne({
-        where: { readerId: reader.id, questionId: tarotQuestion.id },
-      });
-    if (existedTarotInterpretation !== null)
-      throw new BadRequestError('already asked human interpretation');
+    const existedTarotReading = await this.tarotReadingHumanAccess.findOne({
+      where: { readerId: reader.id, questionId: tarotQuestion.id },
+    });
+    if (existedTarotReading !== null)
+      throw new BadRequestError('already asked human reading');
 
-    const tarotInterpretationHuman = new TarotInterpretationHumanEntity();
-    tarotInterpretationHuman.questionId = tarotQuestion.id;
-    tarotInterpretationHuman.readerId = reader.id;
-    tarotInterpretationHuman.status = InterpretationHumanStatus.IN_PROGRESS;
+    const tarotReadingHuman = new TarotReadingHumanEntity();
+    tarotReadingHuman.questionId = tarotQuestion.id;
+    tarotReadingHuman.readerId = reader.id;
+    tarotReadingHuman.status = ReadingHumanStatus.IN_PROGRESS;
 
     await this.ses
       .sendEmail({
@@ -364,8 +361,6 @@ export class TarotService {
       })
       .promise();
 
-    return await this.tarotInterpretationHumanAccess.save(
-      tarotInterpretationHuman
-    );
+    return await this.tarotReadingHumanAccess.save(tarotReadingHuman);
   }
 }

@@ -7,54 +7,52 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { InterpretationHumanStatus } from 'src/constant/Tarot';
+import { ReadingHumanStatus } from 'src/constant/Tarot';
 import { TarotQuestion, TarotQuestionEntity } from './TarotQuestionEntity';
 import { User, UserEntity } from './UserEntity';
 
-export type TarotInterpretationHuman = {
+export type TarotReadingHuman = {
   id: string;
   questionId: string;
   question: TarotQuestion;
   readerId: string;
   reader: User;
-  status: InterpretationHumanStatus;
-  interpretation: string | null;
+  status: ReadingHumanStatus;
+  reading: string | null;
   createdAt: string | null;
   updatedAt: string | null;
 };
 
-@Entity({ name: 'tarot_interpretation_human' })
-export class TarotInterpretationHumanEntity
-  implements TarotInterpretationHuman
-{
-  @Column({ primary: true })
+@Entity({ name: 'tarot_reading_human' })
+export class TarotReadingHumanEntity implements TarotReadingHuman {
+  @Column({ primary: true, type: 'char', length: 36 })
   @Generated('uuid')
   id!: string;
 
-  @Column({ type: 'uuid', name: 'question_id' })
+  @Column({ type: 'char', length: 36, name: 'question_id' })
   questionId!: string;
 
   @ManyToOne(() => TarotQuestionEntity)
   @JoinColumn({ name: 'question_id' })
   question!: TarotQuestion;
 
-  @Column({ type: 'uuid', name: 'reader_id' })
+  @Column({ type: 'char', length: 36, name: 'reader_id' })
   readerId!: string;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'reader_id' })
   reader!: User;
 
-  @Column({ type: 'text' })
-  status!: InterpretationHumanStatus;
+  @Column({ type: 'varchar', length: 255 })
+  status!: ReadingHumanStatus;
 
   @Column({ type: 'text' })
-  interpretation: string | null = null;
+  reading: string | null = null;
 
-  @Column({ type: 'timestamp', name: 'created_at', default: null })
+  @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;
 
-  @Column({ type: 'timestamp', name: 'updated_at', default: null })
+  @Column({ type: 'datetime', name: 'updated_at', default: null })
   updatedAt: string | null = null;
 
   @BeforeInsert()
