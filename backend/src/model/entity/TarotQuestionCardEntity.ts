@@ -7,7 +7,6 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { TarotCard, TarotCardEntity } from './TarotCardEntity';
 import { TarotQuestion, TarotQuestionEntity } from './TarotQuestionEntity';
 
 export type TarotQuestionCard = {
@@ -16,7 +15,6 @@ export type TarotQuestionCard = {
   question: TarotQuestion;
   reversal: boolean;
   cardId: string;
-  card: TarotCard;
   sequence: string;
   createdAt: string | null;
   updatedAt: string | null;
@@ -40,10 +38,6 @@ export class TarotQuestionCardEntity implements TarotQuestionCard {
 
   @Column({ type: 'varchar', length: 255, name: 'card_id' })
   cardId!: string;
-
-  @ManyToOne(() => TarotCardEntity)
-  @JoinColumn({ name: 'card_id' })
-  card!: TarotCard;
 
   @Column({ type: 'int' })
   sequence!: string;

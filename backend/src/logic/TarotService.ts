@@ -1,12 +1,10 @@
 import { Lambda, SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
-import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
 import { TarotReadingAiAccess } from 'src/access/TarotReadingAiAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
-import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
 import { AI_COST, HUMAN_COST } from 'src/constant/Balance';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import { ReadingHumanStatus } from 'src/constant/Tarot';
@@ -21,13 +19,11 @@ import {
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/api/Tarot';
-import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
 import { TarotQuestionCardEntity } from 'src/model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from 'src/model/entity/TarotQuestionEntity';
 import { TarotReadingAiEntity } from 'src/model/entity/TarotReadingAiEntity';
 import { TarotReadingHumanEntity } from 'src/model/entity/TarotReadingHumanEntity';
-import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
 import { CardDisplay } from 'src/model/Tarot';
@@ -42,9 +38,6 @@ import { UserService } from './UserService';
  */
 @injectable()
 export class TarotService {
-  private tarotCards: TarotCard[] | null = null;
-  private tarotSpreads: TarotSpread[] | null = null;
-
   @inject(SES)
   private readonly ses!: SES;
   @inject(Lambda)
@@ -62,12 +55,6 @@ export class TarotService {
   @inject(UserService)
   private readonly userService!: UserService;
 
-  @inject(TarotCardAccess)
-  private readonly tarotCardAccess!: TarotCardAccess;
-
-  @inject(TarotSpreadAccess)
-  private readonly tarotSpreadAccess!: TarotSpreadAccess;
-
   @inject(TarotDailyAccess)
   private readonly tarotDailyAccess!: TarotDailyAccess;
 
@@ -78,20 +65,36 @@ export class TarotService {
   private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
   private async getAllTarotCards() {
-    if (this.tarotCards === null)
-      this.tarotCards = await this.tarotCardAccess.find();
-
-    return this.tarotCards;
+    return [
+      {
+        id: 'aaa',
+        name: 'bbb',
+      },
+    ];
+    // if (this.tarotCards === null)
+    // this.tarotCards = await this.tarotCardAccess.find();
+    // TODO: return tarot cards list
+    // return this.tarotCards;
   }
 
   private async getAllTarotSpreads() {
-    if (this.tarotSpreads === null)
-      this.tarotSpreads = await this.tarotSpreadAccess.find();
+    return [
+      {
+        id: 'xxx',
+        name: 'yyy',
+        description: 'zzz',
+        drawnCardCount: 5,
+        isAiSupport: true,
+      },
+    ];
+    // TODO: return tarot spreads list
+    // if (this.tarotSpreads === null)
+    //   this.tarotSpreads = await this.tarotSpreadAccess.find();
 
-    return this.tarotSpreads.sort(compare('seqNo', 'asc')).map((v) => ({
-      ...v,
-      isAiSupport: v.id === 'SINGLE' || v.id === 'LINEAR',
-    }));
+    // return this.tarotSpreads.map((v) => ({
+    //   ...v,
+    //   isAiSupport: v.id === 'SINGLE' || v.id === 'LINEAR',
+    // }));
   }
 
   public async getTarotDaily(): Promise<GetTaortDailyResponse> {
@@ -269,7 +272,14 @@ export class TarotService {
       data: tarotQuestion.map((v) => ({
         id: v.id,
         question: v.question,
-        spread: v.spread,
+        spread: {
+          // TODO: get true data
+          id: v.spreadId,
+          name: 'xxx',
+          description: 'yyy',
+          drawnCardCount: 5,
+          isAiSupport: true,
+        },
         createdAt: v.createdAt,
       })),
       paginate: genPagination(total, limit, offset),

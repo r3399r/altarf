@@ -29,9 +29,8 @@ export class TarotQuestionAccess {
       TarotQuestionEntity.name,
       {
         relations: {
-          spread: true,
           user: true,
-          card: { card: true },
+          card: true,
           readingAi: true,
           readingHuman: true,
         },
@@ -53,7 +52,6 @@ export class TarotQuestionAccess {
       TarotQuestionEntity.name,
       {
         relations: {
-          spread: true,
           user: true,
         },
         ...options,

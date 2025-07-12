@@ -43,7 +43,7 @@ export class TarotAgentService {
 
     const translateCards = tarotQuestion.card
       .sort(compare('sequence'))
-      .map((v) => (v.reversal ? '逆位的' : '正位的') + v.card.name);
+      .map((v) => (v.reversal ? '逆位的' : '正位的') + v.cardId); // TODO: use true card name
     content += `我抽到${translateCards.map((v) => `「${v}」`).join('、')}`;
     console.log(content);
 

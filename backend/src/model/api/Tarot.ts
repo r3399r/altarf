@@ -1,10 +1,14 @@
-import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
 import { TarotReadingAi } from 'src/model/entity/TarotReadingAiEntity';
 import { TarotReadingHuman } from 'src/model/entity/TarotReadingHumanEntity';
 import { Paginate, PaginationParams } from 'src/model/Pagination';
-import { CardDisplay, CustomTarotSpread, TarotReading } from 'src/model/Tarot';
+import {
+  CardDisplay,
+  TarotCard,
+  TarotReading,
+  TarotSpread,
+} from 'src/model/Tarot';
 
 export type TarotEvent = {
   id: string;
@@ -24,7 +28,7 @@ export type GetTaortDailyResponse = TarotDaily & {
 };
 
 export type GetTarotBasicInfoResponse = {
-  spread: CustomTarotSpread[];
+  spread: TarotSpread[];
   card: TarotCard[];
 };
 
@@ -38,7 +42,9 @@ export type GetTarotQuestionIdResponse = Omit<
 export type GetTarotQuestionParams = PaginationParams;
 
 export type GetTarotQuestionResponse = Paginate<
-  Pick<TarotQuestion, 'id' | 'question' | 'spread' | 'createdAt'>
+  Pick<TarotQuestion, 'id' | 'question' | 'createdAt'> & {
+    spread: TarotSpread;
+  }
 >;
 
 export type PostTarotQuestionIdAiResponse = TarotReadingAi;

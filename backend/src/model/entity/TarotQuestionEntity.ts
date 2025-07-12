@@ -17,14 +17,12 @@ import {
   TarotReadingHuman,
   TarotReadingHumanEntity,
 } from './TarotReadingHumanEntity';
-import { TarotSpread, TarotSpreadEntity } from './TarotSpreadEntity';
 import { User, UserEntity } from './UserEntity';
 
 export type TarotQuestion = {
   id: string;
   question: string;
   spreadId: string;
-  spread: TarotSpread;
   userId: string;
   user: User;
   card: TarotQuestionCard[];
@@ -45,10 +43,6 @@ export class TarotQuestionEntity implements TarotQuestion {
 
   @Column({ type: 'varchar', length: 255, name: 'spread_id' })
   spreadId!: string;
-
-  @ManyToOne(() => TarotSpreadEntity)
-  @JoinColumn({ name: 'spread_id' })
-  spread!: TarotSpread;
 
   @Column({ type: 'char', length: 36, name: 'user_id' })
   userId!: string;
