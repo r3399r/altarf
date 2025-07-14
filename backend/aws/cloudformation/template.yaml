@@ -36,6 +36,7 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess
         - arn:aws:iam::aws:policy/AmazonSQSFullAccess
         - arn:aws:iam::aws:policy/AmazonSESFullAccess
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
   ##############################################
   ##### RESTful API and associated Lambdas #####
   ##############################################
@@ -848,6 +849,13 @@ Resources:
       MemorySize: 128
       Timeout: 30
       Layers: [!Ref LambdaLayer]
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-00b9879bcad3e4697
+        SubnetIds:
+          - subnet-0608d15aefe1735ec
+          - subnet-0deab5ad0e63af50d
+          - subnet-03ac3380f6870bb72
       Environment:
         Variables:
           PROJECT: !Sub ${Project}
@@ -855,9 +863,10 @@ Resources:
           DB_HOST:
             Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
           DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
-          LOGGER_QUEUE_URL: !Sub https://sqs.${AWS::Region}.amazonaws.com/${AWS::AccountId}/polaris-${TargetEnvr}-logger-queue
+          LOGGER_QUEUE_URL:
+            Fn::ImportValue: !Sub polaris-${TargetEnvr}-logger-queue-url
           GOOGLE_OAUTH_CLIENT_ID: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-google-oauth-client-id}}'
-          GOOGLE_OAUTH_CLIENT_SECRET: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-google-oauth-client_secret}}'
+          GOOGLE_OAUTH_CLIENT_SECRET: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-google-oauth-client-secret}}'
           ECPAY_MERCHANT_ID: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-ecpay-merchant-id}}'
           ECPAY_HASH_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-ecpay-hash-key}}'
           ECPAY_HASH_IV: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-ecpay-hash-iv}}'
@@ -881,6 +890,13 @@ Resources:
       MemorySize: 128
       Timeout: 900
       Layers: [!Ref LambdaLayer]
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-00b9879bcad3e4697
+        SubnetIds:
+          - subnet-0608d15aefe1735ec
+          - subnet-0deab5ad0e63af50d
+          - subnet-03ac3380f6870bb72
       Environment:
         Variables:
           PROJECT: !Sub ${Project}
@@ -901,6 +917,13 @@ Resources:
       MemorySize: 128
       Timeout: 900
       Layers: [!Ref LambdaLayer]
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-00b9879bcad3e4697
+        SubnetIds:
+          - subnet-0608d15aefe1735ec
+          - subnet-0deab5ad0e63af50d
+          - subnet-03ac3380f6870bb72
       Environment:
         Variables:
           PROJECT: !Sub ${Project}
@@ -921,6 +944,13 @@ Resources:
       MemorySize: 128
       Timeout: 30
       Layers: [!Ref LambdaLayer]
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-00b9879bcad3e4697
+        SubnetIds:
+          - subnet-0608d15aefe1735ec
+          - subnet-0deab5ad0e63af50d
+          - subnet-03ac3380f6870bb72
       Environment:
         Variables:
           PROJECT: !Sub ${Project}
@@ -1044,10 +1074,6 @@ Resources:
                 }
             ]
           }'
-  S3BucketStorage:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub ${Project}-${TargetEnvr}-storage
   #######################
   ##### EventBridge #####
   #######################
