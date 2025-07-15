@@ -125,7 +125,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -168,7 +168,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -211,7 +211,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -261,7 +261,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -311,7 +311,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -446,7 +446,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -491,7 +491,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -536,7 +536,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -583,7 +583,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -630,7 +630,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -675,7 +675,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -722,7 +722,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -759,7 +759,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -826,14 +826,14 @@ Resources:
               "type": "string"
             },
           },
-          "x-amazon-apigateway-request-validators" : {
-            "Validate body, query string parameters, and headers" : {
-              "validateRequestParameters" : true,
-              "validateRequestBody" : true
+          "x-amazon-apigateway-request-validators": {
+            "Validate body, query string parameters, and headers": {
+              "validateRequestParameters": true,
+              "validateRequestBody": true
             },
-            "Validate query string parameters and headers" : {
-              "validateRequestParameters" : true,
-              "validateRequestBody" : false
+            "Validate query string parameters and headers": {
+              "validateRequestParameters": true,
+              "validateRequestBody": false
             }
           }
         }
@@ -932,13 +932,13 @@ Resources:
           DB_HOST:
             Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
           DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
-  LambdaMonthlyGift:
+  LambdaGiftLoader:
     Type: AWS::Serverless::Function
     Properties:
       Architectures: [arm64]
-      Handler: index.monthlyGift
+      Handler: index.giftLoader
       Runtime: nodejs20.x
-      FunctionName: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      FunctionName: !Sub ${Project}-${TargetEnvr}-gift-loader
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
       MemorySize: 128
@@ -958,14 +958,14 @@ Resources:
           DB_HOST:
             Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
           DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
-  InvokePermissionMonthlyGift:
+  InvokePermissionGiftLoader:
     Type: AWS::Lambda::Permission
-    DependsOn: [EventBridgeMonthlyGift, LambdaMonthlyGift]
+    DependsOn: [EventBridgeGiftLoader, LambdaGiftLoader]
     Properties:
-      FunctionName: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      FunctionName: !Sub ${Project}-${TargetEnvr}-gift-loader
       Action: 'lambda:InvokeFunction'
       Principal: events.amazonaws.com
-      SourceArn: !GetAtt EventBridgeMonthlyGift.Arn
+      SourceArn: !GetAtt EventBridgeGiftLoader.Arn
   LambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
@@ -1077,13 +1077,13 @@ Resources:
   #######################
   ##### EventBridge #####
   #######################
-  EventBridgeMonthlyGift:
+  EventBridgeGiftLoader:
     Type: AWS::Events::Rule
-    DependsOn: [LambdaMonthlyGift]
+    DependsOn: [LambdaGiftLoader]
     Properties:
-      Name: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      Name: !Sub ${Project}-${TargetEnvr}-gift-loader
       ScheduleExpression: cron(5 0 1 * ? *)
       State: ENABLED
-      Targets: 
-        - Arn: !GetAtt LambdaMonthlyGift.Arn
-          Id: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      Targets:
+        - Arn: !GetAtt LambdaGiftLoader.Arn
+          Id: !Sub ${Project}-${TargetEnvr}-gift-loader

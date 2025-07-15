@@ -3,7 +3,7 @@ import { bindings } from 'src/bindings';
 import { TarotTimerService } from 'src/logic/TarotTimerService';
 import { initLambda } from 'src/utils/LambdaHelper';
 
-export async function monthlyGift(_event: unknown, _context: unknown) {
+export async function giftLoader(_event: unknown, _context: unknown) {
   const db = bindings.get(DbAccess);
   await db.startTransaction();
   initLambda();
