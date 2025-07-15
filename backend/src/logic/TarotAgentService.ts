@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotReadingAiAccess } from 'src/access/TarotReadingAiAccess';
+import { TAROT_CARD_LIST } from 'src/constant/Tarot';
 import { TarotEvent } from 'src/model/api/Tarot';
 import { compare } from 'src/utils/compare';
 import { OpenAiService } from './OpenAiService';
@@ -18,6 +19,8 @@ export class TarotAgentService {
 
   @inject(TarotQuestionAccess)
   private readonly tarotQuestionAccess!: TarotQuestionAccess;
+
+  private tarotCards = TAROT_CARD_LIST;
 
   public async genTarotReading(data: TarotEvent) {
     const tarotReadingAi = await this.tarotReadingAiAccess.findOneByIdOrFail(
@@ -43,7 +46,11 @@ export class TarotAgentService {
 
     const translateCards = tarotQuestion.card
       .sort(compare('sequence'))
-      .map((v) => (v.reversal ? '逆位的' : '正位的') + v.cardId); // TODO: use true card name
+      .map(
+        (v) =>
+          (v.reversal ? '逆位的' : '正位的') +
+          this.tarotCards.find((c) => c.id === v.cardId)?.name
+      );
     content += `我抽到${translateCards.map((v) => `「${v}」`).join('、')}`;
     console.log(content);
 

@@ -7,7 +7,11 @@ import { TarotReadingAiAccess } from 'src/access/TarotReadingAiAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
 import { AI_COST, HUMAN_COST } from 'src/constant/Balance';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
-import { ReadingHumanStatus } from 'src/constant/Tarot';
+import {
+  ReadingHumanStatus,
+  TAROT_CARD_LIST,
+  TAROT_SPREAD_LIST,
+} from 'src/constant/Tarot';
 import {
   GetTaortDailyResponse,
   GetTarotBasicInfoResponse,
@@ -64,42 +68,11 @@ export class TarotService {
   @inject(TarotReadingHumanAccess)
   private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
-  private async getAllTarotCards() {
-    return [
-      {
-        id: 'aaa',
-        name: 'bbb',
-      },
-    ];
-    // if (this.tarotCards === null)
-    // this.tarotCards = await this.tarotCardAccess.find();
-    // TODO: return tarot cards list
-    // return this.tarotCards;
-  }
-
-  private async getAllTarotSpreads() {
-    return [
-      {
-        id: 'xxx',
-        name: 'yyy',
-        description: 'zzz',
-        drawnCardCount: 5,
-        isAiSupport: true,
-      },
-    ];
-    // TODO: return tarot spreads list
-    // if (this.tarotSpreads === null)
-    //   this.tarotSpreads = await this.tarotSpreadAccess.find();
-
-    // return this.tarotSpreads.map((v) => ({
-    //   ...v,
-    //   isAiSupport: v.id === 'SINGLE' || v.id === 'LINEAR',
-    // }));
-  }
+  private tarotCards = TAROT_CARD_LIST;
+  private tarotSpreads = TAROT_SPREAD_LIST;
 
   public async getTarotDaily(): Promise<GetTaortDailyResponse> {
-    const tartCards = await this.getAllTarotCards();
-    const pickedCard = tartCards[random(tartCards.length)];
+    const pickedCard = this.tarotCards[random(this.tarotCards.length)];
     const reversal = random(2) === 1 ? true : false;
     const pickedDaily = await this.tarotDailyAccess.find({
       where: {
@@ -123,9 +96,7 @@ export class TarotService {
   }
 
   public async generateTarotDaily() {
-    const tartCards = await this.getAllTarotCards();
-
-    for (const card of tartCards) {
+    for (const card of this.tarotCards) {
       console.log(card.name);
       for (const reversal of [true, false]) {
         console.log('reversal: ', reversal);
@@ -197,8 +168,7 @@ export class TarotService {
   }
 
   private async validateSpread(spreadId: string, card: CardDisplay[]) {
-    const spreads = await this.getAllTarotSpreads();
-    const spread = spreads.find((v) => v.id === spreadId);
+    const spread = this.tarotSpreads.find((v) => v.id === spreadId);
     if (!spread) throw new BadRequestError('spread not found');
     if (Number(spread.drawnCardCount) !== card.length)
       throw new BadRequestError('card count not match');
@@ -248,10 +218,7 @@ export class TarotService {
   }
 
   public async getBasicInfo(): Promise<GetTarotBasicInfoResponse> {
-    const tarotSpread = await this.getAllTarotSpreads();
-    const tarotCard = await this.getAllTarotCards();
-
-    return { spread: tarotSpread, card: tarotCard };
+    return { spread: this.tarotSpreads, card: this.tarotCards };
   }
 
   public async getTarotQuestionList(
@@ -269,19 +236,18 @@ export class TarotService {
     });
 
     return {
-      data: tarotQuestion.map((v) => ({
-        id: v.id,
-        question: v.question,
-        spread: {
-          // TODO: get true data
-          id: v.spreadId,
-          name: 'xxx',
-          description: 'yyy',
-          drawnCardCount: 5,
-          isAiSupport: true,
-        },
-        createdAt: v.createdAt,
-      })),
+      data: tarotQuestion.map((v) => {
+        const spread = this.tarotSpreads.find((s) => s.id === v.spreadId);
+        if (spread === undefined)
+          throw new InternalServerError('spread not found');
+
+        return {
+          id: v.id,
+          question: v.question,
+          spread,
+          createdAt: v.createdAt,
+        };
+      }),
       paginate: genPagination(total, limit, offset),
     };
   }
