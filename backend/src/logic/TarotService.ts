@@ -1,15 +1,17 @@
 import { Lambda, SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
-import { TarotCardAccess } from 'src/access/TarotCardAccess';
 import { TarotDailyAccess } from 'src/access/TarotDailyAccess';
-import { TarotInterpretationAiAccess } from 'src/access/TarotInterpretationAiAccess';
-import { TarotInterpretationHumanAccess } from 'src/access/TarotInterpretationHumanAccess';
 import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
-import { TarotSpreadAccess } from 'src/access/TarotSpreadAccess';
+import { TarotReadingAiAccess } from 'src/access/TarotReadingAiAccess';
+import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
 import { AI_COST, HUMAN_COST } from 'src/constant/Balance';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
-import { InterpretationHumanStatus } from 'src/constant/Tarot';
+import {
+  ReadingHumanStatus,
+  TAROT_CARD_LIST,
+  TAROT_SPREAD_LIST,
+} from 'src/constant/Tarot';
 import {
   GetTaortDailyResponse,
   GetTarotBasicInfoResponse,
@@ -21,16 +23,14 @@ import {
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/api/Tarot';
-import { TarotCard } from 'src/model/entity/TarotCardEntity';
 import { TarotDailyEntity } from 'src/model/entity/TarotDailyEntity';
-import { TarotInterpretationAiEntity } from 'src/model/entity/TarotInterpretationAiEntity';
-import { TarotInterpretationHumanEntity } from 'src/model/entity/TarotInterpretationHumanEntity';
 import { TarotQuestionCardEntity } from 'src/model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from 'src/model/entity/TarotQuestionEntity';
-import { TarotSpread } from 'src/model/entity/TarotSpreadEntity';
+import { TarotReadingAiEntity } from 'src/model/entity/TarotReadingAiEntity';
+import { TarotReadingHumanEntity } from 'src/model/entity/TarotReadingHumanEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
-import { CardDisplay } from 'src/model/Tarot';
+import { CardDisplay, TarotCard, TarotSpread } from 'src/model/Tarot';
 import { compare } from 'src/utils/compare';
 import { genPagination } from 'src/utils/paginator';
 import { random } from 'src/utils/random';
@@ -42,9 +42,6 @@ import { UserService } from './UserService';
  */
 @injectable()
 export class TarotService {
-  private tarotCards: TarotCard[] | null = null;
-  private tarotSpreads: TarotSpread[] | null = null;
-
   @inject(SES)
   private readonly ses!: SES;
   @inject(Lambda)
@@ -62,41 +59,20 @@ export class TarotService {
   @inject(UserService)
   private readonly userService!: UserService;
 
-  @inject(TarotCardAccess)
-  private readonly tarotCardAccess!: TarotCardAccess;
-
-  @inject(TarotSpreadAccess)
-  private readonly tarotSpreadAccess!: TarotSpreadAccess;
-
   @inject(TarotDailyAccess)
   private readonly tarotDailyAccess!: TarotDailyAccess;
 
-  @inject(TarotInterpretationAiAccess)
-  private readonly tarotInterpretationAiAccess!: TarotInterpretationAiAccess;
+  @inject(TarotReadingAiAccess)
+  private readonly tarotReadingAiAccess!: TarotReadingAiAccess;
 
-  @inject(TarotInterpretationHumanAccess)
-  private readonly tarotInterpretationHumanAccess!: TarotInterpretationHumanAccess;
+  @inject(TarotReadingHumanAccess)
+  private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
-  private async getAllTarotCards() {
-    if (this.tarotCards === null)
-      this.tarotCards = await this.tarotCardAccess.find();
-
-    return this.tarotCards;
-  }
-
-  private async getAllTarotSpreads() {
-    if (this.tarotSpreads === null)
-      this.tarotSpreads = await this.tarotSpreadAccess.find();
-
-    return this.tarotSpreads.sort(compare('seqNo', 'asc')).map((v) => ({
-      ...v,
-      isAiSupport: v.id === 'SINGLE' || v.id === 'LINEAR',
-    }));
-  }
+  private tarotCards: TarotCard[] = TAROT_CARD_LIST;
+  private tarotSpreads: TarotSpread[] = TAROT_SPREAD_LIST;
 
   public async getTarotDaily(): Promise<GetTaortDailyResponse> {
-    const tartCards = await this.getAllTarotCards();
-    const pickedCard = tartCards[random(tartCards.length)];
+    const pickedCard = this.tarotCards[random(this.tarotCards.length)];
     const reversal = random(2) === 1 ? true : false;
     const pickedDaily = await this.tarotDailyAccess.find({
       where: {
@@ -120,9 +96,7 @@ export class TarotService {
   }
 
   public async generateTarotDaily() {
-    const tartCards = await this.getAllTarotCards();
-
-    for (const card of tartCards) {
+    for (const card of this.tarotCards) {
       console.log(card.name);
       for (const reversal of [true, false]) {
         console.log('reversal: ', reversal);
@@ -130,7 +104,7 @@ export class TarotService {
         const tarotDaily = new TarotDailyEntity();
         tarotDaily.cardId = card.id;
         tarotDaily.reversal = reversal;
-        tarotDaily.interpretation = await this.generateTarotDailyByCard(
+        tarotDaily.reading = await this.generateTarotDailyByCard(
           card.name,
           reversal
         );
@@ -194,8 +168,7 @@ export class TarotService {
   }
 
   private async validateSpread(spreadId: string, card: CardDisplay[]) {
-    const spreads = await this.getAllTarotSpreads();
-    const spread = spreads.find((v) => v.id === spreadId);
+    const spread = this.tarotSpreads.find((v) => v.id === spreadId);
     if (!spread) throw new BadRequestError('spread not found');
     if (Number(spread.drawnCardCount) !== card.length)
       throw new BadRequestError('card count not match');
@@ -204,19 +177,19 @@ export class TarotService {
   public async getTarotQuestionById(
     id: string
   ): Promise<GetTarotQuestionIdResponse> {
-    const { interpretationAi, interpretationHuman, ...tarotQuestion } =
+    const { readingAi, readingHuman, ...tarotQuestion } =
       await this.tarotQuestionAccess.findOneByIdOrFail(id);
-    const interpretation = [
-      ...interpretationAi.map((v) => ({
+    const reading = [
+      ...readingAi.map((v) => ({
         id: v.id,
-        interpretation: v.interpretation,
+        reading: v.reading,
         askedAt: v.createdAt,
         repliedAt: v.updatedAt,
         isAi: true,
       })),
-      ...interpretationHuman.map((v) => ({
+      ...readingHuman.map((v) => ({
         id: v.id,
-        interpretation: v.interpretation,
+        reading: v.reading,
         askedAt: v.createdAt,
         repliedAt: v.updatedAt,
         isAi: false,
@@ -225,7 +198,7 @@ export class TarotService {
 
     return {
       ...tarotQuestion,
-      interpretation,
+      reading,
     };
   }
 
@@ -245,10 +218,7 @@ export class TarotService {
   }
 
   public async getBasicInfo(): Promise<GetTarotBasicInfoResponse> {
-    const tarotSpread = await this.getAllTarotSpreads();
-    const tarotCard = await this.getAllTarotCards();
-
-    return { spread: tarotSpread, card: tarotCard };
+    return { spread: this.tarotSpreads, card: this.tarotCards };
   }
 
   public async getTarotQuestionList(
@@ -266,12 +236,18 @@ export class TarotService {
     });
 
     return {
-      data: tarotQuestion.map((v) => ({
-        id: v.id,
-        question: v.question,
-        spread: v.spread,
-        createdAt: v.createdAt,
-      })),
+      data: tarotQuestion.map((v) => {
+        const spread = this.tarotSpreads.find((s) => s.id === v.spreadId);
+        if (spread === undefined)
+          throw new InternalServerError('spread not found');
+
+        return {
+          id: v.id,
+          question: v.question,
+          spread,
+          createdAt: v.createdAt,
+        };
+      }),
       paginate: genPagination(total, limit, offset),
     };
   }
@@ -297,11 +273,9 @@ export class TarotService {
     this.checkUserQuota(user);
     await this.userService.purchaseForUser(user, AI_COST, 'AI解牌');
 
-    const tarotInterpretationAi = new TarotInterpretationAiEntity();
-    tarotInterpretationAi.questionId = tarotQuestion.id;
-    const newEntity = await this.tarotInterpretationAiAccess.save(
-      tarotInterpretationAi
-    );
+    const tarotReadingAi = new TarotReadingAiEntity();
+    tarotReadingAi.questionId = tarotQuestion.id;
+    const newEntity = await this.tarotReadingAiAccess.save(tarotReadingAi);
 
     await this.lambda
       .invoke({
@@ -330,17 +304,16 @@ export class TarotService {
 
     const reader = await this.userService.getReader();
 
-    const existedTarotInterpretation =
-      await this.tarotInterpretationHumanAccess.findOne({
-        where: { readerId: reader.id, questionId: tarotQuestion.id },
-      });
-    if (existedTarotInterpretation !== null)
-      throw new BadRequestError('already asked human interpretation');
+    const existedTarotReading = await this.tarotReadingHumanAccess.findOne({
+      where: { readerId: reader.id, questionId: tarotQuestion.id },
+    });
+    if (existedTarotReading !== null)
+      throw new BadRequestError('already asked human reading');
 
-    const tarotInterpretationHuman = new TarotInterpretationHumanEntity();
-    tarotInterpretationHuman.questionId = tarotQuestion.id;
-    tarotInterpretationHuman.readerId = reader.id;
-    tarotInterpretationHuman.status = InterpretationHumanStatus.IN_PROGRESS;
+    const tarotReadingHuman = new TarotReadingHumanEntity();
+    tarotReadingHuman.questionId = tarotQuestion.id;
+    tarotReadingHuman.readerId = reader.id;
+    tarotReadingHuman.status = ReadingHumanStatus.IN_PROGRESS;
 
     await this.ses
       .sendEmail({
@@ -364,8 +337,6 @@ export class TarotService {
       })
       .promise();
 
-    return await this.tarotInterpretationHumanAccess.save(
-      tarotInterpretationHuman
-    );
+    return await this.tarotReadingHumanAccess.save(tarotReadingHuman);
   }
 }

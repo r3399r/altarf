@@ -7,7 +7,6 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { TarotCard, TarotCardEntity } from './TarotCardEntity';
 import { TarotQuestion, TarotQuestionEntity } from './TarotQuestionEntity';
 
 export type TarotQuestionCard = {
@@ -16,7 +15,6 @@ export type TarotQuestionCard = {
   question: TarotQuestion;
   reversal: boolean;
   cardId: string;
-  card: TarotCard;
   sequence: string;
   createdAt: string | null;
   updatedAt: string | null;
@@ -24,11 +22,11 @@ export type TarotQuestionCard = {
 
 @Entity({ name: 'tarot_question_card' })
 export class TarotQuestionCardEntity implements TarotQuestionCard {
-  @Column({ primary: true })
+  @Column({ primary: true, type: 'char', length: 36 })
   @Generated('uuid')
   id!: string;
 
-  @Column({ type: 'uuid', name: 'question_id' })
+  @Column({ type: 'char', length: 36, name: 'question_id' })
   questionId!: string;
 
   @ManyToOne(() => TarotQuestionEntity)
@@ -38,20 +36,16 @@ export class TarotQuestionCardEntity implements TarotQuestionCard {
   @Column({ type: 'boolean' })
   reversal!: boolean;
 
-  @Column({ type: 'text', name: 'card_id' })
+  @Column({ type: 'varchar', length: 255, name: 'card_id' })
   cardId!: string;
 
-  @ManyToOne(() => TarotCardEntity)
-  @JoinColumn({ name: 'card_id' })
-  card!: TarotCard;
-
-  @Column({ type: 'int8' })
+  @Column({ type: 'int' })
   sequence!: string;
 
-  @Column({ type: 'timestamp', name: 'created_at', default: null })
+  @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;
 
-  @Column({ type: 'timestamp', name: 'updated_at', default: null })
+  @Column({ type: 'datetime', name: 'updated_at', default: null })
   updatedAt: string | null = null;
 
   @BeforeInsert()

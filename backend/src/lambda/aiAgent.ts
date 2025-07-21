@@ -13,7 +13,7 @@ export const aiAgent = async (event: TarotEvent, _context: LambdaContext) => {
   try {
     const service = bindings.get(TarotAgentService);
 
-    await service.genTarotInterpretation(event);
+    await service.genTarotReading(event);
     await db.commitTransaction();
 
     return;

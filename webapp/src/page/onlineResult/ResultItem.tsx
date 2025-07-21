@@ -2,14 +2,14 @@ import { format } from 'date-fns';
 import PicAvatarAi from 'src/assets/pic-avatar-ai.svg';
 import PicAvatarHuman from 'src/assets/pic-avatar-human.svg';
 import Body from 'src/components/typography/Body';
-import { TarotInterpretation } from 'src/model/backend/Tarot';
+import { TarotReading } from 'src/model/backend/Tarot';
 
 type Props = {
-  tarotInterpretation: TarotInterpretation;
+  tarotReading: TarotReading;
 };
 
-const ResultItem = ({ tarotInterpretation }: Props) => {
-  const { interpretation, repliedAt, isAi } = tarotInterpretation;
+const ResultItem = ({ tarotReading }: Props) => {
+  const { reading, repliedAt, isAi } = tarotReading;
 
   return (
     <div>
@@ -23,11 +23,11 @@ const ResultItem = ({ tarotInterpretation }: Props) => {
         </Body>
       </div>
       <Body className="whitespace-pre-line">
-        {interpretation === null &&
+        {reading === null &&
           (isAi
             ? 'AI解牌中... 請稍候一下再重新整理頁面。'
             : '塔羅師解牌中... 可能需要一段時間，請耐心等待，有結果時會寄 Email 通知您。')}
-        {interpretation !== null && interpretation}
+        {reading !== null && reading}
       </Body>
     </div>
   );

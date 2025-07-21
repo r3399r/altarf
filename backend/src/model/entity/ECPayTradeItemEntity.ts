@@ -13,29 +13,29 @@ export type ECPayTradeItem = {
 
 @Entity({ name: 'ecpay_trade_item' })
 export class ECPayTradeItemEntity implements ECPayTradeItem {
-  @Column({ primary: true })
+  @Column({ primary: true, type: 'char', length: 36 })
   @Generated('uuid')
   id!: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 255 })
   name!: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 255 })
   description!: string;
 
-  @Column({ type: 'int8' })
+  @Column({ type: 'int' })
   amount!: string;
 
-  @Column({ type: 'int8' })
+  @Column({ type: 'int' })
   price!: string;
 
-  @Column({ type: 'timestamp', name: 'created_at', default: null })
+  @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;
 
-  @Column({ type: 'timestamp', name: 'updated_at', default: null })
+  @Column({ type: 'datetime', name: 'updated_at', default: null })
   updatedAt: string | null = null;
 
-  @Column({ type: 'timestamp', name: 'deleted_at', default: null })
+  @Column({ type: 'datetime', name: 'deleted_at', default: null })
   deletedAt: string | null = null;
 
   @BeforeInsert()

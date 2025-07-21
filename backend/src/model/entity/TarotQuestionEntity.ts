@@ -9,51 +9,42 @@ import {
   OneToMany,
 } from 'typeorm';
 import {
-  TarotInterpretationAi,
-  TarotInterpretationAiEntity,
-} from './TarotInterpretationAiEntity';
-import {
-  TarotInterpretationHuman,
-  TarotInterpretationHumanEntity,
-} from './TarotInterpretationHumanEntity';
-import {
   TarotQuestionCard,
   TarotQuestionCardEntity,
 } from './TarotQuestionCardEntity';
-import { TarotSpread, TarotSpreadEntity } from './TarotSpreadEntity';
+import { TarotReadingAi, TarotReadingAiEntity } from './TarotReadingAiEntity';
+import {
+  TarotReadingHuman,
+  TarotReadingHumanEntity,
+} from './TarotReadingHumanEntity';
 import { User, UserEntity } from './UserEntity';
 
 export type TarotQuestion = {
   id: string;
   question: string;
   spreadId: string;
-  spread: TarotSpread;
   userId: string;
   user: User;
   card: TarotQuestionCard[];
-  interpretationAi: TarotInterpretationAi[];
-  interpretationHuman: TarotInterpretationHuman[];
+  readingAi: TarotReadingAi[];
+  readingHuman: TarotReadingHuman[];
   createdAt: string;
   updatedAt: string | null;
 };
 
 @Entity({ name: 'tarot_question' })
 export class TarotQuestionEntity implements TarotQuestion {
-  @Column({ primary: true })
+  @Column({ primary: true, type: 'char', length: 36 })
   @Generated('uuid')
   id!: string;
 
   @Column({ type: 'text' })
   question!: string;
 
-  @Column({ type: 'text', name: 'spread_id' })
+  @Column({ type: 'varchar', length: 255, name: 'spread_id' })
   spreadId!: string;
 
-  @ManyToOne(() => TarotSpreadEntity)
-  @JoinColumn({ name: 'spread_id' })
-  spread!: TarotSpread;
-
-  @Column({ type: 'uuid', name: 'user_id' })
+  @Column({ type: 'char', length: 36, name: 'user_id' })
   userId!: string;
 
   @ManyToOne(() => UserEntity)
@@ -67,21 +58,21 @@ export class TarotQuestionEntity implements TarotQuestion {
   card!: TarotQuestionCard[];
 
   @OneToMany(
-    () => TarotInterpretationAiEntity,
-    (tarotInterpretationAi) => tarotInterpretationAi.question
+    () => TarotReadingAiEntity,
+    (tarotReadingAi) => tarotReadingAi.question
   )
-  interpretationAi!: TarotInterpretationAi[];
+  readingAi!: TarotReadingAi[];
 
   @OneToMany(
-    () => TarotInterpretationHumanEntity,
-    (tarotInterpretationHuman) => tarotInterpretationHuman.question
+    () => TarotReadingHumanEntity,
+    (tarotReadingHuman) => tarotReadingHuman.question
   )
-  interpretationHuman!: TarotInterpretationHuman[];
+  readingHuman!: TarotReadingHuman[];
 
-  @Column({ type: 'timestamp', name: 'created_at', default: null })
+  @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;
 
-  @Column({ type: 'timestamp', name: 'updated_at', default: null })
+  @Column({ type: 'datetime', name: 'updated_at', default: null })
   updatedAt: string | null = null;
 
   @BeforeInsert()

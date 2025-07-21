@@ -4,18 +4,18 @@ import Body from 'src/components/typography/Body';
 
 type Props = {
   id: string;
-  sendInterpretation: (id: string, interpretation: string) => void;
+  sendReading: (id: string, reading: string) => void;
 };
 
 type FormData = {
   content: string;
 };
 
-const Form = ({ id, sendInterpretation }: Props) => {
+const Form = ({ id, sendReading }: Props) => {
   const { register, handleSubmit } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
-    sendInterpretation(id, data.content);
+    sendReading(id, data.content);
   };
 
   return (

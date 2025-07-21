@@ -124,7 +124,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -167,7 +167,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -210,7 +210,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -260,7 +260,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -310,7 +310,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -445,7 +445,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -490,7 +490,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -535,7 +535,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -582,7 +582,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -629,7 +629,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -674,7 +674,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -721,7 +721,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -758,7 +758,7 @@ Resources:
                     }
                   }
                 },
-                "x-amazon-apigateway-request-validator" : "Validate query string parameters and headers",
+                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                 "x-amazon-apigateway-integration": {
                   "type": "aws_proxy",
                   "httpMethod": "POST",
@@ -803,9 +803,9 @@ Resources:
             "postTarotReaderQuestionId": {
               "type": "object",
               "properties": {
-                "interpretation":{"type": "string"}
+                "reading":{"type": "string"}
               },
-              "required": ["interpretation"]
+              "required": ["reading"]
             },
             "postAuth": {
               "type": "object",
@@ -825,14 +825,14 @@ Resources:
               "type": "string"
             },
           },
-          "x-amazon-apigateway-request-validators" : {
-            "Validate body, query string parameters, and headers" : {
-              "validateRequestParameters" : true,
-              "validateRequestBody" : true
+          "x-amazon-apigateway-request-validators": {
+            "Validate body, query string parameters, and headers": {
+              "validateRequestParameters": true,
+              "validateRequestBody": true
             },
-            "Validate query string parameters and headers" : {
-              "validateRequestParameters" : true,
-              "validateRequestBody" : false
+            "Validate query string parameters and headers": {
+              "validateRequestParameters": true,
+              "validateRequestBody": false
             }
           }
         }
@@ -852,13 +852,13 @@ Resources:
         Variables:
           PROJECT: !Sub ${Project}
           ENVR: !Sub ${TargetEnvr}
-          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
-          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
-          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
-          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
-          LOGGER_QUEUE_URL: !Sub https://sqs.${AWS::Region}.amazonaws.com/${AWS::AccountId}/polaris-${TargetEnvr}-logger-queue
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
+          LOGGER_QUEUE_URL:
+            Fn::ImportValue: !Sub polaris-${TargetEnvr}-logger-queue-url
           GOOGLE_OAUTH_CLIENT_ID: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-google-oauth-client-id}}'
-          GOOGLE_OAUTH_CLIENT_SECRET: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-google-oauth-client_secret}}'
+          GOOGLE_OAUTH_CLIENT_SECRET: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-google-oauth-client-secret}}'
           ECPAY_MERCHANT_ID: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-ecpay-merchant-id}}'
           ECPAY_HASH_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-ecpay-hash-key}}'
           ECPAY_HASH_IV: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-ecpay-hash-iv}}'
@@ -887,10 +887,9 @@ Resources:
           PROJECT: !Sub ${Project}
           ENVR: !Sub ${TargetEnvr}
           OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai}}'
-          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
-          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
-          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
-          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
   LambdaTarotDailyFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -908,17 +907,16 @@ Resources:
           PROJECT: !Sub ${Project}
           ENVR: !Sub ${TargetEnvr}
           OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai}}'
-          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
-          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
-          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
-          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
-  LambdaMonthlyGift:
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
+  LambdaGiftLoader:
     Type: AWS::Serverless::Function
     Properties:
       Architectures: [arm64]
-      Handler: index.monthlyGift
+      Handler: index.giftLoader
       Runtime: nodejs20.x
-      FunctionName: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      FunctionName: !Sub ${Project}-${TargetEnvr}-gift-loader
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
       MemorySize: 128
@@ -928,18 +926,17 @@ Resources:
         Variables:
           PROJECT: !Sub ${Project}
           ENVR: !Sub ${TargetEnvr}
-          DB_CLUSTER: !Sub '{{resolve:ssm:${TargetEnvr}-db-cluster:1}}'
-          DB_HOST: !Sub '{{resolve:ssm:${TargetEnvr}-db-host:1}}'
-          DB_PWD: !Sub '{{resolve:ssm:${TargetEnvr}-db-pwd:1}}'
-          DB_USER: !Sub '{{resolve:ssm:${TargetEnvr}-db-user:1}}'
-  InvokePermissionMonthlyGift:
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
+  InvokePermissionGiftLoader:
     Type: AWS::Lambda::Permission
-    DependsOn: [EventBridgeMonthlyGift, LambdaMonthlyGift]
+    DependsOn: [EventBridgeGiftLoader, LambdaGiftLoader]
     Properties:
-      FunctionName: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      FunctionName: !Sub ${Project}-${TargetEnvr}-gift-loader
       Action: 'lambda:InvokeFunction'
       Principal: events.amazonaws.com
-      SourceArn: !GetAtt EventBridgeMonthlyGift.Arn
+      SourceArn: !GetAtt EventBridgeGiftLoader.Arn
   LambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
@@ -1048,20 +1045,16 @@ Resources:
                 }
             ]
           }'
-  S3BucketStorage:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub ${Project}-${TargetEnvr}-storage
   #######################
   ##### EventBridge #####
   #######################
-  EventBridgeMonthlyGift:
+  EventBridgeGiftLoader:
     Type: AWS::Events::Rule
-    DependsOn: [LambdaMonthlyGift]
+    DependsOn: [LambdaGiftLoader]
     Properties:
-      Name: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      Name: !Sub ${Project}-${TargetEnvr}-gift-loader
       ScheduleExpression: cron(5 0 1 * ? *)
       State: ENABLED
-      Targets: 
-        - Arn: !GetAtt LambdaMonthlyGift.Arn
-          Id: !Sub ${Project}-${TargetEnvr}-monthly-gift
+      Targets:
+        - Arn: !GetAtt LambdaGiftLoader.Arn
+          Id: !Sub ${Project}-${TargetEnvr}-gift-loader

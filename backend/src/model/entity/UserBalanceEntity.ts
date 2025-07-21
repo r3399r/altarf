@@ -24,36 +24,36 @@ export type UserBalance = {
 
 @Entity({ name: 'user_balance' })
 export class UserBalanceEntity implements UserBalance {
-  @Column({ primary: true })
+  @Column({ primary: true, type: 'char', length: 36 })
   @Generated('uuid')
   id!: string;
 
-  @Column({ type: 'uuid', name: 'user_id' })
+  @Column({ type: 'char', length: 36, name: 'user_id' })
   userId!: string;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_id' })
   user!: User;
 
-  @Column({ type: 'text', name: 'transaction_type' })
+  @Column({ type: 'varchar', length: 255, name: 'transaction_type' })
   transactionType!: string;
 
-  @Column({ type: 'float8' })
+  @Column({ type: 'double' })
   amount!: number;
 
-  @Column({ type: 'float8' })
+  @Column({ type: 'double' })
   balance!: number;
 
   @Column({ type: 'text', nullable: true })
   description: string | null = null;
 
-  @Column({ type: 'timestamp', name: 'transacted_at' })
+  @Column({ type: 'datetime', name: 'transacted_at' })
   transactedAt!: string;
 
-  @Column({ type: 'timestamp', name: 'created_at', default: null })
+  @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;
 
-  @Column({ type: 'timestamp', name: 'updated_at', default: null })
+  @Column({ type: 'datetime', name: 'updated_at', default: null })
   updatedAt: string | null = null;
 
   @BeforeInsert()

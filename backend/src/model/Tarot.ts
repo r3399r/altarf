@@ -1,17 +1,24 @@
-import { TarotSpread } from './entity/TarotSpreadEntity';
-
 export type CardDisplay = {
   id: string;
   reversed: boolean;
 };
 
-export type CustomTarotSpread = TarotSpread & {
+export type TarotCard = {
+  id: string;
+  name: string;
+};
+
+export type TarotSpread = {
+  id: string;
+  name: string;
+  description: string;
+  drawnCardCount: number;
   isAiSupport: boolean;
 };
 
-export type TarotInterpretation = {
+export type TarotReading = {
   id: string;
-  interpretation: string | null;
+  reading: string | null;
   askedAt: string | null;
   repliedAt: string | null;
   isAi: boolean;

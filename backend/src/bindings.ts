@@ -4,13 +4,11 @@ import { Container } from 'inversify';
 import { DbAccess } from './access/DbAccess';
 import { ECPayTradeAccess } from './access/ECPayTradeAccess';
 import { ECPayTradeItemAccess } from './access/ECPayTradeItemAccess';
-import { TarotCardAccess } from './access/TarotCardAccess';
 import { TarotDailyAccess } from './access/TarotDailyAccess';
-import { TarotInterpretationAiAccess } from './access/TarotInterpretationAiAccess';
-import { TarotInterpretationHumanAccess } from './access/TarotInterpretationHumanAccess';
 import { TarotQuestionAccess } from './access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from './access/TarotQuestionCardAccess';
-import { TarotSpreadAccess } from './access/TarotSpreadAccess';
+import { TarotReadingAiAccess } from './access/TarotReadingAiAccess';
+import { TarotReadingHumanAccess } from './access/TarotReadingHumanAccess';
 import { UserAccess } from './access/UserAccess';
 import { UserBalanceAccess } from './access/UserBalanceAccess';
 import { AuthService } from './logic/AuthService';
@@ -24,13 +22,11 @@ import { TarotTimerService } from './logic/TarotTimerService';
 import { UserService } from './logic/UserService';
 import { ECPayTradeEntity } from './model/entity/ECPayTradeEntity';
 import { ECPayTradeItemEntity } from './model/entity/ECPayTradeItemEntity';
-import { TarotCardEntity } from './model/entity/TarotCardEntity';
 import { TarotDailyEntity } from './model/entity/TarotDailyEntity';
-import { TarotInterpretationAiEntity } from './model/entity/TarotInterpretationAiEntity';
-import { TarotInterpretationHumanEntity } from './model/entity/TarotInterpretationHumanEntity';
 import { TarotQuestionCardEntity } from './model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from './model/entity/TarotQuestionEntity';
-import { TarotSpreadEntity } from './model/entity/TarotSpreadEntity';
+import { TarotReadingAiEntity } from './model/entity/TarotReadingAiEntity';
+import { TarotReadingHumanEntity } from './model/entity/TarotReadingHumanEntity';
 import { UserBalanceEntity } from './model/entity/UserBalanceEntity';
 import { UserEntity } from './model/entity/UserEntity';
 import { Database, dbEntitiesBindingId } from './utils/Database';
@@ -42,19 +38,15 @@ container.bind(Database).toSelf().inSingletonScope();
 // db entities
 container.bind<Function>(dbEntitiesBindingId).toFunction(ECPayTradeEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(ECPayTradeItemEntity);
-container.bind<Function>(dbEntitiesBindingId).toFunction(TarotCardEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotDailyEntity);
+container.bind<Function>(dbEntitiesBindingId).toFunction(TarotReadingAiEntity);
 container
   .bind<Function>(dbEntitiesBindingId)
-  .toFunction(TarotInterpretationAiEntity);
-container
-  .bind<Function>(dbEntitiesBindingId)
-  .toFunction(TarotInterpretationHumanEntity);
+  .toFunction(TarotReadingHumanEntity);
 container
   .bind<Function>(dbEntitiesBindingId)
   .toFunction(TarotQuestionCardEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotQuestionEntity);
-container.bind<Function>(dbEntitiesBindingId).toFunction(TarotSpreadEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(UserEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(UserBalanceEntity);
 
@@ -62,13 +54,11 @@ container.bind<Function>(dbEntitiesBindingId).toFunction(UserBalanceEntity);
 container.bind(DbAccess).toSelf();
 container.bind(ECPayTradeAccess).toSelf();
 container.bind(ECPayTradeItemAccess).toSelf();
-container.bind(TarotInterpretationAiAccess).toSelf();
-container.bind(TarotInterpretationHumanAccess).toSelf();
-container.bind(TarotCardAccess).toSelf();
+container.bind(TarotReadingAiAccess).toSelf();
+container.bind(TarotReadingHumanAccess).toSelf();
 container.bind(TarotDailyAccess).toSelf();
 container.bind(TarotQuestionAccess).toSelf();
 container.bind(TarotQuestionCardAccess).toSelf();
-container.bind(TarotSpreadAccess).toSelf();
 container.bind(UserAccess).toSelf();
 container.bind(UserBalanceAccess).toSelf();
 
@@ -85,7 +75,7 @@ container.bind(ECPayService).toSelf();
 
 // AWS
 container.bind(Lambda).toDynamicValue(() => new Lambda());
-container.bind(SES).toDynamicValue(() => new SES());
+container.bind(SES).toDynamicValue(() => new SES({ region: 'ap-southeast-1' }));
 container.bind(SQS).toDynamicValue(() => new SQS());
 
 export { container as bindings };

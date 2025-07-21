@@ -32,7 +32,7 @@ const Daily = () => {
           className="mt-[53px] px-4 py-6 pt-10"
           title={`${drawnCard.name} (${drawnCard.reversal ? '逆位' : '正位'})`}
         >
-          <Body className="whitespace-pre-line">{drawnCard.interpretation}</Body>
+          <Body className="whitespace-pre-line">{drawnCard.reading}</Body>
         </StarDivision>
         {!isMobile && (
           <div className="mt-8 flex items-center justify-center">

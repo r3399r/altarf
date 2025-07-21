@@ -11,23 +11,23 @@ export type User = {
 
 @Entity({ name: 'user' })
 export class UserEntity implements User {
-  @Column({ primary: true })
+  @Column({ primary: true, type: 'char', length: 36 })
   @Generated('uuid')
   id!: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 255 })
   email!: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 255 })
   role!: string;
 
-  @Column({ type: 'float8' })
+  @Column({ type: 'double' })
   balance!: number;
 
-  @Column({ type: 'timestamp', name: 'created_at', default: null })
+  @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;
 
-  @Column({ type: 'timestamp', name: 'updated_at', default: null })
+  @Column({ type: 'datetime', name: 'updated_at', default: null })
   updatedAt: string | null = null;
 
   @BeforeInsert()
