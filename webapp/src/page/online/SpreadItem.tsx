@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import IcSpread from 'src/assets/ic-spread.svg';
 import Body from 'src/components/typography/Body';
-import { CustomTarotSpread } from 'src/model/backend/Tarot';
+import { TarotSpread } from 'src/model/backend/Tarot';
 
 type Props = {
-  tarotSpread: CustomTarotSpread;
+  tarotSpread: TarotSpread;
   onClick: () => void;
   selected: boolean;
 };

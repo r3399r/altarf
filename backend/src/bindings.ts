@@ -75,7 +75,7 @@ container.bind(ECPayService).toSelf();
 
 // AWS
 container.bind(Lambda).toDynamicValue(() => new Lambda());
-container.bind(SES).toDynamicValue(() => new SES());
+container.bind(SES).toDynamicValue(() => new SES({ region: 'ap-southeast-1' }));
 container.bind(SQS).toDynamicValue(() => new SQS());
 
 export { container as bindings };

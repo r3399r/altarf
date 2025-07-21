@@ -1,12 +1,10 @@
-import { TarotCard, TarotSpread } from 'src/model/Tarot';
-
 export enum ReadingHumanStatus {
   OPEN = 'OPEN',
   IN_PROGRESS = 'IN_PROGRESS',
   DONE = 'DONE',
 }
 
-export const TAROT_CARD_LIST: TarotCard[] = [
+export const TAROT_CARD_LIST = [
   { id: 'MAJOR_O_THE_FOOL', name: '愚者' },
   { id: 'MAJOR_I_THE_MAGICIAN', name: '魔術師' },
   { id: 'MAJOR_II_THE_HIGH_PRIESTESS', name: '女祭司' },
@@ -91,7 +89,7 @@ export const TAROT_CARD_LIST: TarotCard[] = [
   { id: 'PENTACLES_KING', name: '錢幣國王' },
 ];
 
-export const TAROT_SPREAD_LIST: TarotSpread[] = [
+export const TAROT_SPREAD_LIST = [
   {
     id: 'SINGLE',
     name: '單張牌',

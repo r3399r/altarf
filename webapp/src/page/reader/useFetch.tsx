@@ -16,11 +16,11 @@ const useFetch = (page: number) => {
   const [refresh, setRefresh] = useState(false);
   const [result, setResult] = useState<GetTarotReaderQuestionResponse>();
 
-  const sendInterpretation = (id: string, interpretation: string) => {
+  const sendReading = (id: string, reading: string) => {
     dispatch(startWaiting());
     tarotReaderEndpoint
       .postTarotReaderQuestionId(id, {
-        interpretation,
+        reading,
       })
       .then(() => {
         setRefresh(!refresh);
@@ -55,7 +55,7 @@ const useFetch = (page: number) => {
       });
   }, [isReady, dispatch, refresh, page]);
 
-  return { result, sendInterpretation };
+  return { result, sendReading };
 };
 
 export default useFetch;

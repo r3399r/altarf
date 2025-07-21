@@ -19,10 +19,7 @@ const OnlineResult = () => {
   const { result, url, askAi, askHuman, isAiSupport, isOwner } = useFetch();
   const [openAiConfirm, setOpenAiConfirm] = useState(false);
   const [openHumanConfirm, setOpenHumanConfirm] = useState(false);
-  const alreadyAskHuman = useMemo(
-    () => result?.interpretation.some((v) => v.isAi === false),
-    [result],
-  );
+  const alreadyAskHuman = useMemo(() => result?.reading.some((v) => v.isAi === false), [result]);
 
   if (!result) return <></>;
 
@@ -31,7 +28,7 @@ const OnlineResult = () => {
       <Canvas
         cardList={result.card.sort(compare('sequence')).map((v) => ({
           id: v.cardId,
-          name: v.card.name,
+          name: v.cardId,
           reversed: v.reversal,
         }))}
         showCardBack={false}
@@ -54,11 +51,11 @@ const OnlineResult = () => {
           <img src={IcShare} className="absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer" />
         </CopyToClipboard>
       </div>
-      {result.interpretation.length > 0 && (
+      {result.reading.length > 0 && (
         <StarDivision className="mt-15 px-4 py-14 sm:px-8" title="解牌結果">
           <div className="flex flex-col gap-14">
-            {result.interpretation.map((v) => (
-              <ResultItem key={v.id} tarotInterpretation={v} />
+            {result.reading.map((v) => (
+              <ResultItem key={v.id} tarotReading={v} />
             ))}
           </div>
         </StarDivision>

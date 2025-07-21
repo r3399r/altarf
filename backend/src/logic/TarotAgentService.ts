@@ -3,6 +3,7 @@ import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotReadingAiAccess } from 'src/access/TarotReadingAiAccess';
 import { TAROT_CARD_LIST } from 'src/constant/Tarot';
 import { TarotEvent } from 'src/model/api/Tarot';
+import { TarotCard } from 'src/model/Tarot';
 import { compare } from 'src/utils/compare';
 import { OpenAiService } from './OpenAiService';
 
@@ -20,7 +21,7 @@ export class TarotAgentService {
   @inject(TarotQuestionAccess)
   private readonly tarotQuestionAccess!: TarotQuestionAccess;
 
-  private tarotCards = TAROT_CARD_LIST;
+  private tarotCards: TarotCard[] = TAROT_CARD_LIST;
 
   public async genTarotReading(data: TarotEvent) {
     const tarotReadingAi = await this.tarotReadingAiAccess.findOneByIdOrFail(

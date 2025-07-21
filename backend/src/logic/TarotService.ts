@@ -30,7 +30,7 @@ import { TarotReadingAiEntity } from 'src/model/entity/TarotReadingAiEntity';
 import { TarotReadingHumanEntity } from 'src/model/entity/TarotReadingHumanEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
-import { CardDisplay } from 'src/model/Tarot';
+import { CardDisplay, TarotCard, TarotSpread } from 'src/model/Tarot';
 import { compare } from 'src/utils/compare';
 import { genPagination } from 'src/utils/paginator';
 import { random } from 'src/utils/random';
@@ -68,8 +68,8 @@ export class TarotService {
   @inject(TarotReadingHumanAccess)
   private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
-  private tarotCards = TAROT_CARD_LIST;
-  private tarotSpreads = TAROT_SPREAD_LIST;
+  private tarotCards: TarotCard[] = TAROT_CARD_LIST;
+  private tarotSpreads: TarotSpread[] = TAROT_SPREAD_LIST;
 
   public async getTarotDaily(): Promise<GetTaortDailyResponse> {
     const pickedCard = this.tarotCards[random(this.tarotCards.length)];

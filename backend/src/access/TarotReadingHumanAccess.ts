@@ -29,6 +29,7 @@ export class TarotReadingHumanAccess {
       TarotReadingHumanEntity.name,
       {
         relations: {
+          question: { card: true },
           reader: true,
         },
         ...options,
