@@ -74,55 +74,64 @@ export class TarotService {
   public async getTarotDaily(): Promise<GetTaortDailyResponse> {
     const pickedCard = this.tarotCards[random(this.tarotCards.length)];
     const reversal = random(2) === 1 ? true : false;
-    const pickedDaily = await this.tarotDailyAccess.find({
+    const pickedDaily = await this.tarotDailyAccess.findOne({
       where: {
         cardId: pickedCard.id,
         reversal,
       },
+      order: {
+        lastReadAt: 'ASC',
+      },
     });
 
-    if (pickedDaily.length <= 0)
+    if (pickedDaily === null)
       throw new InternalServerError('there is no daily tarot');
 
-    const firstTarot = pickedDaily.sort(compare('lastReadAt', 'asc', true))[0];
-    firstTarot.lastReadAt = new Date().toISOString();
-    await this.tarotDailyAccess.save(firstTarot);
+    pickedDaily.lastReadAt = new Date().toISOString();
+    await this.tarotDailyAccess.save(pickedDaily);
 
     return {
-      ...firstTarot,
+      ...pickedDaily,
       name: pickedCard.name,
       drawnAt: new Date().toISOString(),
     };
   }
 
   public async generateTarotDaily() {
-    for (const card of this.tarotCards) {
-      console.log(card.name);
-      for (const reversal of [true, false]) {
-        console.log('reversal: ', reversal);
+    const earliestReadList = await this.tarotDailyAccess.findEarliestReadList();
 
-        const tarotDaily = new TarotDailyEntity();
-        tarotDaily.cardId = card.id;
-        tarotDaily.reversal = reversal;
-        tarotDaily.reading = await this.generateTarotDailyByCard(
-          card.name,
-          reversal
+    const diversedCards = this.tarotCards.filter((v) =>
+      v.id.startsWith(`${process.env.TAROT_PREFIX}`)
+    );
+    for (const card of diversedCards)
+      for (const reversal of [true, false]) {
+        console.log('card: ' + card.name + ', reversal: ' + reversal);
+        const earliestRead = earliestReadList.find(
+          (v) => v.cardId === card.id && v.reversal === (reversal ? 1 : 0)
         );
-        await this.tarotDailyAccess.save(tarotDaily);
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        if (
+          earliestRead === undefined ||
+          new Date(earliestRead.earliestReadAt) > oneDayAgo
+        ) {
+          const tarotDaily = new TarotDailyEntity();
+          tarotDaily.cardId = card.id;
+          tarotDaily.reversal = reversal;
+          tarotDaily.reading = await this.generateTarotDailyByCard(
+            card.name,
+            reversal
+          );
+          tarotDaily.lastReadAt = new Date(0).toISOString();
+          await this.tarotDailyAccess.save(tarotDaily);
+        }
       }
-    }
   }
 
   private async generateTarotDailyByCard(cardName: string, reversal: boolean) {
-    const content =
-      '你現在是塔羅占卜師，我會給你問題，以及我抽到的牌卡，你會給我清晰的觀點，如果抽到負面的牌卡，你會為我加油打氣，並且提供我建議，盡可能寫多一點，以唐綺陽的語氣來回答我的問題，不要自稱唐綺陽。我想問「今日運勢」我抽到「' +
-      (reversal ? '逆位的' : '正位的') +
-      cardName +
-      '」';
-    console.log('content: ', content);
-    const chatCompletion = await this.openAiService.chatCompletion([
-      { role: 'user', content },
-    ]);
+    const chatCompletion = await this.openAiService.askTarotQuestion(
+      `抽到的卡牌為「${(reversal ? '逆位的' : '正位的') + cardName}」`,
+      '請問今日運勢'
+    );
     console.log(JSON.stringify(chatCompletion));
 
     return chatCompletion.choices[0].message.content;

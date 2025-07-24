@@ -23,3 +23,9 @@ export type TarotReading = {
   repliedAt: string | null;
   isAi: boolean;
 };
+
+export type TarotDailyRead = {
+  cardId: string;
+  reversal: 0 | 1;
+  earliestReadAt: string;
+};

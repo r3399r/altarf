@@ -33,31 +33,26 @@ export class TarotAgentService {
 
     const now = new Date().getTime();
 
-    let content =
-      '你現在是塔羅占卜師，我會給你問題，以及我抽到的牌卡，你會給我清晰的觀點，如果抽到負面的牌卡，你會為我加油打氣，並且提供我建議，盡可能寫多一點，以唐綺陽的語氣來回答我的問題，不要自稱唐綺陽。';
-
-    switch (tarotQuestion.spreadId) {
-      case 'SINGLE':
-        break;
-      case 'LINEAR':
-        content += '三張牌分別代表「過去」、「現在」、「未來」，';
-        break;
-    }
-    content += `我想問「${tarotQuestion.question}」`;
-
     const translateCards = tarotQuestion.card
       .sort(compare('sequence'))
       .map(
         (v) =>
+          '「' +
           (v.reversal ? '逆位的' : '正位的') +
-          this.tarotCards.find((c) => c.id === v.cardId)?.name
-      );
-    content += `我抽到${translateCards.map((v) => `「${v}」`).join('、')}`;
-    console.log(content);
+          this.tarotCards.find((c) => c.id === v.cardId)?.name +
+          '」'
+      )
+      .join('、');
 
-    const chatCompletion = await this.openAiService.chatCompletion([
-      { role: 'user', content },
-    ]);
+    const description =
+      tarotQuestion.spreadId === 'SINGLE'
+        ? `抽到的牌卡為${translateCards}`
+        : `三張牌分別代表「過去」、「現在」、「未來」，抽到的牌卡為${translateCards}`;
+
+    const chatCompletion = await this.openAiService.askTarotQuestion(
+      description,
+      tarotQuestion.question
+    );
     const elapsedTime = new Date().getTime() - now;
 
     tarotReadingAi.reading = chatCompletion.choices[0].message.content;
