@@ -9,6 +9,7 @@ import StarDivision from 'src/components/StarDivision';
 import Body from 'src/components/typography/Body';
 import H3 from 'src/components/typography/H3';
 import { AI_COST, HUMAN_COST } from 'src/constant/backend/Balance';
+import { TAROT_CARD_LIST } from 'src/constant/backend/Tarot';
 import { setSnackbarMessage } from 'src/redux/uiSlice';
 import { compare } from 'src/utils/compare';
 import ResultItem from './ResultItem';
@@ -28,7 +29,7 @@ const OnlineResult = () => {
       <Canvas
         cardList={result.card.sort(compare('sequence')).map((v) => ({
           id: v.cardId,
-          name: v.cardId,
+          name: TAROT_CARD_LIST.find((c) => c.id === v.cardId)?.name ?? '',
           reversed: v.reversal,
         }))}
         showCardBack={false}
