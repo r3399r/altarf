@@ -48,6 +48,78 @@ export class TarotReaderService {
     };
   }
 
+  private getEmailBody(questionId: string) {
+    const url =
+      process.env.ENVR === 'prod'
+        ? `https://lookout.celestialstudio.net/online/${questionId}`
+        : `https://lookout-test.celestialstudio.net/online/${questionId}`;
+
+    return {
+      text: `親愛的使用者\n您好，收到塔羅解牌答覆`,
+      html: `<html>
+        <head>
+            <style type="text/css">
+                body {
+                    max-width: 600px;
+                    padding: 16px 10px;
+                }
+                p {
+                    margin: 0 0 5px 0;
+                }
+                .header {
+                    padding: 8px;
+                    background-color: #0f293f;
+                }
+                .card {
+                    background-color: #e8eff2;
+                    color: #0f293f;
+                    padding: 24px 16px 40px 16px;
+                    margin-bottom: 16px;
+                }
+                .title {
+                    font-size: 24px;
+                    font-weight: bold;
+                    text-align: center;
+                }
+                .horizon {
+                    margin: 24px 0;
+                    background-color: #c3d7e7;
+                    height: 1px;
+                }
+                .code {
+                    font-weight: bold;
+                    margin: 24px 0;
+                }
+                .contact {
+                    font-size: 14px;
+                    text-decoration: underline;
+                }
+                .org {
+                    color: #698399;
+                    font-size: 14px;
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <img src="https://yue-public-bucket.s3.ap-southeast-1.amazonaws.com/altarf-email-logo.png"></img>
+            </div>
+            <div class="card">
+                <div class="title">塔羅解牌答覆</div>
+                <div class="horizon"></div>
+                <div class="content">
+                    <p>親愛的使用者</p>
+                    <p>您在瞭望塔所占卜的問題，塔羅師已經回覆囉！請點<a class="contact" href="${url}" target="_blank">我</a>前往查看。</p>
+                    <p>瞭望塔 Lookout</p>
+                </div>
+            </div>
+            <div class="org">© Celetial Studio 2022 - ${new Date().getFullYear()}</div>
+        </body>
+        </html>`,
+    };
+  }
+
   public async replyTarotQuestionByReader(
     id: string,
     data: PostTarotReaderQuestionIdRequest
@@ -72,15 +144,15 @@ export class TarotReaderService {
           Body: {
             Text: {
               Charset: 'UTF-8',
-              Data: 'Tarot Reader has replied to your question. Please check the result',
+              Data: this.getEmailBody(tarotReading.questionId).text,
             },
             Html: {
               Charset: 'UTF-8',
-              Data: 'Tarot Reader has replied to your question. Please check the result',
+              Data: this.getEmailBody(tarotReading.questionId).html,
             },
           },
           Subject: {
-            Data: 'Tarot Reader Reply',
+            Data: '塔羅師已回覆您的塔羅解牌提問',
           },
         },
         Source: 'lookout-noreply@celestialstudio.net',
