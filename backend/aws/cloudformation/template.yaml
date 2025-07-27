@@ -890,13 +890,13 @@ Resources:
           DB_HOST:
             Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
           DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
-  LambdaTarotDailyLoader1:
+  LambdaTarotDailyLoader:
     Type: AWS::Serverless::Function
     Properties:
       Architectures: [arm64]
       Handler: index.tarotDailyLoader
       Runtime: nodejs20.x
-      FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader1
+      FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
       MemorySize: 128
@@ -910,91 +910,6 @@ Resources:
           DB_HOST:
             Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
           DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
-          TAROT_PREFIX: MAJOR
-  LambdaTarotDailyLoader2:
-    Type: AWS::Serverless::Function
-    Properties:
-      Architectures: [arm64]
-      Handler: index.tarotDailyLoader
-      Runtime: nodejs20.x
-      FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader2
-      Role: !GetAtt ExecutionRole.Arn
-      CodeUri: ../../lib/src
-      MemorySize: 128
-      Timeout: 900
-      Layers: [!Ref LambdaLayer]
-      Environment:
-        Variables:
-          PROJECT: !Sub ${Project}
-          ENVR: !Sub ${TargetEnvr}
-          OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai}}'
-          DB_HOST:
-            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
-          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
-          TAROT_PREFIX: WANDS
-  LambdaTarotDailyLoader3:
-    Type: AWS::Serverless::Function
-    Properties:
-      Architectures: [arm64]
-      Handler: index.tarotDailyLoader
-      Runtime: nodejs20.x
-      FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader3
-      Role: !GetAtt ExecutionRole.Arn
-      CodeUri: ../../lib/src
-      MemorySize: 128
-      Timeout: 900
-      Layers: [!Ref LambdaLayer]
-      Environment:
-        Variables:
-          PROJECT: !Sub ${Project}
-          ENVR: !Sub ${TargetEnvr}
-          OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai}}'
-          DB_HOST:
-            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
-          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
-          TAROT_PREFIX: CUPS
-  LambdaTarotDailyLoader4:
-    Type: AWS::Serverless::Function
-    Properties:
-      Architectures: [arm64]
-      Handler: index.tarotDailyLoader
-      Runtime: nodejs20.x
-      FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader4
-      Role: !GetAtt ExecutionRole.Arn
-      CodeUri: ../../lib/src
-      MemorySize: 128
-      Timeout: 900
-      Layers: [!Ref LambdaLayer]
-      Environment:
-        Variables:
-          PROJECT: !Sub ${Project}
-          ENVR: !Sub ${TargetEnvr}
-          OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai}}'
-          DB_HOST:
-            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
-          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
-          TAROT_PREFIX: SWORDS
-  LambdaTarotDailyLoader5:
-    Type: AWS::Serverless::Function
-    Properties:
-      Architectures: [arm64]
-      Handler: index.tarotDailyLoader
-      Runtime: nodejs20.x
-      FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader5
-      Role: !GetAtt ExecutionRole.Arn
-      CodeUri: ../../lib/src
-      MemorySize: 128
-      Timeout: 900
-      Layers: [!Ref LambdaLayer]
-      Environment:
-        Variables:
-          PROJECT: !Sub ${Project}
-          ENVR: !Sub ${TargetEnvr}
-          OPENAI_KEY: !Sub '{{resolve:ssm:${Project}-${TargetEnvr}-openai}}'
-          DB_HOST:
-            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
-          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
-          TAROT_PREFIX: PENTACLES
   LambdaGiftLoader:
     Type: AWS::Serverless::Function
     Properties:
@@ -1143,53 +1058,13 @@ Resources:
       Targets:
         - Arn: !GetAtt LambdaGiftLoader.Arn
           Id: !Sub ${Project}-${TargetEnvr}-gift-loader
-  EventBridgeDailyLoader1:
+  EventBridgeDailyLoader:
     Type: AWS::Events::Rule
-    DependsOn: [LambdaTarotDailyLoader1]
+    DependsOn: [LambdaTarotDailyLoader]
     Properties:
-      Name: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader1
-      ScheduleExpression: cron(38 17 * * ? *)
+      Name: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader
+      ScheduleExpression: cron(23 23 * * ? *)
       State: ENABLED
       Targets:
-        - Arn: !GetAtt LambdaTarotDailyLoader1.Arn
-          Id: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader1
-  EventBridgeDailyLoader2:
-    Type: AWS::Events::Rule
-    DependsOn: [LambdaTarotDailyLoader2]
-    Properties:
-      Name: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader2
-      ScheduleExpression: cron(38 18 * * ? *)
-      State: ENABLED
-      Targets:
-        - Arn: !GetAtt LambdaTarotDailyLoader2.Arn
-          Id: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader2
-  EventBridgeDailyLoader3:
-    Type: AWS::Events::Rule
-    DependsOn: [LambdaTarotDailyLoader3]
-    Properties:
-      Name: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader3
-      ScheduleExpression: cron(38 19 * * ? *)
-      State: ENABLED
-      Targets:
-        - Arn: !GetAtt LambdaTarotDailyLoader3.Arn
-          Id: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader3
-  EventBridgeDailyLoader4:
-    Type: AWS::Events::Rule
-    DependsOn: [LambdaTarotDailyLoader4]
-    Properties:
-      Name: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader4
-      ScheduleExpression: cron(38 20 * * ? *)
-      State: ENABLED
-      Targets:
-        - Arn: !GetAtt LambdaTarotDailyLoader4.Arn
-          Id: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader4
-  EventBridgeDailyLoader5:
-    Type: AWS::Events::Rule
-    DependsOn: [LambdaTarotDailyLoader5]
-    Properties:
-      Name: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader5
-      ScheduleExpression: cron(38 21 * * ? *)
-      State: ENABLED
-      Targets:
-        - Arn: !GetAtt LambdaTarotDailyLoader5.Arn
-          Id: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader5
+        - Arn: !GetAtt LambdaTarotDailyLoader.Arn
+          Id: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader

@@ -30,7 +30,12 @@ import { TarotReadingAiEntity } from 'src/model/entity/TarotReadingAiEntity';
 import { TarotReadingHumanEntity } from 'src/model/entity/TarotReadingHumanEntity';
 import { User } from 'src/model/entity/UserEntity';
 import { BadRequestError, InternalServerError } from 'src/model/error';
-import { CardDisplay, TarotCard, TarotSpread } from 'src/model/Tarot';
+import {
+  CardDisplay,
+  TarotCard,
+  TarotDailyRead,
+  TarotSpread,
+} from 'src/model/Tarot';
 import { compare } from 'src/utils/compare';
 import { genPagination } from 'src/utils/paginator';
 import { random } from 'src/utils/random';
@@ -97,37 +102,41 @@ export class TarotService {
     };
   }
 
-  public async generateTarotDaily() {
-    const earliestReadList = await this.tarotDailyAccess.findEarliestReadList();
-
-    const diversedCards = this.tarotCards.filter((v) =>
-      v.id.startsWith(`${process.env.TAROT_PREFIX}`)
+  private async generateTarotDailyByCard(
+    earliestReadList: TarotDailyRead[],
+    card: TarotCard,
+    reversal: boolean
+  ) {
+    const earliestRead = earliestReadList.find(
+      (v) => v.cardId === card.id && v.reversal === (reversal ? 1 : 0)
     );
-    for (const card of diversedCards)
-      for (const reversal of [true, false]) {
-        console.log('card: ' + card.name + ', reversal: ' + reversal);
-        const earliestRead = earliestReadList.find(
-          (v) => v.cardId === card.id && v.reversal === (reversal ? 1 : 0)
-        );
-        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-        if (
-          earliestRead === undefined ||
-          new Date(earliestRead.earliestReadAt) > oneDayAgo
-        ) {
-          const tarotDaily = new TarotDailyEntity();
-          tarotDaily.cardId = card.id;
-          tarotDaily.reversal = reversal;
-          tarotDaily.reading = await this.generateTarotDailyByCard(
-            card.name,
-            reversal
-          );
-          tarotDaily.lastReadAt = new Date(0).toISOString();
-          await this.tarotDailyAccess.save(tarotDaily);
-        }
-      }
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    if (
+      earliestRead === undefined ||
+      new Date(earliestRead.earliestReadAt) > oneDayAgo
+    ) {
+      const tarotDaily = new TarotDailyEntity();
+      tarotDaily.cardId = card.id;
+      tarotDaily.reversal = reversal;
+      tarotDaily.reading = await this.askTarotDaily(card.name, reversal);
+      tarotDaily.lastReadAt = new Date(0).toISOString();
+      await this.tarotDailyAccess.save(tarotDaily);
+    }
   }
 
-  private async generateTarotDailyByCard(cardName: string, reversal: boolean) {
+  public async generateTarotDaily() {
+    const earliestReadList = await this.tarotDailyAccess.findEarliestReadList();
+    await Promise.all(
+      this.tarotCards.map(async (c) => {
+        // deal upright
+        await this.generateTarotDailyByCard(earliestReadList, c, false);
+        // deal reversed
+        await this.generateTarotDailyByCard(earliestReadList, c, true);
+      })
+    );
+  }
+
+  private async askTarotDaily(cardName: string, reversal: boolean) {
     const chatCompletion = await this.openAiService.askTarotQuestion(
       `抽到的卡牌為「${(reversal ? '逆位的' : '正位的') + cardName}」`,
       '請問今日運勢'
