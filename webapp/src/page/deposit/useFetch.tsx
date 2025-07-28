@@ -31,13 +31,12 @@ const useFetch = () => {
       .getEcpayPayment({
         ecpayTradeItemId,
         returnUrl: `${location.origin}/api/ecpay/notify`,
-        // returnUrl: 'https://lookout-test.celestialstudio.net/api/ecpay/notify',
       })
       .then((r) => {
         // Create a temporary form element
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'; // ECPay endpoint
+        form.action = import.meta.env.VITE_ECPAY_ENDPOINT; // ECPay endpoint
         form.target = '_blank';
 
         // Append all input fields to the form

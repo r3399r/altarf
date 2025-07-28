@@ -39,6 +39,7 @@ jobs:
           touch .env
           echo VITE_GOOGLE_OAUTH_CLIENT_ID=${{ secrets.VITE_GOOGLE_OAUTH_CLIENT_ID }} >> .env
           echo VITE_CRYPTO_SECRET_KEY=${{ secrets.VITE_CRYPTO_SECRET_KEY }} >> .env
+          echo VITE_ECPAY_ENDPOINT=${{ secrets.VITE_ECPAY_ENDPOINT }} >> .env
 
       # Runs a single command using the runners shell
       - name: Deploy to dev environment
