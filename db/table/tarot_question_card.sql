@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS tarot_question_card (
+    id CHAR(36) NOT NULL DEFAULT (UUID()),
+    question_id CHAR(36) NOT NULL,
+    reversal BOOLEAN NOT NULL, 
+    card_id VARCHAR(255) NOT NULL,
+    sequence INT NOT NULL,
+    created_at DATETIME(3) NULL,
+    updated_at DATETIME(3) NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (question_id) REFERENCES tarot_question(id)
+);

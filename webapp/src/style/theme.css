@@ -1,0 +1,91 @@
+@theme {
+  --color-text-body: var(--color-text-body);
+  --color-text-error: var(--color-text-error);
+  --color-text-title: var(--color-text-title);
+  --color-text-caption: var(--color-text-caption);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+
+  --color-text-tab-focus: var(--color-text-tab-focus);
+  --color-text-button-primary-normal: var(--color-text-button-primary-normal);
+  --color-text-button-secondary-normal: var(--color-text-button-secondary-normal);
+  --color-text-input-subtle: var(--color-text-input-subtle);
+  --color-text-input-subtle-disabled: var(--color-text-input-subtle-disabled);
+  --color-text-input-helper: var(--color-text-input-helper);
+  --color-text-table-thead: var(--color-text-table-thead);
+  --color-text-pagination-normal: var(--color-text-pagination-normal);
+  --color-text-pagination-focus: var(--color-text-pagination-focus);
+  --color-text-note-deposit: var(--color-text-note-deposit);
+  --color-text-note-spend: var(--color-text-note-spend);
+
+  --color-background-surface-body: var(--color-background-surface-body);
+  --color-background-surface-list: var(--color-background-surface-list);
+  --color-background-surface-overlay-normal: var(--color-background-surface-overlay-normal);
+  --color-background-button-primary-normal: var(--color-background-button-primary-normal);
+  --color-background-button-primary-hover: var(--color-background-button-primary-hover);
+  --color-background-button-primary-active: var(--color-background-button-primary-active);
+  --color-background-button-secondary-normal: var(--color-background-button-secondary-normal);
+  --color-background-textfield-normal: var(--color-background-textfield-normal);
+  --color-background-menu-normal: var(--color-background-menu-normal);
+  --color-background-menu-hover: var(--color-background-menu-hover);
+  --color-background-pagination-focus: var(--color-background-pagination-focus);
+  --color-background-pagination-hover: var(--color-background-pagination-hover);
+
+  --color-border-tab: var(--color-border-tab);
+  --color-border-content: var(--color-border-content);
+  --color-border-focus: var(--color-border-focus);
+  --color-border-error: var(--color-border-error);
+  --color-border-accent: var(--color-border-accent);
+  --color-border-table-thead: var(--color-border-table-thead);
+  --color-border-table-tbody: var(--color-border-table-tbody);
+  --color-border-spread-normal: var(--color-border-spread-normal);
+  --color-border-spread-active: var(--color-border-spread-active);
+
+  --color-icon-primary: var(--color-icon-primary);
+}
+
+[data-theme='primary'] {
+  --color-text-body: theme(color-white);
+  --color-text-error: theme(color-red-300);
+  --color-text-title: theme(color-white);
+  --color-text-caption: theme(color-white);
+  --color-text-primary: theme(color-beige-300);
+  --color-text-secondary: theme(color-grey-400);
+
+  --color-text-tab-focus: theme(color-beige-400);
+  --color-text-button-primary-normal: theme(color-grey-900);
+  --color-text-button-secondary-normal: theme(color-white);
+  --color-text-input-subtle: theme(color-grey-500);
+  --color-text-input-subtle-disabled: theme(color-grey-700);
+  --color-text-input-helper: theme(color-grey-300);
+  --color-text-table-thead: theme(color-grey-500);
+  --color-text-pagination-normal: theme(color-grey-400);
+  --color-text-pagination-focus: theme(color-grey-900);
+  --color-text-note-deposit: theme(color-orange-300);
+  --color-text-note-spend: theme(color-blue-300);
+
+  --color-background-surface-body: theme(color-grey-900);
+  --color-background-surface-list: theme(color-grey-850);
+  --color-background-surface-overlay-normal: theme(color-grey-800);
+  --color-background-button-primary-normal: theme(color-beige-300);
+  --color-background-button-primary-hover: theme(color-beige-100);
+  --color-background-button-primary-active: theme(color-beige-400);
+  --color-background-button-secondary-normal: theme(color-grey-800);
+  --color-background-textfield-normal: theme(color-grey-800);
+  --color-background-menu-normal: theme(color-grey-800);
+  --color-background-menu-hover: theme(color-grey-700);
+  --color-background-pagination-focus: theme(color-beige-300);
+  --color-background-pagination-hover: theme(color-grey-800);
+
+  --color-border-tab: theme(color-beige-400);
+  --color-border-content: theme(color-beige-300);
+  --color-border-focus: theme(color-beige-300);
+  --color-border-error: theme(color-red-300);
+  --color-border-accent: theme(color-grey-500);
+  --color-border-table-thead: theme(color-grey-700);
+  --color-border-table-tbody: theme(color-grey-800);
+  --color-border-spread-normal: theme(color-grey-700);
+  --color-border-spread-active: theme(color-beige-300);
+
+  --color-icon-primary: theme(color-beige-300);
+}
