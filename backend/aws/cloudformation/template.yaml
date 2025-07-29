@@ -910,6 +910,14 @@ Resources:
           DB_HOST:
             Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
           DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
+  InvokePermissionTarotDailyLoader:
+    Type: AWS::Lambda::Permission
+    DependsOn: [EventBridgeDailyLoader, LambdaTarotDailyLoader]
+    Properties:
+      FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt EventBridgeDailyLoader.Arn
   LambdaGiftLoader:
     Type: AWS::Serverless::Function
     Properties:
