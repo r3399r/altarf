@@ -188,7 +188,7 @@ export class TarotService {
   private async validateSpread(spreadId: string, card: CardDisplay[]) {
     const spread = this.tarotSpreads.find((v) => v.id === spreadId);
     if (!spread) throw new BadRequestError('spread not found');
-    if (Number(spread.drawnCardCount) !== card.length)
+    if (spread.meaning.length !== card.length)
       throw new BadRequestError('card count not match');
   }
 

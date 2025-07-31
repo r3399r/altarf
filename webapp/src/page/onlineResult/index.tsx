@@ -9,7 +9,7 @@ import StarDivision from 'src/components/StarDivision';
 import Body from 'src/components/typography/Body';
 import H3 from 'src/components/typography/H3';
 import { AI_COST, HUMAN_COST } from 'src/constant/backend/Balance';
-import { TAROT_CARD_LIST } from 'src/constant/backend/Tarot';
+import { TAROT_CARD_LIST, TAROT_SPREAD_LIST } from 'src/constant/backend/Tarot';
 import { setSnackbarMessage } from 'src/redux/uiSlice';
 import { compare } from 'src/utils/compare';
 import ResultItem from './ResultItem';
@@ -33,7 +33,7 @@ const OnlineResult = () => {
           reversed: v.reversal,
         }))}
         showCardBack={false}
-        spreadId={result.spreadId}
+        spread={TAROT_SPREAD_LIST.find((s) => s.id === result.spreadId) ?? TAROT_SPREAD_LIST[0]}
       />
       <div className="rounded-lg bg-background-surface-overlay-normal px-8 py-4">
         <H3 className="mb-2">我的問題：</H3>

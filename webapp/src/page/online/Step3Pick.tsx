@@ -13,7 +13,7 @@ type Props = {
 const Step3Pick = ({ onSend, onPick }: Props) => {
   const { pickedSpread, pickedCardList } = useSelector((rootState: RootState) => rootState.tarot);
   const isReady = useMemo(
-    () => (!pickedSpread ? false : pickedCardList?.length === Number(pickedSpread.drawnCardCount)),
+    () => (!pickedSpread ? false : pickedCardList?.length === pickedSpread.meaning.length),
     [pickedSpread, pickedCardList],
   );
 
@@ -26,8 +26,8 @@ const Step3Pick = ({ onSend, onPick }: Props) => {
 
   return (
     <>
-      <Canvas cardList={pickedCardList ?? []} showCardBack={true} spreadId={pickedSpread.id} />
-      <StarTitle title={`此牌陣需抽 ${pickedSpread.drawnCardCount} 張牌`} />
+      <Canvas cardList={pickedCardList ?? []} showCardBack={true} spread={pickedSpread} />
+      <StarTitle title={`此牌陣需抽 ${pickedSpread.meaning.length} 張牌`} />
       <div className="mt-10 text-center">
         <Button onClick={onClick}>
           {isReady ? '我選好了' : `抽第 ${(pickedCardList?.length ?? 0) + 1} 張牌`}
