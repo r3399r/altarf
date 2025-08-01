@@ -108,7 +108,7 @@ export const TAROT_SPREAD_LIST = [
     id: 'CROSS',
     name: '大十字牌陣',
     description:
-      '抽取五張牌，時間之流進階版，加上兩張代表理想與隱憂的牌，協助趨吉避凶。',
+      '抽取五張牌，時間之流進階版，加上兩張代表理想與隱憂的牌，協助趨吉避凶，例如:剛進職場需要注意什麼',
     meaning: ['理想', '隱憂', '過去', '現在', '未來'],
     isAiSupport: false,
   },
@@ -116,21 +116,22 @@ export const TAROT_SPREAD_LIST = [
     id: 'FOUR_ELEMENT',
     name: '四元素牌陣',
     description:
-      '抽取四張牌，代表大方向、務實面、規劃面、感情面，適合分析現況、結果。',
+      '抽取四張牌，代表大方向、務實面、規劃面、感情面，適合分析現況、結果，例如:換工作好不好',
     meaning: ['行為大方向', '財物務實', '思考計畫', '感情'],
     isAiSupport: false,
   },
   {
     id: 'HEXAGRAM',
     name: '六芒星牌陣',
-    description: '抽取六張牌，環境對未來的影響，適合分析未來規劃。',
+    description:
+      '抽取六張牌，環境對未來的影響，適合分析未來規劃，例如:未來三個月工作如何變化',
     meaning: ['過去', '現在', '未來', '原因', '環境', '對策'],
     isAiSupport: false,
   },
   {
     id: 'CUP',
     name: '杯型陣',
-    description: '抽取七張牌，適合有標準答案的問題。',
+    description: '抽取七張牌，適合有標準答案的問題，例如:他是否喜歡我',
     meaning: ['過去', '現況', '未來', '答案', '環境', '恐懼希望', '結果'],
     isAiSupport: false,
   },
