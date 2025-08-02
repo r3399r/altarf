@@ -29,50 +29,54 @@ const Reader = () => {
 
   return (
     <>
-      {result.data.map((v) => (
-        <div key={v.id} className="border p-3">
-          <div className="flex gap-2">
-            <Body bold>ID</Body>
-            <Body className="cursor-pointer !text-beige-300" bold>
-              <a href={`${Page.Online}/${v.questionId}`}>{v.questionId}</a>
-            </Body>
-          </div>
-          <div className="flex gap-2">
-            <Body bold>狀態</Body>
-            <Body>{getStatusText(v.status)}</Body>
-          </div>
-          <div className="flex gap-2">
-            <Body bold>創建日期</Body>
-            <Body>{v.createdAt ? format(v.createdAt, 'yyyy/MM/dd HH:mm:ss') : '-'}</Body>
-          </div>
-          <div className="flex gap-2">
-            <Body bold>牌陣</Body>
-            <Body>{TAROT_SPREAD_LIST.find((s) => s.id === v.question.spreadId)?.name}</Body>
-          </div>
-          <div className="flex gap-2">
-            <Body bold>抽牌</Body>
-            {v.question.card.sort(compare('sequence')).map((o) => (
-              <Body key={o.id}>
-                ({Number(o.sequence) + 1}){o.reversal ? '逆位-' : '正位-'}
-                {TAROT_CARD_LIST.find((c) => c.id === o.cardId)?.name}
+      {result.data.map((v) => {
+        const spread = TAROT_SPREAD_LIST.find((s) => s.id === v.question.spreadId);
+
+        return (
+          <div key={v.id} className="border p-3">
+            <div className="flex gap-2">
+              <Body bold>ID</Body>
+              <Body className="cursor-pointer !text-beige-300" bold>
+                <a href={`${Page.Online}/${v.questionId}`}>{v.questionId}</a>
               </Body>
-            ))}
-          </div>
-          <div>
-            <Body bold>問題</Body>
-            <Body>{v.question.question}</Body>
-          </div>
-          {v.status === ReadingHumanStatus.IN_PROGRESS && (
-            <Form id={v.id} sendReading={sendReading} />
-          )}
-          {v.status === ReadingHumanStatus.DONE && (
-            <div>
-              <Body bold>解牌</Body>
-              <Body>{v.reading}</Body>
             </div>
-          )}
-        </div>
-      ))}
+            <div className="flex gap-2">
+              <Body bold>狀態</Body>
+              <Body>{getStatusText(v.status)}</Body>
+            </div>
+            <div className="flex gap-2">
+              <Body bold>創建日期</Body>
+              <Body>{v.createdAt ? format(v.createdAt, 'yyyy/MM/dd HH:mm:ss') : '-'}</Body>
+            </div>
+            <div className="flex gap-2">
+              <Body bold>牌陣</Body>
+              <Body>{spread?.name}</Body>
+            </div>
+            <div>
+              <Body bold>抽牌</Body>
+              {v.question.card.sort(compare('sequence')).map((o, i) => (
+                <Body>
+                  ({i + 1}) {spread?.meaning[i]}-{o.reversal ? '逆位' : '正位'}-
+                  {TAROT_CARD_LIST.find((c) => c.id === o.cardId)?.name}
+                </Body>
+              ))}
+            </div>
+            <div>
+              <Body bold>問題</Body>
+              <Body>{v.question.question}</Body>
+            </div>
+            {v.status === ReadingHumanStatus.IN_PROGRESS && (
+              <Form id={v.id} sendReading={sendReading} />
+            )}
+            {v.status === ReadingHumanStatus.DONE && (
+              <div>
+                <Body bold>解牌</Body>
+                <Body>{v.reading}</Body>
+              </div>
+            )}
+          </div>
+        );
+      })}
       <div className="mt-10">
         <Pagination
           page={page}
