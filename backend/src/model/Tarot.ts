@@ -12,7 +12,7 @@ export type TarotSpread = {
   id: string;
   name: string;
   description: string;
-  drawnCardCount: number;
+  meaning: string[];
   isAiSupport: boolean;
 };
 
