@@ -4,7 +4,7 @@ export enum BalanceTransactionType {
   ADJUSTMENT = 'ADJUSTMENT', // 調整
 }
 
-export const POINT_FOR_NEW_USER = 80;
+export const POINT_FOR_NEW_USER = 90;
 
 export const POINT_MONTHLY = 15;
 
