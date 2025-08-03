@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from 'src/components/Button';
+import Modal from 'src/components/Modal';
 import Body from 'src/components/typography/Body';
 
 type Props = {
@@ -12,19 +14,30 @@ type FormData = {
 };
 
 const Form = ({ id, sendReading }: Props) => {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, getValues } = useForm<FormData>();
+  const [openAiConfirm, setOpenAiConfirm] = useState(false);
 
-  const onSubmit = (data: FormData) => {
-    sendReading(id, data.content);
+  const onSubmit = () => {
+    sendReading(id, getValues().content);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <Body bold>解牌</Body>
       <textarea className="w-full border p-2" {...register('content')}></textarea>
-      <Button type="submit" className="!p-2">
+      <Button type="button" className="!p-2" onClick={() => setOpenAiConfirm(true)}>
         Submit
       </Button>
+      <Modal
+        open={openAiConfirm}
+        handleClose={() => setOpenAiConfirm(false)}
+        title="確認是否送出?"
+        cancelText="取消"
+        confirmText="確認"
+        handleConfirm={onSubmit}
+      >
+        <div>確認是否送出?</div>
+      </Modal>
     </form>
   );
 };
