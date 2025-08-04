@@ -177,10 +177,10 @@ export class TarotService {
     return newTarotQuestion;
   }
 
-  private checkUserQuota(user: User) {
-    if (user.balance < 0)
+  private checkUserQuota(user: User, cost: number) {
+    if (user.balance < cost)
       throw new BadRequestError(
-        'balance is less than 0',
+        'balance is insufficient',
         'BALANCE_INSUFFICIENT'
       );
   }
@@ -288,7 +288,7 @@ export class TarotService {
         'SPREAD_NOT_SUPPORT_AI'
       );
 
-    this.checkUserQuota(user);
+    this.checkUserQuota(user, AI_COST);
     await this.userService.purchaseForUser(user, AI_COST, 'AI解牌');
 
     const tarotReadingAi = new TarotReadingAiEntity();
@@ -391,7 +391,7 @@ export class TarotService {
     if (tarotQuestion.userId !== user.id)
       throw new BadRequestError('userId not match');
 
-    this.checkUserQuota(user);
+    this.checkUserQuota(user, HUMAN_COST);
     await this.userService.purchaseForUser(user, HUMAN_COST, '真人解牌');
 
     const reader = await this.userService.getReader();
