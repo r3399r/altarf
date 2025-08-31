@@ -34,6 +34,14 @@ const Menu = ({ onClose }: Props) => {
     onClose();
   };
 
+  const onContactUs = () => {
+    window.open(
+      'https://docs.google.com/forms/d/e/1FAIpQLSfr4pIQUo3cOJnIMrowx0bpARmK8sQUfBEWIdHFH4yM8TMQPQ/viewform?usp=dialog',
+      '_blank',
+    );
+    onClose();
+  };
+
   const Item = ({ label, onClick }: ItemProps) => (
     <Body className="cursor-pointer p-4 hover:bg-grey-700" onClick={onClick}>
       {label}
@@ -46,6 +54,7 @@ const Menu = ({ onClose }: Props) => {
       <Divider />
       <Item label="餘額與儲值" onClick={onViewWallet} />
       <Item label="占卜紀錄" onClick={onViewRecords} />
+      <Item label="聯絡我們" onClick={onContactUs} />
       <Item label="登出" onClick={onLogout} />
     </div>
   );
