@@ -845,7 +845,7 @@ Resources:
       FunctionName: !Sub ${Project}-${TargetEnvr}-api
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
-      MemorySize: 128
+      MemorySize: 200
       Timeout: 30
       Layers: [!Ref LambdaLayer]
       Environment:
@@ -879,7 +879,7 @@ Resources:
       FunctionName: !Sub ${Project}-${TargetEnvr}-ai-agent
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
-      MemorySize: 128
+      MemorySize: 200
       Timeout: 900
       Layers: [!Ref LambdaLayer]
       Environment:
@@ -899,7 +899,7 @@ Resources:
       FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
-      MemorySize: 128
+      MemorySize: 200
       Timeout: 900
       Layers: [!Ref LambdaLayer]
       Environment:
@@ -927,7 +927,7 @@ Resources:
       FunctionName: !Sub ${Project}-${TargetEnvr}-gift-loader
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
-      MemorySize: 128
+      MemorySize: 200
       Timeout: 30
       Layers: [!Ref LambdaLayer]
       Environment:
