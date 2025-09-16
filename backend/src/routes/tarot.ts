@@ -2,6 +2,7 @@ import { bindings } from 'src/bindings';
 import { TarotService } from 'src/logic/TarotService';
 import {
   GetTarotQuestionParams,
+  PostTarotQuestionIdHumanRequest,
   PostTarotQuestionRequest,
 } from 'src/model/api/Tarot';
 import { BadRequestError } from 'src/model/error';
@@ -84,9 +85,14 @@ const tarotQuestionIdAi = async () => {
 const tarotQuestionIdHuman = async () => {
   if (event.pathParameters === null)
     throw new BadRequestError('pathParameters should not be empty');
+  if (event.body === null)
+    throw new BadRequestError('body should not be empty');
   switch (event.httpMethod) {
     case 'POST':
-      return await service.askHumanTarotQuestion(event.pathParameters.id);
+      return await service.askHumanTarotQuestion(
+        event.pathParameters.id,
+        JSON.parse(event.body) as PostTarotQuestionIdHumanRequest
+      );
   }
 
   throw new Error('unexpected httpMethod');

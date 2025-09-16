@@ -7,34 +7,23 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { ReadingHumanStatus } from 'src/constant/Tarot';
 import { Reader, ReaderEntity } from './ReaderEntity';
-import { TarotQuestion, TarotQuestionEntity } from './TarotQuestionEntity';
 
-export type TarotReadingHuman = {
+export type ReaderSocial = {
   id: string;
-  questionId: string;
-  question: TarotQuestion;
   readerId: string;
   reader: Reader;
-  status: ReadingHumanStatus;
-  reading: string | null;
+  platform: string;
+  url: string;
   createdAt: string | null;
   updatedAt: string | null;
 };
 
-@Entity({ name: 'tarot_reading_human' })
-export class TarotReadingHumanEntity implements TarotReadingHuman {
+@Entity({ name: 'reader_social' })
+export class ReaderSocialEntity implements ReaderSocial {
   @Column({ primary: true, type: 'char', length: 36 })
   @Generated('uuid')
   id!: string;
-
-  @Column({ type: 'char', length: 36, name: 'question_id' })
-  questionId!: string;
-
-  @ManyToOne(() => TarotQuestionEntity)
-  @JoinColumn({ name: 'question_id' })
-  question!: TarotQuestion;
 
   @Column({ type: 'char', length: 36, name: 'reader_id' })
   readerId!: string;
@@ -43,11 +32,11 @@ export class TarotReadingHumanEntity implements TarotReadingHuman {
   @JoinColumn({ name: 'reader_id' })
   reader!: Reader;
 
-  @Column({ type: 'varchar', length: 255 })
-  status!: ReadingHumanStatus;
+  @Column({ type: 'varchar', length: 50 })
+  platform!: string;
 
-  @Column({ type: 'text' })
-  reading: string | null = null;
+  @Column({ type: 'varchar', length: 255 })
+  url!: string;
 
   @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;

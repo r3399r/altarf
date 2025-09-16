@@ -1,5 +1,6 @@
 import { SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
+import { ReaderAccess } from 'src/access/ReaderAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import { ReadingHumanStatus } from 'src/constant/Tarot';
@@ -21,11 +22,17 @@ export class TarotReaderService {
   private readonly ses!: SES;
   @inject(UserService)
   private readonly userService!: UserService;
+  @inject(ReaderAccess)
+  private readonly readerAccess!: ReaderAccess;
   @inject(TarotReadingHumanAccess)
   private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
   private async getUserInfo() {
     return await this.userService.getUserEntity();
+  }
+
+  public async getAllReaders() {
+    return await this.readerAccess.find();
   }
 
   public async getQuestionListByReader(
@@ -35,8 +42,10 @@ export class TarotReaderService {
 
     const limit = params?.limit ? Number(params.limit) : LIMIT;
     const offset = params?.offset ? Number(params.offset) : OFFSET;
+    if (user.reader == null) throw new Error('User is not a reader');
+
     const [data, total] = await this.tarotReadingHumanAccess.findAndCount({
-      where: { readerId: user.id },
+      where: { readerId: user.reader.id },
       order: { createdAt: 'DESC' },
       take: limit,
       skip: offset,

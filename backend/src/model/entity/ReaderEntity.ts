@@ -4,37 +4,45 @@ import {
   Column,
   Entity,
   Generated,
+  JoinColumn,
+  OneToMany,
   OneToOne,
 } from 'typeorm';
-import { Reader, ReaderEntity } from './ReaderEntity';
+import { ReaderSocial, ReaderSocialEntity } from './ReaderSocialEntity';
+import { User, UserEntity } from './UserEntity';
 
-export type User = {
+export type Reader = {
   id: string;
-  email: string;
-  role: string;
-  balance: number;
-  reader: Reader | null;
+  userId: string;
+  user: User;
+  nickname: string;
+  bio: string | null;
+  social: ReaderSocial[];
   createdAt: string | null;
   updatedAt: string | null;
 };
 
-@Entity({ name: 'user' })
-export class UserEntity implements User {
+@Entity({ name: 'reader' })
+export class ReaderEntity implements Reader {
   @Column({ primary: true, type: 'char', length: 36 })
   @Generated('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  email!: string;
+  @Column({ type: 'char', length: 36, name: 'user_id' })
+  userId!: string;
+
+  @OneToOne(() => UserEntity)
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
 
   @Column({ type: 'varchar', length: 255 })
-  role!: string;
+  nickname!: string;
 
-  @Column({ type: 'double' })
-  balance!: number;
+  @Column({ type: 'text', nullable: true })
+  bio: string | null = null;
 
-  @OneToOne(() => ReaderEntity, (reader) => reader.user)
-  reader!: ReaderEntity | null;
+  @OneToMany(() => ReaderSocialEntity, (social) => social.reader)
+  social!: ReaderSocial[];
 
   @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;

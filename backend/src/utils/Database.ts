@@ -25,7 +25,7 @@ export class Database {
         database: process.env.PROJECT,
         entities: this.entities,
         synchronize: false,
-        logging: false,
+        logging: true,
       });
     if (!this.dataSource.isInitialized) await this.dataSource.initialize();
 

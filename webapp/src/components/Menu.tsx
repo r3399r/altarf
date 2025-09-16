@@ -16,7 +16,7 @@ type ItemProps = {
 };
 
 const Menu = ({ onClose }: Props) => {
-  const { email } = useSelector((state: RootState) => state.ui);
+  const { email, isReader } = useSelector((state: RootState) => state.ui);
   const navigate = useNavigate();
 
   const onLogout = () => {
@@ -24,13 +24,18 @@ const Menu = ({ onClose }: Props) => {
     logout();
   };
 
-  const onViewRecords = () => {
+  const onClickRecords = () => {
     navigate(Page.Records);
     onClose();
   };
 
-  const onViewWallet = () => {
+  const onClickWallet = () => {
     navigate(Page.Wallet);
+    onClose();
+  };
+
+  const onClickBackstage = () => {
+    navigate(Page.Reader);
     onClose();
   };
 
@@ -52,8 +57,9 @@ const Menu = ({ onClose }: Props) => {
     <div className="overflow-hidden rounded-xl bg-background-menu-normal shadow-lg">
       <Body className="px-4 py-3 pt-4">{email ?? '-'}</Body>
       <Divider />
-      <Item label="餘額與儲值" onClick={onViewWallet} />
-      <Item label="占卜紀錄" onClick={onViewRecords} />
+      <Item label="餘額與儲值" onClick={onClickWallet} />
+      <Item label="占卜紀錄" onClick={onClickRecords} />
+      {isReader && <Item label="塔羅師後台" onClick={onClickBackstage} />}
       <Item label="聯絡我們" onClick={onContactUs} />
       <Item label="登出" onClick={onLogout} />
     </div>

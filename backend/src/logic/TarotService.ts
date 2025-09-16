@@ -19,6 +19,7 @@ import {
   GetTarotQuestionParams,
   GetTarotQuestionResponse,
   PostTarotQuestionIdAiResponse,
+  PostTarotQuestionIdHumanRequest,
   PostTarotQuestionIdHumanResponse,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
@@ -383,7 +384,8 @@ export class TarotService {
   }
 
   public async askHumanTarotQuestion(
-    id: string
+    id: string,
+    data: PostTarotQuestionIdHumanRequest
   ): Promise<PostTarotQuestionIdHumanResponse> {
     const user = await this.getUserInfo();
 
@@ -394,7 +396,7 @@ export class TarotService {
     this.checkUserQuota(user, HUMAN_COST);
     await this.userService.purchaseForUser(user, HUMAN_COST, '真人解牌');
 
-    const reader = await this.userService.getReader();
+    const reader = await this.userService.getReader(data.readerId);
 
     const existedTarotReading = await this.tarotReadingHumanAccess.findOne({
       where: { readerId: reader.id, questionId: tarotQuestion.id },
@@ -409,7 +411,7 @@ export class TarotService {
 
     await this.ses
       .sendEmail({
-        Destination: { ToAddresses: [reader.email] },
+        Destination: { ToAddresses: [reader.user.email] },
         Message: {
           Body: {
             Text: {
