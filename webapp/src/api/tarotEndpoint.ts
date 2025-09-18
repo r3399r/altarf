@@ -6,6 +6,7 @@ import {
   GetTarotQuestionParams,
   GetTarotQuestionResponse,
   PostTarotQuestionIdAiResponse,
+  PostTarotQuestionIdHumanRequest,
   PostTarotQuestionIdHumanResponse,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
@@ -76,9 +77,12 @@ const postTarotQuestionIdAi = async (id: string) => {
   }
 };
 
-const postTarotQuestionIdHuman = async (id: string) => {
+const postTarotQuestionIdHuman = async (id: string, data: PostTarotQuestionIdHumanRequest) => {
   try {
-    return await http.authPost<PostTarotQuestionIdHumanResponse>(`tarot/question/${id}/human`);
+    return await http.authPost<PostTarotQuestionIdHumanResponse, PostTarotQuestionIdHumanRequest>(
+      `tarot/question/${id}/human`,
+      { data },
+    );
   } catch (e) {
     const error = axiosError(e);
     if (error.response?.data.code === 'BALANCE_INSUFFICIENT') throw '餘額不足，請先儲值';

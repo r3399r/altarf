@@ -293,6 +293,16 @@ Resources:
                     "type": "string"
                   }
                 }],
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/postTarotQuestionIdHuman"
+                      }
+                    }
+                  },
+                  "required": true
+                },
                 "responses": {
                   "200": {
                     "description": "200 response",
@@ -842,6 +852,13 @@ Resources:
                 "reading":{"type": "string"}
               },
               "required": ["reading"]
+            },
+            "postTarotQuestionIdHuman": {
+              "type": "object",
+              "properties": {
+                "readerId":{"type": "string"}
+              },
+              "required": ["readerId"]
             },
             "postAuth": {
               "type": "object",

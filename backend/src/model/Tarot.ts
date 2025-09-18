@@ -1,3 +1,5 @@
+import { Reader } from './entity/ReaderEntity';
+
 export type CardDisplay = {
   id: string;
   reversed: boolean;
@@ -22,6 +24,7 @@ export type TarotReading = {
   askedAt: string | null;
   repliedAt: string | null;
   isAi: boolean;
+  reader: Reader | null;
 };
 
 export type TarotDailyRead = {

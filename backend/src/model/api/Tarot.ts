@@ -1,3 +1,4 @@
+import { Reader } from 'src/model/entity/ReaderEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
 import { TarotReadingAi } from 'src/model/entity/TarotReadingAiEntity';
@@ -52,6 +53,8 @@ export type PostTarotQuestionIdAiResponse = TarotReadingAi;
 export type PostTarotQuestionIdHumanRequest = { readerId: string };
 
 export type PostTarotQuestionIdHumanResponse = TarotReadingHuman;
+
+export type GetTarotReaderResponse = Reader[];
 
 export type GetTarotReaderQuestionParams = PaginationParams;
 

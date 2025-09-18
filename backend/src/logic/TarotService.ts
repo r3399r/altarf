@@ -5,7 +5,7 @@ import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
 import { TarotReadingAiAccess } from 'src/access/TarotReadingAiAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
-import { AI_COST, HUMAN_COST } from 'src/constant/Balance';
+import { AI_COST } from 'src/constant/Balance';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import {
   ReadingHumanStatus,
@@ -37,6 +37,7 @@ import {
   TarotDailyRead,
   TarotSpread,
 } from 'src/model/Tarot';
+import { fee } from 'src/utils/calculator';
 import { compare } from 'src/utils/compare';
 import { genPagination } from 'src/utils/paginator';
 import { random } from 'src/utils/random';
@@ -205,6 +206,7 @@ export class TarotService {
         askedAt: v.createdAt,
         repliedAt: v.updatedAt,
         isAi: true,
+        reader: null,
       })),
       ...readingHuman.map((v) => ({
         id: v.id,
@@ -212,6 +214,7 @@ export class TarotService {
         askedAt: v.createdAt,
         repliedAt: v.updatedAt,
         isAi: false,
+        reader: v.reader,
       })),
     ].sort(compare('repliedAt', 'desc', true));
 
@@ -393,16 +396,17 @@ export class TarotService {
     if (tarotQuestion.userId !== user.id)
       throw new BadRequestError('userId not match');
 
-    this.checkUserQuota(user, HUMAN_COST);
-    await this.userService.purchaseForUser(user, HUMAN_COST, '真人解牌');
-
     const reader = await this.userService.getReader(data.readerId);
+
+    const cost = reader.costPerReading + fee(reader.costPerReading);
+    this.checkUserQuota(user, cost);
+    await this.userService.purchaseForUser(user, cost, '真人解牌');
 
     const existedTarotReading = await this.tarotReadingHumanAccess.findOne({
       where: { readerId: reader.id, questionId: tarotQuestion.id },
     });
     if (existedTarotReading !== null)
-      throw new BadRequestError('already asked human reading');
+      throw new BadRequestError('already asked this reader for human reading');
 
     const tarotReadingHuman = new TarotReadingHumanEntity();
     tarotReadingHuman.questionId = tarotQuestion.id;

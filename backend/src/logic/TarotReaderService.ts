@@ -7,9 +7,11 @@ import { ReadingHumanStatus } from 'src/constant/Tarot';
 import {
   GetTarotReaderQuestionParams,
   GetTarotReaderQuestionResponse,
+  GetTarotReaderResponse,
   PostTarotReaderQuestionIdRequest,
   PostTarotReaderQuestionIdResponse,
 } from 'src/model/api/Tarot';
+import { fee } from 'src/utils/calculator';
 import { genPagination } from 'src/utils/paginator';
 import { UserService } from './UserService';
 
@@ -31,8 +33,13 @@ export class TarotReaderService {
     return await this.userService.getUserEntity();
   }
 
-  public async getAllReaders() {
-    return await this.readerAccess.find();
+  public async getAllReaders(): Promise<GetTarotReaderResponse> {
+    const readers = await this.readerAccess.find();
+
+    return readers.map((r) => ({
+      ...r,
+      costPerReading: r.costPerReading + fee(r.costPerReading),
+    }));
   }
 
   public async getQuestionListByReader(
@@ -129,16 +136,18 @@ export class TarotReaderService {
     };
   }
 
-  public async replyTarotQuestionByReader(
+  public async replyTarotQuestion(
     id: string,
     data: PostTarotReaderQuestionIdRequest
   ): Promise<PostTarotReaderQuestionIdResponse> {
     const user = await this.getUserInfo();
+    if (user.reader == null) throw new Error('User is not a reader');
+
     const tarotReading = await this.tarotReadingHumanAccess.findOneOrFail({
       where: {
         id,
         status: ReadingHumanStatus.IN_PROGRESS,
-        readerId: user.id,
+        readerId: user.reader.id,
       },
     });
 

@@ -32,7 +32,7 @@ export class TarotQuestionAccess {
           user: true,
           card: true,
           readingAi: true,
-          readingHuman: true,
+          readingHuman: { reader: true },
         },
         ...options,
       }

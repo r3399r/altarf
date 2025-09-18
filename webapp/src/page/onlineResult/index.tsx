@@ -1,26 +1,23 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts';
 import { useDispatch } from 'react-redux';
 import IcShare from 'src/assets/ic-share.svg';
 import Button from 'src/components/Button';
 import Canvas from 'src/components/Canvas';
-import Modal from 'src/components/Modal';
 import StarDivision from 'src/components/StarDivision';
 import Body from 'src/components/typography/Body';
 import H3 from 'src/components/typography/H3';
-import { AI_COST, HUMAN_COST } from 'src/constant/backend/Balance';
 import { TAROT_CARD_LIST, TAROT_SPREAD_LIST } from 'src/constant/backend/Tarot';
 import { setSnackbarMessage } from 'src/redux/uiSlice';
 import { compare } from 'src/utils/compare';
+import ModalAskForReading from './ModalAskForReading';
 import ResultItem from './ResultItem';
 import useFetch from './useFetch';
 
 const OnlineResult = () => {
   const dispatch = useDispatch();
-  const { result, url, askAi, askHuman, isAiSupport, isOwner } = useFetch();
-  const [openAiConfirm, setOpenAiConfirm] = useState(false);
-  const [openHumanConfirm, setOpenHumanConfirm] = useState(false);
-  const alreadyAskHuman = useMemo(() => result?.reading.some((v) => v.isAi === false), [result]);
+  const { result, filteredReaders, url, askAi, askHuman, isAiSupport, isOwner } = useFetch();
+  const [openAskForReading, setOpenAskForReading] = useState(false);
 
   if (!result) return <></>;
 
@@ -41,11 +38,8 @@ const OnlineResult = () => {
       </div>
       <div className="relative mt-6 py-3">
         {isOwner && (
-          <div className="itemes-center flex justify-center gap-4">
-            {isAiSupport && <Button onClick={() => setOpenAiConfirm(true)}>AI 解牌</Button>}
-            <Button onClick={() => setOpenHumanConfirm(true)} disabled={alreadyAskHuman}>
-              真人解牌
-            </Button>
+          <div className="text-center">
+            <Button onClick={() => setOpenAskForReading(true)}>前往解牌</Button>
           </div>
         )}
         <CopyToClipboard text={url} onCopy={() => dispatch(setSnackbarMessage('已複製連結'))}>
@@ -61,26 +55,14 @@ const OnlineResult = () => {
           </div>
         </StarDivision>
       )}
-      <Modal
-        open={openAiConfirm}
-        handleClose={() => setOpenAiConfirm(false)}
-        title="AI 解牌"
-        cancelText="取消"
-        confirmText="繼續"
-        handleConfirm={askAi}
-      >
-        <div>AI 解牌需花費 {AI_COST} 點</div>
-      </Modal>
-      <Modal
-        open={openHumanConfirm}
-        handleClose={() => setOpenHumanConfirm(false)}
-        title="真人解牌"
-        cancelText="取消"
-        confirmText="繼續"
-        handleConfirm={askHuman}
-      >
-        <div>真人解牌需花費 {HUMAN_COST} 點</div>
-      </Modal>
+      <ModalAskForReading
+        open={openAskForReading}
+        handleClose={() => setOpenAskForReading(false)}
+        isAiSupport={isAiSupport}
+        askAi={askAi}
+        askHuman={askHuman}
+        readers={filteredReaders}
+      />
     </>
   );
 };

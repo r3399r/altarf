@@ -54,7 +54,7 @@ const tarotReaderQuestionId = async () => {
       if (event.body === null)
         throw new BadRequestError('body should not be empty');
 
-      return await service.replyTarotQuestionByReader(
+      return await service.replyTarotQuestion(
         event.pathParameters.id,
         JSON.parse(event.body) as PostTarotReaderQuestionIdRequest
       );
