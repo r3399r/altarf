@@ -16,7 +16,7 @@ const ResultItem = ({ tarotReading }: Props) => {
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img src={isAi ? PicAvatarAi : PicAvatarHuman} />
-          <Body bold>{isAi ? 'AI解牌' : '塔羅師'}</Body>
+          <Body bold>{isAi ? 'AI解牌' : `塔羅師-${tarotReading.reader?.nickname}`}</Body>
         </div>
         <Body className="text-text-secondary">
           {repliedAt && format(repliedAt, 'yyyy/MM/dd HH:mm:ss')}

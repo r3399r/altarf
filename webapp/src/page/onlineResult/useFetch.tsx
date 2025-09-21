@@ -19,11 +19,11 @@ const useFetch = () => {
   const { spreadList } = useTarotInfo();
   const { email, balance } = useSelector((rootState: RootState) => rootState.ui);
   const [refresh, setRefresh] = useState(false);
-  const filteredReaders = useMemo(() => {
+  const mapReaders = useMemo(() => {
     if (!result || !readers) return [];
     const askedReaderIds = result.reading.filter((r) => !r.isAi).map((r) => r.reader?.id ?? 'xx');
 
-    return readers.filter((r) => !askedReaderIds.includes(r.id));
+    return readers.map((r) => ({ ...r, beenAsked: !askedReaderIds.includes(r.id) }));
   }, [result, readers]);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const useFetch = () => {
 
   return {
     result,
-    filteredReaders,
+    mapReaders,
     url: `${window.location.origin.toString()}${location.pathname}`,
     askAi,
     askHuman,

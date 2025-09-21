@@ -16,7 +16,7 @@ import useFetch from './useFetch';
 
 const OnlineResult = () => {
   const dispatch = useDispatch();
-  const { result, filteredReaders, url, askAi, askHuman, isAiSupport, isOwner } = useFetch();
+  const { result, mapReaders, url, askAi, askHuman, isAiSupport, isOwner } = useFetch();
   const [openAskForReading, setOpenAskForReading] = useState(false);
 
   if (!result) return <></>;
@@ -61,7 +61,7 @@ const OnlineResult = () => {
         isAiSupport={isAiSupport}
         askAi={askAi}
         askHuman={askHuman}
-        readers={filteredReaders}
+        readers={mapReaders}
       />
     </>
   );

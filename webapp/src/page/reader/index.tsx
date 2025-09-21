@@ -55,7 +55,7 @@ const Reader = () => {
             <div>
               <Body bold>抽牌</Body>
               {v.question.card.sort(compare('sequence')).map((o, i) => (
-                <Body>
+                <Body key={o.id}>
                   ({i + 1}) {spread?.meaning[i]}-{o.reversal ? '逆位' : '正位'}-
                   {TAROT_CARD_LIST.find((c) => c.id === o.cardId)?.name}
                 </Body>
