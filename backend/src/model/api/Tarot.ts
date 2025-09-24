@@ -65,3 +65,9 @@ export type PostTarotReaderQuestionIdRequest = {
 };
 
 export type PostTarotReaderQuestionIdResponse = TarotReadingHuman;
+
+export type PostTarotQuestionIdRateRequest = {
+  rating: number;
+  readingId: string;
+  isAi: boolean;
+};

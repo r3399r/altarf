@@ -1,11 +1,11 @@
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import IcComment2 from 'src/assets/ic-comment-like.svg';
-import IcComment1 from 'src/assets/ic-comment-love.svg';
-import IcComment3 from 'src/assets/ic-comment-neutral.svg';
-import IcComment4 from 'src/assets/ic-comment-unclear.svg';
-import IcComment5 from 'src/assets/ic-comment-unlike.svg';
+import IcRatingLike from 'src/assets/ic-rating-like.svg';
+import IcRatingLove from 'src/assets/ic-rating-love.svg';
+import IcRatingNeutral from 'src/assets/ic-rating-neutral.svg';
+import IcRatingUnclear from 'src/assets/ic-rating-unclear.svg';
+import IcRatingUnlike from 'src/assets/ic-rating-unlike.svg';
 import IcStar from 'src/assets/ic-starry.svg';
 import PicAvatarAi from 'src/assets/pic-avatar-ai.svg';
 import PicAvatarHuman from 'src/assets/pic-avatar-human.svg';
@@ -16,12 +16,55 @@ import { TarotReading } from 'src/model/backend/Tarot';
 
 type Props = {
   tarotReading: TarotReading;
+  doRating: (rating: number, readingId: string, isAi: boolean) => void;
 };
 
-const ResultItem = ({ tarotReading }: Props) => {
+const ResultItem = ({ tarotReading, doRating }: Props) => {
   const navigate = useNavigate();
-  const { reading, repliedAt, isAi } = tarotReading;
-  const [expandComment, setExpandComment] = useState<boolean>(false);
+  const { id, reading, createdAt, isAi, rating } = tarotReading;
+  const [expandRating, setExpandRating] = useState<boolean>(false);
+
+  const onRating = (rating: number) => {
+    doRating(rating, id, isAi);
+    setExpandRating(false);
+  };
+
+  const RatingOption = ({ rating, onClick }: { rating: number; onClick: () => void }) => {
+    let icon: string;
+    let label: string;
+    switch (rating) {
+      case 5:
+        icon = IcRatingLove;
+        label = '非常滿意';
+        break;
+      case 4:
+        icon = IcRatingLike;
+        label = '有幫助';
+        break;
+      case 3:
+        icon = IcRatingNeutral;
+        label = '普通';
+        break;
+      case 2:
+        icon = IcRatingUnclear;
+        label = '有點模糊';
+        break;
+      default:
+        icon = IcRatingUnlike;
+        label = '不喜歡';
+        break;
+    }
+
+    return (
+      <div
+        className="flex w-fit cursor-pointer gap-1 rounded-[30px] bg-background-surface-tabbar px-3 py-2"
+        onClick={onClick}
+      >
+        <img className="w-[18px]" src={icon} />
+        <Body size="s">{label}</Body>
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -31,7 +74,7 @@ const ResultItem = ({ tarotReading }: Props) => {
           <Body bold>{isAi ? 'AI解牌' : `塔羅師-${tarotReading.reader?.nickname}`}</Body>
         </div>
         <Body className="text-text-secondary">
-          {repliedAt && format(repliedAt, 'yyyy/MM/dd HH:mm:ss')}
+          {createdAt && format(createdAt, 'yyyy/MM/dd HH:mm:ss')}
         </Body>
       </div>
       <Body className="mb-3 whitespace-pre-line">
@@ -41,52 +84,25 @@ const ResultItem = ({ tarotReading }: Props) => {
             : '塔羅師解牌中... 可能需要一段時間，請耐心等待，有結果時會寄 Email 通知您。')}
         {reading !== null && reading}
       </Body>
-      {!expandComment && (
+      {!expandRating && rating === null && (
         <div
           className="flex w-fit cursor-pointer items-center gap-1 rounded-[30px] bg-background-surface-tabbar px-3 py-2"
-          onClick={() => setExpandComment(true)}
+          onClick={() => setExpandRating(true)}
         >
           <img className="w-[18px]" src={IcStar} />
           <Body size="s">為此占卜評分</Body>
         </div>
       )}
-      {expandComment && (
+      {!expandRating && rating !== null && (
+        <RatingOption rating={rating} onClick={() => setExpandRating(true)} />
+      )}
+      {expandRating && (
         <div className="flex flex-wrap items-center gap-3">
-          <div
-            className="flex cursor-pointer gap-1 rounded-[30px] bg-background-surface-tabbar px-3 py-2"
-            onClick={() => setExpandComment(false)}
-          >
-            <img className="w-[18px]" src={IcComment1} />
-            <Body size="s">非常滿意</Body>
-          </div>
-          <div
-            className="flex cursor-pointer gap-1 rounded-[30px] bg-background-surface-tabbar px-3 py-2"
-            onClick={() => setExpandComment(false)}
-          >
-            <img className="w-[18px]" src={IcComment2} />
-            <Body size="s">有幫助</Body>
-          </div>
-          <div
-            className="flex cursor-pointer gap-1 rounded-[30px] bg-background-surface-tabbar px-3 py-2"
-            onClick={() => setExpandComment(false)}
-          >
-            <img className="w-[18px]" src={IcComment3} />
-            <Body size="s">普通</Body>
-          </div>
-          <div
-            className="flex cursor-pointer gap-1 rounded-[30px] bg-background-surface-tabbar px-3 py-2"
-            onClick={() => setExpandComment(false)}
-          >
-            <img className="w-[18px]" src={IcComment4} />
-            <Body size="s">有點模糊</Body>
-          </div>
-          <div
-            className="flex cursor-pointer gap-1 rounded-[30px] bg-background-surface-tabbar px-3 py-2"
-            onClick={() => setExpandComment(false)}
-          >
-            <img className="w-[18px]" src={IcComment5} />
-            <Body size="s">不喜歡</Body>
-          </div>
+          <RatingOption rating={5} onClick={() => onRating(5)} />
+          <RatingOption rating={4} onClick={() => onRating(4)} />
+          <RatingOption rating={3} onClick={() => onRating(3)} />
+          <RatingOption rating={2} onClick={() => onRating(2)} />
+          <RatingOption rating={1} onClick={() => onRating(1)} />
         </div>
       )}
       <div className="mt-3 text-right">

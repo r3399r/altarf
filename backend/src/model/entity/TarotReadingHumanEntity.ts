@@ -19,6 +19,7 @@ export type TarotReadingHuman = {
   reader: Reader;
   status: ReadingHumanStatus;
   reading: string | null;
+  rating: number | null;
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -48,6 +49,9 @@ export class TarotReadingHumanEntity implements TarotReadingHuman {
 
   @Column({ type: 'text' })
   reading: string | null = null;
+
+  @Column({ type: 'int', nullable: true })
+  rating: number | null = null;
 
   @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;

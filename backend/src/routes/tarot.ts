@@ -3,6 +3,7 @@ import { TarotService } from 'src/logic/TarotService';
 import {
   GetTarotQuestionParams,
   PostTarotQuestionIdHumanRequest,
+  PostTarotQuestionIdRateRequest,
   PostTarotQuestionRequest,
 } from 'src/model/api/Tarot';
 import { BadRequestError } from 'src/model/error';
@@ -26,6 +27,8 @@ export default async (lambdaEvent: LambdaEvent) => {
       return await tarotQuestionIdAi();
     case '/api/tarot/question/{id}/human':
       return await tarotQuestionIdHuman();
+    case '/api/tarot/question/{id}/rating':
+      return await tarotQuestionIdRating();
     case '/api/tarot/daily':
       return await tarotDaily();
   }
@@ -95,6 +98,21 @@ const tarotQuestionIdHuman = async () => {
       );
   }
 
+  throw new Error('unexpected httpMethod');
+};
+
+const tarotQuestionIdRating = async () => {
+  if (event.pathParameters === null)
+    throw new BadRequestError('pathParameters should not be empty');
+  if (event.body === null)
+    throw new BadRequestError('body should not be empty');
+  switch (event.httpMethod) {
+    case 'POST':
+      return await service.rateTarotQuestion(
+        event.pathParameters.id,
+        JSON.parse(event.body) as PostTarotQuestionIdRateRequest
+      );
+  }
   throw new Error('unexpected httpMethod');
 };
 

@@ -21,6 +21,7 @@ import {
   PostTarotQuestionIdAiResponse,
   PostTarotQuestionIdHumanRequest,
   PostTarotQuestionIdHumanResponse,
+  PostTarotQuestionIdRateRequest,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/api/Tarot';
@@ -203,20 +204,22 @@ export class TarotService {
       ...readingAi.map((v) => ({
         id: v.id,
         reading: v.reading,
-        askedAt: v.createdAt,
-        repliedAt: v.updatedAt,
+        createdAt: v.createdAt,
+        updatedAt: v.updatedAt,
         isAi: true,
         reader: null,
+        rating: v.rating,
       })),
       ...readingHuman.map((v) => ({
         id: v.id,
         reading: v.reading,
-        askedAt: v.createdAt,
-        repliedAt: v.updatedAt,
+        createdAt: v.createdAt,
+        updatedAt: v.updatedAt,
         isAi: false,
         reader: v.reader,
+        rating: v.rating,
       })),
-    ].sort(compare('repliedAt', 'desc', true));
+    ].sort(compare('createdAt', 'desc', true));
 
     return {
       ...tarotQuestion,
@@ -279,9 +282,9 @@ export class TarotService {
   ): Promise<PostTarotQuestionIdAiResponse> {
     const user = await this.getUserInfo();
 
-    const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(id);
-    if (tarotQuestion.userId !== user.id)
-      throw new BadRequestError('userId not match');
+    const tarotQuestion = await this.tarotQuestionAccess.findOneOrFail({
+      where: { id, userId: user.id },
+    });
 
     if (
       tarotQuestion.spreadId !== 'SINGLE' &&
@@ -392,9 +395,9 @@ export class TarotService {
   ): Promise<PostTarotQuestionIdHumanResponse> {
     const user = await this.getUserInfo();
 
-    const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(id);
-    if (tarotQuestion.userId !== user.id)
-      throw new BadRequestError('userId not match');
+    const tarotQuestion = await this.tarotQuestionAccess.findOneOrFail({
+      where: { id, userId: user.id },
+    });
 
     const reader = await this.userService.getReader(data.readerId);
 
@@ -436,5 +439,36 @@ export class TarotService {
       .promise();
 
     return await this.tarotReadingHumanAccess.save(tarotReadingHuman);
+  }
+
+  public async rateTarotQuestion(
+    id: string,
+    data: PostTarotQuestionIdRateRequest
+  ) {
+    const user = await this.getUserInfo();
+
+    const tarotQuestion = await this.tarotQuestionAccess.findOneOrFail({
+      where: { id, userId: user.id },
+    });
+
+    if (data.isAi) {
+      const readingAi = await this.tarotReadingAiAccess.findOneOrFail({
+        where: {
+          id: data.readingId,
+          questionId: tarotQuestion.id,
+        },
+      });
+      readingAi.rating = data.rating;
+      await this.tarotReadingAiAccess.save(readingAi);
+    } else {
+      const readingHuman = await this.tarotReadingHumanAccess.findOneOrFail({
+        where: {
+          id: data.readingId,
+          questionId: tarotQuestion.id,
+        },
+      });
+      readingHuman.rating = data.rating;
+      await this.tarotReadingHumanAccess.save(readingHuman);
+    }
   }
 }

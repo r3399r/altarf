@@ -8,6 +8,7 @@ import {
   PostTarotQuestionIdAiResponse,
   PostTarotQuestionIdHumanRequest,
   PostTarotQuestionIdHumanResponse,
+  PostTarotQuestionIdRateRequest,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/backend/api/Tarot';
@@ -91,6 +92,15 @@ const postTarotQuestionIdHuman = async (id: string, data: PostTarotQuestionIdHum
   }
 };
 
+const postTarotQuestionIdRating = async (id: string, data: PostTarotQuestionIdRateRequest) => {
+  try {
+    return await http.authPost(`tarot/question/${id}/rating`, { data });
+  } catch (e) {
+    const error = axiosError(e);
+    throw defaultErrorMessage(error);
+  }
+};
+
 export default {
   getTarotDaily,
   postTarotQuestion,
@@ -99,4 +109,5 @@ export default {
   getTarotQuestionId,
   postTarotQuestionIdAi,
   postTarotQuestionIdHuman,
+  postTarotQuestionIdRating,
 };

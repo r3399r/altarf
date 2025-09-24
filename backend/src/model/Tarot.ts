@@ -21,10 +21,11 @@ export type TarotSpread = {
 export type TarotReading = {
   id: string;
   reading: string | null;
-  askedAt: string | null;
-  repliedAt: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
   isAi: boolean;
   reader: Reader | null;
+  rating: number | null;
 };
 
 export type TarotDailyRead = {

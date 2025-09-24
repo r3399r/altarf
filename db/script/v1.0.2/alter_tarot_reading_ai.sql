@@ -1,0 +1,1 @@
+ALTER TABLE altarf.tarot_reading_ai ADD COLUMN rating INT NULL;

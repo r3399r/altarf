@@ -17,6 +17,7 @@ export type TarotReadingAi = {
   promptTokens: number | null;
   completionTokens: number | null;
   elapsedTime: number | null;
+  rating: number | null;
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -45,6 +46,9 @@ export class TarotReadingAiEntity implements TarotReadingAi {
 
   @Column({ type: 'double', name: 'elapsed_time' })
   elapsedTime: number | null = null;
+
+  @Column({ type: 'int', nullable: true })
+  rating: number | null = null;
 
   @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;

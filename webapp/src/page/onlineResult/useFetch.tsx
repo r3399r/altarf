@@ -84,6 +84,21 @@ const useFetch = () => {
       });
   };
 
+  const doRating = (rating: number, readingId: string, isAi: boolean) => {
+    dispatch(startWaiting());
+    tarotEndpoint
+      .postTarotQuestionIdRating(id ?? '', { rating, readingId, isAi })
+      .then(() => {
+        setRefresh(!refresh);
+      })
+      .catch((e) => {
+        dispatch(setErrorMessage(e));
+      })
+      .finally(() => {
+        dispatch(finishWaiting());
+      });
+  };
+
   const isAiSupport = spreadList?.find((v) => v.id === result?.spreadId)?.isAiSupport ?? false;
   const isOwner = result?.user.email === email;
 
@@ -95,6 +110,7 @@ const useFetch = () => {
     askHuman,
     isAiSupport,
     isOwner,
+    doRating,
   };
 };
 

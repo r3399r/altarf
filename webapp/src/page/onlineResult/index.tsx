@@ -16,7 +16,7 @@ import useFetch from './useFetch';
 
 const OnlineResult = () => {
   const dispatch = useDispatch();
-  const { result, mapReaders, url, askAi, askHuman, isAiSupport, isOwner } = useFetch();
+  const { result, mapReaders, url, askAi, askHuman, isAiSupport, isOwner, doRating } = useFetch();
   const [openAskForReading, setOpenAskForReading] = useState(false);
 
   if (!result) return <></>;
@@ -50,7 +50,7 @@ const OnlineResult = () => {
         <StarDivision className="mt-15 px-4 py-14 sm:px-8" title="解牌結果">
           <div className="flex flex-col gap-14">
             {result.reading.map((v) => (
-              <ResultItem key={v.id} tarotReading={v} />
+              <ResultItem key={v.id} tarotReading={v} doRating={doRating} />
             ))}
           </div>
         </StarDivision>
