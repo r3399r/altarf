@@ -20,7 +20,7 @@ type ModalAskForReadingProps = {
   isAiSupport: boolean;
   askAi: () => void;
   askHuman: (readerId: string, cost: number) => void;
-  readers: (Reader & { beenAsked: boolean })[];
+  readers: Reader[];
 };
 
 const ModalAskForReading = ({
@@ -32,8 +32,9 @@ const ModalAskForReading = ({
   readers,
 }: ModalAskForReadingProps) => {
   const [selectedReader, setSelectedReader] = useState<Reader | null>(null);
-  const [selectedIsAi, setSelectedIsAi] = useState<boolean>(true);
+  const [selectedIsAi, setSelectedIsAi] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
+  const showNext = isAiSupport || readers.length > 0;
 
   const onConfirm = () => {
     if (selectedIsAi) askAi();
@@ -43,13 +44,14 @@ const ModalAskForReading = ({
 
   const onClose = () => {
     setStep(1);
-    setSelectedIsAi(true);
+    setSelectedIsAi(false);
     setSelectedReader(null);
     handleClose();
   };
 
   const Step1 = () => (
     <div className="flex flex-col gap-4">
+      <Body>已解過此題的塔羅師將不會進行重複解牌。</Body>
       {isAiSupport && (
         <div
           className={classNames(
@@ -130,12 +132,21 @@ const ModalAskForReading = ({
           </div>
         </div>
       ))}
-      <div className="mt-3 flex justify-end gap-6">
-        <Button appearance="secondary" onClick={onClose}>
-          取消
-        </Button>
-        <Button onClick={() => setStep(2)}>下一步</Button>
-      </div>
+      {showNext && (
+        <div className="mt-3 flex justify-end gap-6">
+          <Button appearance="secondary" onClick={onClose}>
+            取消
+          </Button>
+          <Button disabled={!selectedIsAi && !selectedReader} onClick={() => setStep(2)}>
+            下一步
+          </Button>
+        </div>
+      )}
+      {!showNext && (
+        <div className="mt-3 flex justify-end">
+          <Button onClick={onClose}>我知道了</Button>
+        </div>
+      )}
     </div>
   );
 

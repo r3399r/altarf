@@ -23,7 +23,7 @@ const useFetch = () => {
     if (!result || !readers) return [];
     const askedReaderIds = result.reading.filter((r) => !r.isAi).map((r) => r.reader?.id ?? 'xx');
 
-    return readers.map((r) => ({ ...r, beenAsked: !askedReaderIds.includes(r.id) }));
+    return readers.filter((r) => !askedReaderIds.includes(r.id));
   }, [result, readers]);
 
   useEffect(() => {
