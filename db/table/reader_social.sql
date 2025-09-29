@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS reader_social (
+CREATE TABLE IF NOT EXISTS altarf.reader_social (
     id CHAR(36) NOT NULL DEFAULT (UUID()),
     reader_id CHAR(36) NOT NULL,
     platform VARCHAR(50) NOT NULL,
