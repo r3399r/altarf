@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS tarot_reading_ai (
     prompt_tokens DOUBLE NULL,
     completion_tokens DOUBLE NULL,
     elapsed_time DOUBLE NULL,
+    rating INT NULL,
     created_at DATETIME(3) NULL,
     updated_at DATETIME(3) NULL,
     PRIMARY KEY (id),

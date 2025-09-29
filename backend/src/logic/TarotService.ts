@@ -5,7 +5,7 @@ import { TarotQuestionAccess } from 'src/access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from 'src/access/TarotQuestionCardAccess';
 import { TarotReadingAiAccess } from 'src/access/TarotReadingAiAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
-import { AI_COST, HUMAN_COST } from 'src/constant/Balance';
+import { AI_COST } from 'src/constant/Balance';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import {
   ReadingHumanStatus,
@@ -19,7 +19,9 @@ import {
   GetTarotQuestionParams,
   GetTarotQuestionResponse,
   PostTarotQuestionIdAiResponse,
+  PostTarotQuestionIdHumanRequest,
   PostTarotQuestionIdHumanResponse,
+  PostTarotQuestionIdRateRequest,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/api/Tarot';
@@ -36,6 +38,7 @@ import {
   TarotDailyRead,
   TarotSpread,
 } from 'src/model/Tarot';
+import { fee } from 'src/utils/calculator';
 import { compare } from 'src/utils/compare';
 import { genPagination } from 'src/utils/paginator';
 import { random } from 'src/utils/random';
@@ -201,18 +204,22 @@ export class TarotService {
       ...readingAi.map((v) => ({
         id: v.id,
         reading: v.reading,
-        askedAt: v.createdAt,
-        repliedAt: v.updatedAt,
+        createdAt: v.createdAt,
+        updatedAt: v.updatedAt,
         isAi: true,
+        reader: null,
+        rating: v.rating,
       })),
       ...readingHuman.map((v) => ({
         id: v.id,
         reading: v.reading,
-        askedAt: v.createdAt,
-        repliedAt: v.updatedAt,
+        createdAt: v.createdAt,
+        updatedAt: v.updatedAt,
         isAi: false,
+        reader: v.reader,
+        rating: v.rating,
       })),
-    ].sort(compare('repliedAt', 'desc', true));
+    ].sort(compare('createdAt', 'desc', true));
 
     return {
       ...tarotQuestion,
@@ -275,9 +282,9 @@ export class TarotService {
   ): Promise<PostTarotQuestionIdAiResponse> {
     const user = await this.getUserInfo();
 
-    const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(id);
-    if (tarotQuestion.userId !== user.id)
-      throw new BadRequestError('userId not match');
+    const tarotQuestion = await this.tarotQuestionAccess.findOneOrFail({
+      where: { id, userId: user.id },
+    });
 
     if (
       tarotQuestion.spreadId !== 'SINGLE' &&
@@ -383,24 +390,26 @@ export class TarotService {
   }
 
   public async askHumanTarotQuestion(
-    id: string
+    id: string,
+    data: PostTarotQuestionIdHumanRequest
   ): Promise<PostTarotQuestionIdHumanResponse> {
     const user = await this.getUserInfo();
 
-    const tarotQuestion = await this.tarotQuestionAccess.findOneByIdOrFail(id);
-    if (tarotQuestion.userId !== user.id)
-      throw new BadRequestError('userId not match');
+    const tarotQuestion = await this.tarotQuestionAccess.findOneOrFail({
+      where: { id, userId: user.id },
+    });
 
-    this.checkUserQuota(user, HUMAN_COST);
-    await this.userService.purchaseForUser(user, HUMAN_COST, '真人解牌');
+    const reader = await this.userService.getReader(data.readerId);
 
-    const reader = await this.userService.getReader();
+    const cost = reader.costPerReading + fee(reader.costPerReading);
+    this.checkUserQuota(user, cost);
+    await this.userService.purchaseForUser(user, cost, '真人解牌');
 
     const existedTarotReading = await this.tarotReadingHumanAccess.findOne({
       where: { readerId: reader.id, questionId: tarotQuestion.id },
     });
     if (existedTarotReading !== null)
-      throw new BadRequestError('already asked human reading');
+      throw new BadRequestError('already asked this reader for human reading');
 
     const tarotReadingHuman = new TarotReadingHumanEntity();
     tarotReadingHuman.questionId = tarotQuestion.id;
@@ -409,7 +418,7 @@ export class TarotService {
 
     await this.ses
       .sendEmail({
-        Destination: { ToAddresses: [reader.email] },
+        Destination: { ToAddresses: [reader.user.email] },
         Message: {
           Body: {
             Text: {
@@ -430,5 +439,36 @@ export class TarotService {
       .promise();
 
     return await this.tarotReadingHumanAccess.save(tarotReadingHuman);
+  }
+
+  public async rateTarotQuestion(
+    id: string,
+    data: PostTarotQuestionIdRateRequest
+  ) {
+    const user = await this.getUserInfo();
+
+    const tarotQuestion = await this.tarotQuestionAccess.findOneOrFail({
+      where: { id, userId: user.id },
+    });
+
+    if (data.isAi) {
+      const readingAi = await this.tarotReadingAiAccess.findOneOrFail({
+        where: {
+          id: data.readingId,
+          questionId: tarotQuestion.id,
+        },
+      });
+      readingAi.rating = data.rating;
+      await this.tarotReadingAiAccess.save(readingAi);
+    } else {
+      const readingHuman = await this.tarotReadingHumanAccess.findOneOrFail({
+        where: {
+          id: data.readingId,
+          questionId: tarotQuestion.id,
+        },
+      });
+      readingHuman.rating = data.rating;
+      await this.tarotReadingHumanAccess.save(readingHuman);
+    }
   }
 }

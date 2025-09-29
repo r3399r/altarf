@@ -68,7 +68,7 @@ const Bar = () => {
         .then((res) => {
           dispatch(setEmail(res.data.email));
           dispatch(setBalance(res.data.balance));
-          dispatch(setIsReader(res.data.role === 'reader'));
+          dispatch(setIsReader(res.data.reader !== null));
         })
         .catch((e) => {
           dispatch(setErrorMessage(e));

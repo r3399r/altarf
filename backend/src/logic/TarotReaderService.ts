@@ -1,14 +1,17 @@
 import { SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
+import { ReaderAccess } from 'src/access/ReaderAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import { ReadingHumanStatus } from 'src/constant/Tarot';
 import {
   GetTarotReaderQuestionParams,
   GetTarotReaderQuestionResponse,
+  GetTarotReaderResponse,
   PostTarotReaderQuestionIdRequest,
   PostTarotReaderQuestionIdResponse,
 } from 'src/model/api/Tarot';
+import { fee } from 'src/utils/calculator';
 import { genPagination } from 'src/utils/paginator';
 import { UserService } from './UserService';
 
@@ -21,11 +24,22 @@ export class TarotReaderService {
   private readonly ses!: SES;
   @inject(UserService)
   private readonly userService!: UserService;
+  @inject(ReaderAccess)
+  private readonly readerAccess!: ReaderAccess;
   @inject(TarotReadingHumanAccess)
   private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
   private async getUserInfo() {
     return await this.userService.getUserEntity();
+  }
+
+  public async getAllReaders(): Promise<GetTarotReaderResponse> {
+    const readers = await this.readerAccess.find();
+
+    return readers.map((r) => ({
+      ...r,
+      costPerReading: r.costPerReading + fee(r.costPerReading),
+    }));
   }
 
   public async getQuestionListByReader(
@@ -35,8 +49,10 @@ export class TarotReaderService {
 
     const limit = params?.limit ? Number(params.limit) : LIMIT;
     const offset = params?.offset ? Number(params.offset) : OFFSET;
+    if (user.reader == null) throw new Error('User is not a reader');
+
     const [data, total] = await this.tarotReadingHumanAccess.findAndCount({
-      where: { readerId: user.id },
+      where: { readerId: user.reader.id },
       order: { createdAt: 'DESC' },
       take: limit,
       skip: offset,
@@ -120,16 +136,18 @@ export class TarotReaderService {
     };
   }
 
-  public async replyTarotQuestionByReader(
+  public async replyTarotQuestion(
     id: string,
     data: PostTarotReaderQuestionIdRequest
   ): Promise<PostTarotReaderQuestionIdResponse> {
     const user = await this.getUserInfo();
+    if (user.reader == null) throw new Error('User is not a reader');
+
     const tarotReading = await this.tarotReadingHumanAccess.findOneOrFail({
       where: {
         id,
         status: ReadingHumanStatus.IN_PROGRESS,
-        readerId: user.id,
+        readerId: user.reader.id,
       },
     });
 

@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { ReaderAccess } from 'src/access/ReaderAccess';
 import { UserAccess } from 'src/access/UserAccess';
 import { UserBalanceAccess } from 'src/access/UserBalanceAccess';
 import {
@@ -23,6 +24,9 @@ import { GoogleService } from './GoogleService';
 export class UserService {
   @inject(UserAccess)
   private readonly userAccess!: UserAccess;
+
+  @inject(ReaderAccess)
+  private readonly readerAccess!: ReaderAccess;
 
   @inject(GoogleService)
   private readonly googleService!: GoogleService;
@@ -126,15 +130,13 @@ export class UserService {
     await this.userBalanceAccess.save(userBalanceEntity);
   }
 
-  public async getReader() {
-    return await this.userAccess.findOneOrFail({
-      where: { role: 'reader' },
+  public async getReader(id: string) {
+    return await this.readerAccess.findOneOrFail({
+      where: { id },
     });
   }
 
   public async getUserList() {
-    return await this.userAccess.find({
-      where: { role: 'user' },
-    });
+    return await this.userAccess.find();
   }
 }

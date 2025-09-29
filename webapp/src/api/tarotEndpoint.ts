@@ -6,7 +6,9 @@ import {
   GetTarotQuestionParams,
   GetTarotQuestionResponse,
   PostTarotQuestionIdAiResponse,
+  PostTarotQuestionIdHumanRequest,
   PostTarotQuestionIdHumanResponse,
+  PostTarotQuestionIdRateRequest,
   PostTarotQuestionRequest,
   PostTarotQuestionResponse,
 } from 'src/model/backend/api/Tarot';
@@ -76,13 +78,25 @@ const postTarotQuestionIdAi = async (id: string) => {
   }
 };
 
-const postTarotQuestionIdHuman = async (id: string) => {
+const postTarotQuestionIdHuman = async (id: string, data: PostTarotQuestionIdHumanRequest) => {
   try {
-    return await http.authPost<PostTarotQuestionIdHumanResponse>(`tarot/question/${id}/human`);
+    return await http.authPost<PostTarotQuestionIdHumanResponse, PostTarotQuestionIdHumanRequest>(
+      `tarot/question/${id}/human`,
+      { data },
+    );
   } catch (e) {
     const error = axiosError(e);
     if (error.response?.data.code === 'BALANCE_INSUFFICIENT') throw '餘額不足，請先儲值';
 
+    throw defaultErrorMessage(error);
+  }
+};
+
+const postTarotQuestionIdRating = async (id: string, data: PostTarotQuestionIdRateRequest) => {
+  try {
+    return await http.authPost(`tarot/question/${id}/rating`, { data });
+  } catch (e) {
+    const error = axiosError(e);
     throw defaultErrorMessage(error);
   }
 };
@@ -95,4 +109,5 @@ export default {
   getTarotQuestionId,
   postTarotQuestionIdAi,
   postTarotQuestionIdHuman,
+  postTarotQuestionIdRating,
 };

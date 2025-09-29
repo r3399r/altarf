@@ -8,17 +8,18 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { ReadingHumanStatus } from 'src/constant/Tarot';
+import { Reader, ReaderEntity } from './ReaderEntity';
 import { TarotQuestion, TarotQuestionEntity } from './TarotQuestionEntity';
-import { User, UserEntity } from './UserEntity';
 
 export type TarotReadingHuman = {
   id: string;
   questionId: string;
   question: TarotQuestion;
   readerId: string;
-  reader: User;
+  reader: Reader;
   status: ReadingHumanStatus;
   reading: string | null;
+  rating: number | null;
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -39,15 +40,18 @@ export class TarotReadingHumanEntity implements TarotReadingHuman {
   @Column({ type: 'char', length: 36, name: 'reader_id' })
   readerId!: string;
 
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => ReaderEntity)
   @JoinColumn({ name: 'reader_id' })
-  reader!: User;
+  reader!: Reader;
 
   @Column({ type: 'varchar', length: 255 })
   status!: ReadingHumanStatus;
 
   @Column({ type: 'text' })
   reading: string | null = null;
+
+  @Column({ type: 'int', nullable: true })
+  rating: number | null = null;
 
   @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;

@@ -4,6 +4,7 @@ import { Container } from 'inversify';
 import { DbAccess } from './access/DbAccess';
 import { ECPayTradeAccess } from './access/ECPayTradeAccess';
 import { ECPayTradeItemAccess } from './access/ECPayTradeItemAccess';
+import { ReaderAccess } from './access/ReaderAccess';
 import { TarotDailyAccess } from './access/TarotDailyAccess';
 import { TarotQuestionAccess } from './access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from './access/TarotQuestionCardAccess';
@@ -22,6 +23,8 @@ import { TarotTimerService } from './logic/TarotTimerService';
 import { UserService } from './logic/UserService';
 import { ECPayTradeEntity } from './model/entity/ECPayTradeEntity';
 import { ECPayTradeItemEntity } from './model/entity/ECPayTradeItemEntity';
+import { ReaderEntity } from './model/entity/ReaderEntity';
+import { ReaderSocialEntity } from './model/entity/ReaderSocialEntity';
 import { TarotDailyEntity } from './model/entity/TarotDailyEntity';
 import { TarotQuestionCardEntity } from './model/entity/TarotQuestionCardEntity';
 import { TarotQuestionEntity } from './model/entity/TarotQuestionEntity';
@@ -49,6 +52,8 @@ container
 container.bind<Function>(dbEntitiesBindingId).toFunction(TarotQuestionEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(UserEntity);
 container.bind<Function>(dbEntitiesBindingId).toFunction(UserBalanceEntity);
+container.bind<Function>(dbEntitiesBindingId).toFunction(ReaderEntity);
+container.bind<Function>(dbEntitiesBindingId).toFunction(ReaderSocialEntity);
 
 // db access
 container.bind(DbAccess).toSelf();
@@ -61,6 +66,7 @@ container.bind(TarotQuestionAccess).toSelf();
 container.bind(TarotQuestionCardAccess).toSelf();
 container.bind(UserAccess).toSelf();
 container.bind(UserBalanceAccess).toSelf();
+container.bind(ReaderAccess).toSelf();
 
 // service
 container.bind(AuthService).toSelf();

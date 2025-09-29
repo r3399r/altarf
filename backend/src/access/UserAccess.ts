@@ -23,6 +23,9 @@ export class UserAccess {
     const qr = await this.database.getQueryRunner();
 
     return await qr.manager.findOne<User>(UserEntity.name, {
+      relations: {
+        reader: true,
+      },
       ...options,
     });
   }
@@ -31,6 +34,9 @@ export class UserAccess {
     const qr = await this.database.getQueryRunner();
 
     return await qr.manager.findOneOrFail<User>(UserEntity.name, {
+      relations: {
+        reader: true,
+      },
       ...options,
     });
   }
@@ -39,6 +45,9 @@ export class UserAccess {
     const qr = await this.database.getQueryRunner();
 
     return await qr.manager.find<User>(UserEntity.name, {
+      relations: {
+        reader: true,
+      },
       ...options,
     });
   }

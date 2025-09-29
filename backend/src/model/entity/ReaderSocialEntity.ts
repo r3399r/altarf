@@ -4,37 +4,39 @@ import {
   Column,
   Entity,
   Generated,
-  OneToOne,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Reader, ReaderEntity } from './ReaderEntity';
 
-export type User = {
+export type ReaderSocial = {
   id: string;
-  email: string;
-  role: string;
-  balance: number;
-  reader: Reader | null;
+  readerId: string;
+  reader: Reader;
+  platform: string;
+  url: string;
   createdAt: string | null;
   updatedAt: string | null;
 };
 
-@Entity({ name: 'user' })
-export class UserEntity implements User {
+@Entity({ name: 'reader_social' })
+export class ReaderSocialEntity implements ReaderSocial {
   @Column({ primary: true, type: 'char', length: 36 })
   @Generated('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  email!: string;
+  @Column({ type: 'char', length: 36, name: 'reader_id' })
+  readerId!: string;
+
+  @ManyToOne(() => ReaderEntity)
+  @JoinColumn({ name: 'reader_id' })
+  reader!: Reader;
+
+  @Column({ type: 'varchar', length: 50 })
+  platform!: string;
 
   @Column({ type: 'varchar', length: 255 })
-  role!: string;
-
-  @Column({ type: 'double' })
-  balance!: number;
-
-  @OneToOne(() => ReaderEntity, (reader) => reader.user)
-  reader!: ReaderEntity | null;
+  url!: string;
 
   @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;
