@@ -84,25 +84,29 @@ const ResultItem = ({ tarotReading, doRating }: Props) => {
             : '塔羅師解牌中... 可能需要一段時間，請耐心等待，有結果時會寄 Email 通知您。')}
         {reading !== null && reading}
       </Body>
-      {!expandRating && rating === null && (
-        <div
-          className="flex w-fit cursor-pointer items-center gap-1 rounded-[30px] bg-background-surface-tabbar px-3 py-2"
-          onClick={() => setExpandRating(true)}
-        >
-          <img className="w-[18px]" src={IcStar} />
-          <Body size="s">為此占卜評分</Body>
-        </div>
-      )}
-      {!expandRating && rating !== null && (
-        <RatingOption rating={rating} onClick={() => setExpandRating(true)} />
-      )}
-      {expandRating && (
-        <div className="flex flex-wrap items-center gap-3">
-          <RatingOption rating={5} onClick={() => onRating(5)} />
-          <RatingOption rating={4} onClick={() => onRating(4)} />
-          <RatingOption rating={3} onClick={() => onRating(3)} />
-          <RatingOption rating={2} onClick={() => onRating(2)} />
-          <RatingOption rating={1} onClick={() => onRating(1)} />
+      {reading !== null && (
+        <div>
+          {!expandRating && rating === null && (
+            <div
+              className="flex w-fit cursor-pointer items-center gap-1 rounded-[30px] bg-background-surface-tabbar px-3 py-2"
+              onClick={() => setExpandRating(true)}
+            >
+              <img className="w-[18px]" src={IcStar} />
+              <Body size="s">為此占卜評分</Body>
+            </div>
+          )}
+          {!expandRating && rating !== null && (
+            <RatingOption rating={rating} onClick={() => setExpandRating(true)} />
+          )}
+          {expandRating && (
+            <div className="flex flex-wrap items-center gap-3">
+              <RatingOption rating={5} onClick={() => onRating(5)} />
+              <RatingOption rating={4} onClick={() => onRating(4)} />
+              <RatingOption rating={3} onClick={() => onRating(3)} />
+              <RatingOption rating={2} onClick={() => onRating(2)} />
+              <RatingOption rating={1} onClick={() => onRating(1)} />
+            </div>
+          )}
         </div>
       )}
       <div className="mt-3 text-right">
