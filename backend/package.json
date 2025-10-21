@@ -1,6 +1,6 @@
 {
   "name": "altarf-backend",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "lint:es": "eslint -c ./eslint.json src",
     "fix:es": "npm run lint:es -- --fix",
