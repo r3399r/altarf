@@ -124,7 +124,6 @@ export class ECPayService {
         user,
         Number(ecpayTradeItem.amount),
         '',
-        new Date(result.PaymentDate)
       );
   }
 
