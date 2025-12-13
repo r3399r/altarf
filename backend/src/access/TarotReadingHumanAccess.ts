@@ -37,6 +37,21 @@ export class TarotReadingHumanAccess {
     );
   }
 
+  public async find(options?: FindManyOptions<TarotReadingHuman>) {
+    const qr = await this.database.getQueryRunner();
+
+    return await qr.manager.find<TarotReadingHuman>(
+      TarotReadingHumanEntity.name,
+      {
+        relations: {
+          question: true,
+          reader: true,
+        },
+        ...options,
+      }
+    );
+  }
+
   public async findOne(options?: FindOneOptions<TarotReadingHuman>) {
     const qr = await this.database.getQueryRunner();
 

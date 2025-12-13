@@ -963,7 +963,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.api
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-api
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -997,7 +997,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.aiAgent
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-ai-agent
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -1017,7 +1017,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.tarotDailyLoader
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -1045,7 +1045,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.giftLoader
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-gift-loader
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -1067,12 +1067,39 @@ Resources:
       Action: 'lambda:InvokeFunction'
       Principal: events.amazonaws.com
       SourceArn: !GetAtt EventBridgeGiftLoader.Arn
+  LambdaRemindLoader:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures: [arm64]
+      Handler: index.remindLoader
+      Runtime: nodejs22.x
+      FunctionName: !Sub ${Project}-${TargetEnvr}-remind-loader
+      Role: !GetAtt ExecutionRole.Arn
+      CodeUri: ../../lib/src
+      MemorySize: 200
+      Timeout: 30
+      Layers: [!Ref LambdaLayer]
+      Environment:
+        Variables:
+          PROJECT: !Sub ${Project}
+          ENVR: !Sub ${TargetEnvr}
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
+  InvokePermissionRemindLoader:
+    Type: AWS::Lambda::Permission
+    DependsOn: [EventBridgeRemindLoader, LambdaRemindLoader]
+    Properties:
+      FunctionName: !Sub ${Project}-${TargetEnvr}-remind-loader
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt EventBridgeRemindLoader.Arn
   LambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: !Sub ${Project}-${TargetEnvr}-layer
       CompatibleArchitectures: [arm64]
-      CompatibleRuntimes: [nodejs20.x]
+      CompatibleRuntimes: [nodejs22.x]
       ContentUri: ../../dist
       RetentionPolicy: Delete
   #########################################
@@ -1188,6 +1215,16 @@ Resources:
       Targets:
         - Arn: !GetAtt LambdaGiftLoader.Arn
           Id: !Sub ${Project}-${TargetEnvr}-gift-loader
+  EventBridgeRemindLoader:
+    Type: AWS::Events::Rule
+    DependsOn: [LambdaRemindLoader]
+    Properties:
+      Name: !Sub ${Project}-${TargetEnvr}-remind-loader
+      ScheduleExpression: cron(5 0 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt LambdaRemindLoader.Arn
+          Id: !Sub ${Project}-${TargetEnvr}-remind-loader
   EventBridgeDailyLoader:
     Type: AWS::Events::Rule
     DependsOn: [LambdaTarotDailyLoader]
