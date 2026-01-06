@@ -1,5 +1,6 @@
 import { SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
+import { In } from 'typeorm';
 import { ReaderAccess } from 'src/access/ReaderAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
@@ -52,7 +53,10 @@ export class TarotReaderService {
     if (user.reader == null) throw new Error('User is not a reader');
 
     const [data, total] = await this.tarotReadingHumanAccess.findAndCount({
-      where: { readerId: user.reader.id },
+      where: {
+        readerId: user.reader.id,
+        status: params?.status ? In(params.status.split(',')) : undefined,
+      },
       order: { createdAt: 'DESC' },
       take: limit,
       skip: offset,
@@ -130,7 +134,7 @@ export class TarotReaderService {
                     <p>瞭望塔 Lookout</p>
                 </div>
             </div>
-            <div class="org">© Celetial Studio 2022 - ${new Date().getFullYear()}</div>
+            <div class="org">© Celestial Studio 2022 - ${new Date().getFullYear()}</div>
         </body>
         </html>`,
     };

@@ -56,7 +56,9 @@ export type PostTarotQuestionIdHumanResponse = TarotReadingHuman;
 
 export type GetTarotReaderResponse = Reader[];
 
-export type GetTarotReaderQuestionParams = PaginationParams;
+export type GetTarotReaderQuestionParams = PaginationParams & {
+  status?: string;
+};
 
 export type GetTarotReaderQuestionResponse = Paginate<TarotReadingHuman>;
 

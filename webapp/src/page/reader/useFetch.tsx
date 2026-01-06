@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import tarotReaderEndpoint from 'src/api/tarotReaderEndpoint';
+import { ReadingHumanStatus } from 'src/constant/backend/Tarot';
 import { GetTarotReaderQuestionResponse } from 'src/model/backend/api/Tarot';
-import { RootState } from 'src/redux/store';
 import { finishWaiting, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
 
 const LIMIT = 10;
 
-const useFetch = (page: number) => {
+const useFetch = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { isReader } = useSelector((rootState: RootState) => rootState.ui);
-  const [isReady, setIsReady] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [result, setResult] = useState<GetTarotReaderQuestionResponse>();
+  const [unsolvedPage, setUnsolvedPage] = useState(1);
+  const [unsolvedQuestions, setUnsolvedQuestions] = useState<GetTarotReaderQuestionResponse>();
+  const [solvedPage, setSolvedPage] = useState(1);
+  const [solvedQuestions, setSolvedQuestions] = useState<GetTarotReaderQuestionResponse>();
 
   const sendReading = (id: string, reading: string) => {
     dispatch(startWaiting());
@@ -34,18 +33,16 @@ const useFetch = (page: number) => {
   };
 
   useEffect(() => {
-    if (isReader === false) navigate('/online');
-    else if (isReader === true) setIsReady(true);
-  }, [isReader, navigate]);
-
-  useEffect(() => {
-    if (!isReady) return;
     dispatch(startWaiting());
-    const offset = (page - 1) * LIMIT;
+    const offset = (unsolvedPage - 1) * LIMIT;
     tarotReaderEndpoint
-      .getTarotReaderQuestion({ limit: String(LIMIT), offset: String(offset) })
+      .getTarotReaderQuestion({
+        limit: String(LIMIT),
+        offset: String(offset),
+        status: [ReadingHumanStatus.OPEN, ReadingHumanStatus.IN_PROGRESS].join(),
+      })
       .then((res) => {
-        setResult(res.data);
+        setUnsolvedQuestions(res.data);
       })
       .catch((e) => {
         dispatch(setErrorMessage(e));
@@ -53,9 +50,37 @@ const useFetch = (page: number) => {
       .finally(() => {
         dispatch(finishWaiting());
       });
-  }, [isReady, dispatch, refresh, page]);
+  }, [refresh, unsolvedPage]);
 
-  return { result, sendReading };
+  useEffect(() => {
+    dispatch(startWaiting());
+    const offset = (solvedPage - 1) * LIMIT;
+    tarotReaderEndpoint
+      .getTarotReaderQuestion({
+        limit: String(LIMIT),
+        offset: String(offset),
+        status: ReadingHumanStatus.DONE,
+      })
+      .then((res) => {
+        setSolvedQuestions(res.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMessage(e));
+      })
+      .finally(() => {
+        dispatch(finishWaiting());
+      });
+  }, [refresh, solvedPage]);
+
+  return {
+    unsolvedQuestions,
+    unsolvedPage,
+    setUnsolvedPage,
+    solvedQuestions,
+    solvedPage,
+    setSolvedPage,
+    sendReading,
+  };
 };
 
 export default useFetch;

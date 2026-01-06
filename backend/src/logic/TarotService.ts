@@ -383,7 +383,7 @@ export class TarotService {
                     <p>瞭望塔 Lookout</p>
                 </div>
             </div>
-            <div class="org">© Celetial Studio 2022 - ${new Date().getFullYear()}</div>
+            <div class="org">© Celestial Studio 2022 - ${new Date().getFullYear()}</div>
         </body>
         </html>`,
     };
