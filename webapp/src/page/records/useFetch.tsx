@@ -6,7 +6,7 @@ import { finishWaiting, setErrorMessage, startWaiting } from 'src/redux/uiSlice'
 
 const LIMIT = 10;
 
-const useFetch = (page: number) => {
+const useFetch = (page: number, email: string | null) => {
   const dispatch = useDispatch();
   const [result, setResult] = useState<GetTarotQuestionResponse>();
 
@@ -14,7 +14,7 @@ const useFetch = (page: number) => {
     dispatch(startWaiting());
     const offset = (page - 1) * LIMIT;
     tarotEndpoint
-      .getTarotQuestion({ limit: String(LIMIT), offset: String(offset) })
+      .getTarotQuestion({ limit: String(LIMIT), offset: String(offset), email: email ?? undefined })
       .then((res) => {
         setResult(res.data);
       })
@@ -24,7 +24,7 @@ const useFetch = (page: number) => {
       .finally(() => {
         dispatch(finishWaiting());
       });
-  }, [dispatch, page]);
+  }, [dispatch, page, email]);
 
   return { result };
 };

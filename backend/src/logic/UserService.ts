@@ -53,12 +53,16 @@ export class UserService {
     return user;
   }
 
+  public async getUserEntityByEmail(email: string): Promise<User> {
+    return await this.userAccess.findOneOrFail({
+      where: { email },
+    });
+  }
+
   public async getUserEntity(): Promise<User> {
     const info = await this.googleService.getUserInfo();
 
-    return await this.userAccess.findOneOrFail({
-      where: { email: info.email },
-    });
+    return await this.getUserEntityByEmail(info.email);
   }
 
   public async getUserTransactionList(

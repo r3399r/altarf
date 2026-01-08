@@ -249,7 +249,10 @@ export class TarotService {
   public async getTarotQuestionList(
     params: GetTarotQuestionParams | null
   ): Promise<GetTarotQuestionResponse> {
-    const user = await this.getUserInfo();
+    let user: User | null = null;
+    if (params?.email)
+      user = await this.userService.getUserEntityByEmail(params.email);
+    else user = await this.getUserInfo();
 
     const limit = params?.limit ? Number(params.limit) : LIMIT;
     const offset = params?.offset ? Number(params.offset) : OFFSET;

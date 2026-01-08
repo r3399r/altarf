@@ -1,10 +1,12 @@
 import classNames from 'classnames';
 import { format } from 'date-fns';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Canvas from 'src/components/Canvas';
 import Pagination from 'src/components/Pagination';
 import Body from 'src/components/typography/Body';
 import { TAROT_CARD_LIST, TAROT_SPREAD_LIST } from 'src/constant/backend/Tarot';
+import { Page } from 'src/constant/Page';
 import { GetTarotReaderQuestionResponse } from 'src/model/backend/api/Tarot';
 import { compare } from 'src/utils/compare';
 import ResultForm from './ResultForm';
@@ -17,6 +19,7 @@ type Props = {
 };
 
 const TabUnsolved = ({ questions, page, setPage, sendReading }: Props) => {
+  const navigate = useNavigate();
   const [expandedMap, setExpandedMap] = useState<Record<string, boolean>>({});
 
   if (!questions) return <div>Loading...</div>;
@@ -44,7 +47,13 @@ const TabUnsolved = ({ questions, page, setPage, sendReading }: Props) => {
                 </Body>
               </div>
               <Body size="s" className="text-text-secondary">
-                by <span className="underline">{q.question.user.email}</span>
+                by{' '}
+                <span
+                  className="cursor-pointer underline"
+                  onClick={() => navigate(Page.Records, { state: q.question.user.email })}
+                >
+                  {q.question.user.email}
+                </span>
               </Body>
             </div>
             <div

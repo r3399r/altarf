@@ -40,7 +40,9 @@ export type GetTarotQuestionIdResponse = Omit<
   reading: TarotReading[];
 };
 
-export type GetTarotQuestionParams = PaginationParams;
+export type GetTarotQuestionParams = PaginationParams & {
+  email?: string;
+};
 
 export type GetTarotQuestionResponse = Paginate<
   Pick<TarotQuestion, 'id' | 'question' | 'createdAt'> & {

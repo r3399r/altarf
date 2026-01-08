@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from 'src/components/Button';
+import { useLocation, useNavigate } from 'react-router-dom';
+import IcBack from 'src/assets/ic-back.svg';
 import Pagination from 'src/components/Pagination';
 import Table from 'src/components/Table';
 import Body from 'src/components/typography/Body';
@@ -12,8 +12,10 @@ import useFetch from './useFetch';
 
 const Records = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const email = location.state as string | null;
   const [page, setPage] = useState(1);
-  const { result } = useFetch(page);
+  const { result } = useFetch(page, email);
 
   const columns = [
     {
@@ -21,31 +23,35 @@ const Records = () => {
       accessor: (row: GetTarotQuestionResponse['data'][0]) => (
         <Body size="m">{format(new Date(row.createdAt), 'yyyy/MM/dd HH:mm:ss')}</Body>
       ),
+      className: '!w-1/3',
     },
     {
-      header: '項目',
+      header: '題目',
       accessor: (row: GetTarotQuestionResponse['data'][0]) => (
-        <>
-          <Body size="m">線上解牌</Body>
-          <Body size="s" className="line-clamp-2 text-text-input-subtle">
-            題目: {row.question}
-          </Body>
-        </>
+        <Body
+          size="m"
+          className="cursor-pointer underline"
+          onClick={() => navigate(`${Page.Online}/${row.id}`)}
+        >
+          {row.question}
+        </Body>
       ),
-    },
-    {
-      accessor: (row: GetTarotQuestionResponse['data'][0]) => (
-        <Button className="!px-4 !py-2" onClick={() => navigate(`${Page.Online}/${row.id}`)}>
-          占卜結果
-        </Button>
-      ),
-      className: 'text-right',
+      className: '!w-2/3',
     },
   ];
 
   return (
     <>
-      <H2 className="mt-10 mb-[26px] sm:mt-20">占卜紀錄</H2>
+      {email === null && <H2 className="mt-10 mb-6 sm:mt-20">占卜紀錄</H2>}
+      {email !== null && (
+        <div className="my-6">
+          <div className="mb-8 flex cursor-pointer items-center" onClick={() => navigate(-1)}>
+            <img src={IcBack}></img>
+            <Body>回前頁</Body>
+          </div>
+          <Body bold>{email} 的提問</Body>
+        </div>
+      )}
       {result && <Table data={result.data} columns={columns} rowKey={(row) => row.id} />}
       {result && (
         <div className="mt-10">
