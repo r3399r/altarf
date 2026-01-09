@@ -34,7 +34,7 @@ export class UserEntity implements User {
   balance!: number;
 
   @OneToOne(() => ReaderEntity, (reader) => reader.user)
-  reader!: ReaderEntity | null;
+  reader!: Reader | null;
 
   @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;
