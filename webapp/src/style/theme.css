@@ -43,6 +43,8 @@
   --color-border-table-tbody: var(--color-border-table-tbody);
   --color-border-spread-normal: var(--color-border-spread-normal);
   --color-border-spread-active: var(--color-border-spread-active);
+  --color-border-divider-accent: var(--color-border-divider-accent);
+  --color-border-divider-sub: var(--color-border-divider-sub);
 
   --color-icon-primary: var(--color-icon-primary);
 }
@@ -92,6 +94,8 @@
   --color-border-table-tbody: theme(color-grey-800);
   --color-border-spread-normal: theme(color-grey-700);
   --color-border-spread-active: theme(color-beige-300);
+  --color-border-divider-accent: theme(color-grey-500);
+  --color-border-divider-sub: theme(color-grey-800);
 
   --color-icon-primary: theme(color-beige-300);
 }

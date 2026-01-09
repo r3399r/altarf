@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from 'src/components/Button';
 import Modal from 'src/components/Modal';
+import Textarea from 'src/components/Textarea';
 import Body from 'src/components/typography/Body';
 
 type Props = {
@@ -27,10 +28,7 @@ const ResultForm = ({ id, question, sendReading }: Props) => {
       <Body size="m" className="mb-1 text-text-input-subtle">
         輸入解牌結果：
       </Body>
-      <textarea
-        className="w-full rounded-lg border-none bg-background-textfield-normal p-2 text-[0.875rem]"
-        {...register('content')}
-      ></textarea>
+      <Textarea {...register('content')} />
       <div className="mt-4 flex justify-end">
         <Button
           type="button"

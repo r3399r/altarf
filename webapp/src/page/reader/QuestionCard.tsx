@@ -107,7 +107,7 @@ const QuestionCard = ({ tarotReading, sendReading, status }: Props) => {
       </div>
       {status === 'unsolved' && sendReading && (
         <ResultForm
-          id={tarotReading.question.id}
+          id={tarotReading.id}
           question={tarotReading.question.question}
           sendReading={sendReading}
         />
