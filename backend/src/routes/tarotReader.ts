@@ -3,6 +3,7 @@ import { TarotReaderService } from 'src/logic/TarotReaderService';
 import {
   GetTarotQuestionParams,
   PostTarotReaderQuestionIdRequest,
+  PutTarotReaderRequest,
 } from 'src/model/api/Tarot';
 import { BadRequestError } from 'src/model/error';
 import { LambdaEvent } from 'src/model/Lambda';
@@ -17,6 +18,8 @@ export default async (lambdaEvent: LambdaEvent) => {
   switch (event.resource) {
     case '/api/tarot-reader':
       return await tarotReader();
+    case '/api/tarot-reader/{id}':
+      return await tarotReaderId();
     case '/api/tarot-reader/question':
       return await tarotReaderQuestion();
     case '/api/tarot-reader/question/{id}':
@@ -30,6 +33,23 @@ const tarotReader = async () => {
   switch (event.httpMethod) {
     case 'GET':
       return await service.getAllReaders();
+  }
+
+  throw new Error('unexpected httpMethod');
+};
+
+const tarotReaderId = async () => {
+  if (event.pathParameters === null)
+    throw new BadRequestError('pathParameters should not be empty');
+  switch (event.httpMethod) {
+    case 'PUT':
+      if (event.body === null)
+        throw new BadRequestError('body should not be empty');
+
+      return await service.updateReaderProfile(
+        event.pathParameters.id,
+        JSON.parse(event.body) as PutTarotReaderRequest
+      );
   }
 
   throw new Error('unexpected httpMethod');

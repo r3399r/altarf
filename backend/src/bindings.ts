@@ -5,6 +5,7 @@ import { DbAccess } from './access/DbAccess';
 import { ECPayTradeAccess } from './access/ECPayTradeAccess';
 import { ECPayTradeItemAccess } from './access/ECPayTradeItemAccess';
 import { ReaderAccess } from './access/ReaderAccess';
+import { ReaderSocialAccess } from './access/ReaderSocialAccess';
 import { TarotDailyAccess } from './access/TarotDailyAccess';
 import { TarotQuestionAccess } from './access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from './access/TarotQuestionCardAccess';
@@ -67,6 +68,7 @@ container.bind(TarotQuestionCardAccess).toSelf();
 container.bind(UserAccess).toSelf();
 container.bind(UserBalanceAccess).toSelf();
 container.bind(ReaderAccess).toSelf();
+container.bind(ReaderSocialAccess).toSelf();
 
 // service
 container.bind(AuthService).toSelf();

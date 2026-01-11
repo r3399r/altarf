@@ -5,12 +5,25 @@ import {
   GetTarotReaderResponse,
   PostTarotReaderQuestionIdRequest,
   PostTarotReaderQuestionIdResponse,
+  PutTarotReaderRequest,
+  PutTarotReaderResponse,
 } from 'src/model/backend/api/Tarot';
 import { axiosError, defaultErrorMessage } from 'src/utils/errorHandler';
 
 const getTarotReader = async () => {
   try {
     return await http.authGet<GetTarotReaderResponse>('tarot-reader');
+  } catch (e) {
+    const error = axiosError(e);
+    throw defaultErrorMessage(error);
+  }
+};
+
+const putTarotReaderId = async (id: string, data: PutTarotReaderRequest) => {
+  try {
+    return await http.authPut<PutTarotReaderResponse, PutTarotReaderRequest>(`tarot-reader/${id}`, {
+      data,
+    });
   } catch (e) {
     const error = axiosError(e);
     throw defaultErrorMessage(error);
@@ -38,4 +51,9 @@ const postTarotReaderQuestionId = async (id: string, data: PostTarotReaderQuesti
   }
 };
 
-export default { getTarotReader, getTarotReaderQuestion, postTarotReaderQuestionId };
+export default {
+  getTarotReader,
+  putTarotReaderId,
+  getTarotReaderQuestion,
+  postTarotReaderQuestionId,
+};

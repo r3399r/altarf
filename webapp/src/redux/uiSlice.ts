@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { User } from 'src/model/backend/entity/UserEntity';
 
 export type UiState = {
   workload: number;
@@ -9,6 +10,7 @@ export type UiState = {
   openErrorModal: boolean;
   errorMessage: string;
   snackbarMessage: string | null;
+  user: User | null;
 };
 
 const initialState: UiState = {
@@ -20,6 +22,7 @@ const initialState: UiState = {
   openErrorModal: false,
   errorMessage: '',
   snackbarMessage: null,
+  user: null,
 };
 
 export const uiSlice = createSlice({
@@ -34,6 +37,9 @@ export const uiSlice = createSlice({
     },
     setIsLogin: (state: UiState, action: PayloadAction<boolean>) => {
       state.isLogin = action.payload;
+    },
+    setUser: (state: UiState, action: PayloadAction<User | null>) => {
+      state.user = action.payload;
     },
     setIsReader: (state: UiState, action: PayloadAction<boolean>) => {
       state.isReader = action.payload;
@@ -61,6 +67,7 @@ export const uiSlice = createSlice({
 export const {
   startWaiting,
   finishWaiting,
+  setUser,
   setIsLogin,
   setIsReader,
   setEmail,

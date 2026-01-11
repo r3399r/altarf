@@ -1,3 +1,4 @@
+import { SocialMediaPlatform } from 'src/constant/Reader';
 import { Reader } from 'src/model/entity/ReaderEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
@@ -57,6 +58,18 @@ export type PostTarotQuestionIdHumanRequest = { readerId: string };
 export type PostTarotQuestionIdHumanResponse = TarotReadingHuman;
 
 export type GetTarotReaderResponse = Reader[];
+
+export type PutTarotReaderRequest = {
+  nickname: string;
+  bio: string;
+  social: {
+    platform: SocialMediaPlatform;
+    url: string;
+  }[];
+  costPerReading: number;
+};
+
+export type PutTarotReaderResponse = Reader;
 
 export type GetTarotReaderQuestionParams = PaginationParams & {
   status?: string;

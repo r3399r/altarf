@@ -470,6 +470,66 @@ Resources:
                 }
               }
             },
+            "/api/tarot-reader/{id}": {
+              "put": {
+                "parameters":[{
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {"type": "string"}
+                },{
+                  "name": "x-credential",
+                  "in": "header",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }],
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/putTarotReaderId"
+                      }
+                    }
+                  },
+                  "required": true
+                },
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Origin": {
+                        "schema": {"type": "string"}
+                      }
+                    },
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Empty"
+                        }
+                      }
+                    }
+                  }
+                },
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-integration": {
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Project}-${TargetEnvr}-api/invocations",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Origin": "'*'"
+                      }
+                    }
+                  },
+                  "passthroughBehavior": "when_no_match",
+                  "contentHandling": "CONVERT_TO_TEXT"
+                }
+              }
+            },
             "/api/tarot-reader/question": {
               "get": {
                 "parameters":[{
@@ -517,6 +577,11 @@ Resources:
             "/api/tarot-reader/question/{id}": {
               "post": {
                 "parameters":[{
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {"type": "string"}
+                },{
                   "name": "x-credential",
                   "in": "header",
                   "required": true,
@@ -946,6 +1011,25 @@ Resources:
             "postEcpayNotify": {
               "type": "string"
             },
+            "putTarotReaderId": {
+              "type": "object",
+              "properties": {
+                "nickname":{"type": "string"},
+                "bio":{"type": "string"},
+                "costPerReading":{"type": "integer", "minimum":0},
+                "social": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "platform": {"type": "string"},
+                      "url": {"type": "string"}
+                    }
+                  }
+                }
+              },
+              "required": ["nickname","bio","costPerReading","social"]
+            }
           },
           "x-amazon-apigateway-request-validators": {
             "Validate body, query string parameters, and headers": {

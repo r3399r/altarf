@@ -2,6 +2,7 @@ import { SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
 import { In } from 'typeorm';
 import { ReaderAccess } from 'src/access/ReaderAccess';
+import { ReaderSocialAccess } from 'src/access/ReaderSocialAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import { ReadingHumanStatus } from 'src/constant/Tarot';
@@ -11,7 +12,10 @@ import {
   GetTarotReaderResponse,
   PostTarotReaderQuestionIdRequest,
   PostTarotReaderQuestionIdResponse,
+  PutTarotReaderRequest,
+  PutTarotReaderResponse,
 } from 'src/model/api/Tarot';
+import { ReaderSocialEntity } from 'src/model/entity/ReaderSocialEntity';
 import { fee } from 'src/utils/calculator';
 import { genPagination } from 'src/utils/paginator';
 import { UserService } from './UserService';
@@ -27,6 +31,8 @@ export class TarotReaderService {
   private readonly userService!: UserService;
   @inject(ReaderAccess)
   private readonly readerAccess!: ReaderAccess;
+  @inject(ReaderSocialAccess)
+  private readonly readerSocialAccess!: ReaderSocialAccess;
   @inject(TarotReadingHumanAccess)
   private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
@@ -41,6 +47,36 @@ export class TarotReaderService {
       ...r,
       costPerReading: r.costPerReading + fee(r.costPerReading),
     }));
+  }
+
+  public async updateReaderProfile(
+    id: string,
+    data: PutTarotReaderRequest
+  ): Promise<PutTarotReaderResponse> {
+    const user = await this.getUserInfo();
+    if (user.reader == null) throw new Error('User is not a reader');
+
+    const reader = await this.readerAccess.findOneOrFail({
+      where: { id },
+    });
+
+    reader.nickname = data.nickname;
+    reader.bio = data.bio;
+    reader.costPerReading = data.costPerReading;
+    await this.readerAccess.save(reader);
+
+    for (const s of reader.social) await this.readerSocialAccess.delete(s.id);
+    for (const s of data.social) {
+      const social = new ReaderSocialEntity();
+      social.readerId = reader.id;
+      social.platform = s.platform;
+      social.url = s.url;
+      await this.readerSocialAccess.save(social);
+    }
+
+    return await this.readerAccess.findOneOrFail({
+      where: { id },
+    });
   }
 
   public async getQuestionListByReader(
