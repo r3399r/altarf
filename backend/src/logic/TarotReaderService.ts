@@ -186,11 +186,13 @@ export class TarotReaderService {
     const tarotReading = await this.tarotReadingHumanAccess.findOneOrFail({
       where: {
         id,
-        status: ReadingHumanStatus.IN_PROGRESS,
         readerId: user.reader.id,
       },
     });
 
+    if (tarotReading.viewedAt === null)
+      tarotReading.viewedAt = tarotReading.createdAt;
+    tarotReading.repliedAt = new Date().toISOString();
     tarotReading.reading = data.reading;
     tarotReading.status = ReadingHumanStatus.DONE;
     await this.tarotReadingHumanAccess.save(tarotReading);
@@ -218,5 +220,23 @@ export class TarotReaderService {
       .promise();
 
     return tarotReading;
+  }
+
+  public async startTarotQuestion(id: string): Promise<void> {
+    const user = await this.getUserInfo();
+    if (user.reader == null) throw new Error('User is not a reader');
+
+    const tarotReading = await this.tarotReadingHumanAccess.findOneOrFail({
+      where: {
+        id,
+        readerId: user.reader.id,
+      },
+    });
+
+    if (tarotReading.status !== ReadingHumanStatus.OPEN) return;
+
+    tarotReading.viewedAt = new Date().toISOString();
+    tarotReading.status = ReadingHumanStatus.IN_PROGRESS;
+    await this.tarotReadingHumanAccess.save(tarotReading);
   }
 }

@@ -417,7 +417,7 @@ export class TarotService {
     const tarotReadingHuman = new TarotReadingHumanEntity();
     tarotReadingHuman.questionId = tarotQuestion.id;
     tarotReadingHuman.readerId = reader.id;
-    tarotReadingHuman.status = ReadingHumanStatus.IN_PROGRESS;
+    tarotReadingHuman.status = ReadingHumanStatus.OPEN;
 
     await this.ses
       .sendEmail({

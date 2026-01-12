@@ -24,6 +24,8 @@ export default async (lambdaEvent: LambdaEvent) => {
       return await tarotReaderQuestion();
     case '/api/tarot-reader/question/{id}':
       return await tarotReaderQuestionId();
+    case '/api/tarot-reader/question/{id}/start':
+      return await tarotReaderQuestionIdStart();
   }
 
   throw new BadRequestError('unexpected resource');
@@ -78,6 +80,17 @@ const tarotReaderQuestionId = async () => {
         event.pathParameters.id,
         JSON.parse(event.body) as PostTarotReaderQuestionIdRequest
       );
+  }
+
+  throw new Error('unexpected httpMethod');
+};
+
+const tarotReaderQuestionIdStart = async () => {
+  if (event.pathParameters === null)
+    throw new BadRequestError('pathParameters should not be empty');
+  switch (event.httpMethod) {
+    case 'POST':
+      return await service.startTarotQuestion(event.pathParameters.id);
   }
 
   throw new Error('unexpected httpMethod');

@@ -50,7 +50,7 @@ const OnlineResult = () => {
         <StarDivision className="mt-15 px-4 py-14 sm:px-8" title="解牌結果">
           <div className="flex flex-col gap-14">
             {result.reading.map((v) => (
-              <ResultItem key={v.id} tarotReading={v} doRating={doRating} />
+              <ResultItem key={v.id} tarotReading={v} doRating={doRating} isOwner={isOwner} />
             ))}
           </div>
         </StarDivision>

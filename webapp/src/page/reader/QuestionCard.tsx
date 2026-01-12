@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import tarotReaderEndpoint from 'src/api/tarotReaderEndpoint';
 import IcRatingLike from 'src/assets/ic-rating-like.svg';
 import IcRatingLove from 'src/assets/ic-rating-love.svg';
 import IcRatingNeutral from 'src/assets/ic-rating-neutral.svg';
@@ -9,7 +10,7 @@ import IcRatingUnclear from 'src/assets/ic-rating-unclear.svg';
 import IcRatingUnlike from 'src/assets/ic-rating-unlike.svg';
 import Canvas from 'src/components/Canvas';
 import Body from 'src/components/typography/Body';
-import { TAROT_CARD_LIST, TAROT_SPREAD_LIST } from 'src/constant/backend/Tarot';
+import { ReadingHumanStatus, TAROT_CARD_LIST, TAROT_SPREAD_LIST } from 'src/constant/backend/Tarot';
 import { Page } from 'src/constant/Page';
 import { TarotReadingHuman } from 'src/model/backend/entity/TarotReadingHumanEntity';
 import { compare } from 'src/utils/compare';
@@ -24,6 +25,10 @@ type Props = {
 const QuestionCard = ({ tarotReading, sendReading, status }: Props) => {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState<boolean>(false);
+
+  const startQuestion = (id: string) => {
+    tarotReaderEndpoint.postTarotReaderQuestionIdStart(id);
+  };
 
   const Rating = ({ rating }: { rating: number }) => {
     let icon: string;
@@ -71,7 +76,16 @@ const QuestionCard = ({ tarotReading, sendReading, status }: Props) => {
             size="m"
             bold
             className="cursor-pointer text-text-secondary underline"
-            onClick={() => setExpanded(!expanded)}
+            onClick={() => {
+              if (
+                !expanded &&
+                status === 'unsolved' &&
+                tarotReading.status === ReadingHumanStatus.OPEN
+              )
+                startQuestion(tarotReading.id);
+
+              setExpanded(!expanded);
+            }}
           >
             {expanded ? '收合牌陣' : '查看牌陣'}
           </Body>
