@@ -16,7 +16,6 @@ import {
   PutTarotReaderResponse,
 } from 'src/model/api/Tarot';
 import { ReaderSocialEntity } from 'src/model/entity/ReaderSocialEntity';
-import { fee } from 'src/utils/calculator';
 import { genPagination } from 'src/utils/paginator';
 import { UserService } from './UserService';
 
@@ -41,12 +40,7 @@ export class TarotReaderService {
   }
 
   public async getAllReaders(): Promise<GetTarotReaderResponse> {
-    const readers = await this.readerAccess.find();
-
-    return readers.map((r) => ({
-      ...r,
-      costPerReading: r.costPerReading + fee(r.costPerReading),
-    }));
+    return await this.readerAccess.find();
   }
 
   public async updateReaderProfile(
@@ -62,7 +56,8 @@ export class TarotReaderService {
 
     reader.nickname = data.nickname;
     reader.bio = data.bio;
-    reader.costPerReading = data.costPerReading;
+    reader.cost = data.cost;
+    reader.fee = data.fee;
     await this.readerAccess.save(reader);
 
     for (const s of reader.social) await this.readerSocialAccess.delete(s.id);

@@ -18,7 +18,9 @@ export type Reader = {
   nickname: string;
   bio: string | null;
   social: ReaderSocial[];
-  costPerReading: number;
+  available: boolean;
+  cost: number;
+  fee: number;
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -45,8 +47,14 @@ export class ReaderEntity implements Reader {
   @OneToMany(() => ReaderSocialEntity, (social) => social.reader)
   social!: ReaderSocial[];
 
-  @Column({ type: 'double', name: 'cost_per_reading' })
-  costPerReading!: number;
+  @Column({ type: 'boolean', default: true })
+  available!: boolean;
+
+  @Column({ type: 'double', default: 0 })
+  cost!: number;
+
+  @Column({ type: 'double', default: 0 })
+  fee!: number;
 
   @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;

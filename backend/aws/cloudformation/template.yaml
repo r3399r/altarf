@@ -1066,7 +1066,8 @@ Resources:
               "properties": {
                 "nickname":{"type": "string"},
                 "bio":{"type": "string"},
-                "costPerReading":{"type": "integer", "minimum":0},
+                "cost":{"type": "integer", "minimum":0},
+                "fee":{"type": "integer", "minimum":0},
                 "social": {
                   "type": "array",
                   "items": {
@@ -1078,7 +1079,7 @@ Resources:
                   }
                 }
               },
-              "required": ["nickname","bio","costPerReading","social"]
+              "required": ["nickname","bio","cost","fee","social"]
             }
           },
           "x-amazon-apigateway-request-validators": {

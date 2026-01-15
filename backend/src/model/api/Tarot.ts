@@ -66,7 +66,8 @@ export type PutTarotReaderRequest = {
     platform: SocialMediaPlatform;
     url: string;
   }[];
-  costPerReading: number;
+  cost: number;
+  fee: number;
 };
 
 export type PutTarotReaderResponse = Reader;

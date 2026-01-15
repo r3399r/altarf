@@ -22,17 +22,19 @@ export class TarotLoaderService {
     const users = await this.userService.getUserList();
 
     await Promise.all(
-      users.map((v) =>
-        this.userService.depositForUser(v, POINT_MONTHLY, '每月贈點')
-      )
+      users.map((v) => {
+        if (v.reader !== null) return;
+
+        return this.userService.depositForUser(v, POINT_MONTHLY, '每月贈點');
+      })
     );
   }
 
   private getEmailBody() {
     const url =
       process.env.ENVR === 'prod'
-        ? `https://lookout.celestialstudio.net/reader`
-        : `https://lookout-test.celestialstudio.net/reader`;
+        ? 'https://lookout.celestialstudio.net/reader'
+        : 'https://lookout-test.celestialstudio.net/reader';
 
     return {
       text: `親愛的塔羅師\n您好，此信件主要是提醒您有未回覆的塔羅解牌提問`,

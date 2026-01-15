@@ -38,7 +38,6 @@ import {
   TarotDailyRead,
   TarotSpread,
 } from 'src/model/Tarot';
-import { fee } from 'src/utils/calculator';
 import { compare } from 'src/utils/compare';
 import { genPagination } from 'src/utils/paginator';
 import { random } from 'src/utils/random';
@@ -404,9 +403,8 @@ export class TarotService {
 
     const reader = await this.userService.getReader(data.readerId);
 
-    const cost = reader.costPerReading + fee(reader.costPerReading);
-    this.checkUserQuota(user, cost);
-    await this.userService.purchaseForUser(user, cost, '真人解牌');
+    this.checkUserQuota(user, reader.cost + reader.fee);
+    await this.userService.purchaseForUser(user, reader.cost, '真人解牌');
 
     const existedTarotReading = await this.tarotReadingHumanAccess.findOne({
       where: { readerId: reader.id, questionId: tarotQuestion.id },

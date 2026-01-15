@@ -20,7 +20,7 @@ type FormData = {
   threads: string;
   email: string;
   website: string;
-  costPerReading: number;
+  cost: number;
 };
 
 const TabInfo = () => {
@@ -28,10 +28,10 @@ const TabInfo = () => {
   const { user } = useSelector((rootState: RootState) => rootState.ui);
   const dispatch = useDispatch();
 
-  const costPerReading = bn(watch('costPerReading'));
-  const preFee = costPerReading.times(0.05).dp(0, 4);
+  const cost = bn(watch('cost'));
+  const preFee = cost.times(0.05).dp(0, 4);
   const fee = preFee.lt(5) ? bn(5) : preFee;
-  const total = costPerReading.plus(fee);
+  const total = cost.plus(fee);
 
   const onSubmit = (data: FormData) => {
     if (!user?.reader?.id) return;
@@ -48,7 +48,8 @@ const TabInfo = () => {
       nickname: data.nickname,
       bio: data.bio,
       social,
-      costPerReading: Number(data.costPerReading),
+      cost: Number(data.cost),
+      fee: fee.toNumber(),
     };
     tarotReaderEndpoint
       .putTarotReaderId(user.reader.id, paylaod)
@@ -72,7 +73,7 @@ const TabInfo = () => {
     if (user !== null) {
       setValue('nickname', user.reader?.nickname || '');
       setValue('bio', user.reader?.bio || '');
-      setValue('costPerReading', user.reader?.costPerReading || 0);
+      setValue('cost', user.reader?.cost || 0);
       const social = user.reader?.social || [];
       setValue(
         'facebook',
@@ -124,12 +125,12 @@ const TabInfo = () => {
       <Body size="m" className="my-4">
         使用者實際解牌的費用會額外加上 5% 的手續費。僅支援整數
       </Body>
-      <Input inputMode="decimal" type="number" {...register('costPerReading')} />
+      <Input inputMode="decimal" type="number" {...register('cost')} />
       <Body size="s" className="mt-1 text-text-input-helper">
-        手續費：NTD${fee.toFormat()}
+        手續費：{fee.toFormat()} 點
       </Body>
       <Body size="s" className="text-text-input-helper">
-        實際費用：NTD${total.toFormat()}
+        實際費用：{total.toFormat()} 點
       </Body>
       <div className="mt-10 flex justify-center">
         <Button type="submit">儲存</Button>
