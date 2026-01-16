@@ -403,8 +403,10 @@ export class TarotService {
 
     const reader = await this.userService.getReader(data.readerId);
 
-    this.checkUserQuota(user, reader.cost + reader.fee);
-    await this.userService.purchaseForUser(user, reader.cost, '真人解牌');
+    const totalCost = reader.cost + reader.fee;
+    this.checkUserQuota(user, totalCost);
+    await this.userService.purchaseForUser(user, totalCost, '真人解牌');
+    await this.userService.depositForUser(reader.user, reader.cost, '解牌收益');
 
     const existedTarotReading = await this.tarotReadingHumanAccess.findOne({
       where: { readerId: reader.id, questionId: tarotQuestion.id },
