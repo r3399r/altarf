@@ -191,6 +191,7 @@ export class TarotReaderService {
     tarotReading.reading = data.reading;
     tarotReading.status = ReadingHumanStatus.DONE;
     await this.tarotReadingHumanAccess.save(tarotReading);
+    await this.userService.depositForUser(user, user.reader.cost, '解牌收益');
 
     await this.ses
       .sendEmail({
