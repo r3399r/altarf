@@ -51,7 +51,7 @@ export class TarotReaderService {
     if (user.reader == null) throw new Error('User is not a reader');
 
     const unansweredQuestions = await this.tarotReadingHumanAccess.find({
-      where: { status: Not(ReadingHumanStatus.DONE) },
+      where: { status: Not(ReadingHumanStatus.DONE), readerId: user.reader.id },
     });
     if (unansweredQuestions.length > 0)
       throw new Error(
