@@ -34,4 +34,12 @@ export class ReaderAccess {
       ...options,
     });
   }
+
+  public async save(data: Reader) {
+    const qr = await this.database.getQueryRunner();
+    const entity = new ReaderEntity();
+    Object.assign(entity, data);
+
+    return await qr.manager.save(entity);
+  }
 }

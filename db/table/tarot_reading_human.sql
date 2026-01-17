@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS tarot_reading_human (
     status VARCHAR(255) NOT NULL,
     reading TEXT NULL,
     rating INT NULL,
+    viewed_at DATETIME(3) NULL,
+    replied_at DATETIME(3) NULL,
     created_at DATETIME(3) NULL,
     updated_at DATETIME(3) NULL,
     PRIMARY KEY (id),

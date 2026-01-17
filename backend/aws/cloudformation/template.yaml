@@ -470,6 +470,66 @@ Resources:
                 }
               }
             },
+            "/api/tarot-reader/{id}": {
+              "put": {
+                "parameters":[{
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {"type": "string"}
+                },{
+                  "name": "x-credential",
+                  "in": "header",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }],
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/putTarotReaderId"
+                      }
+                    }
+                  },
+                  "required": true
+                },
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Origin": {
+                        "schema": {"type": "string"}
+                      }
+                    },
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Empty"
+                        }
+                      }
+                    }
+                  }
+                },
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-integration": {
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Project}-${TargetEnvr}-api/invocations",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Origin": "'*'"
+                      }
+                    }
+                  },
+                  "passthroughBehavior": "when_no_match",
+                  "contentHandling": "CONVERT_TO_TEXT"
+                }
+              }
+            },
             "/api/tarot-reader/question": {
               "get": {
                 "parameters":[{
@@ -517,6 +577,11 @@ Resources:
             "/api/tarot-reader/question/{id}": {
               "post": {
                 "parameters":[{
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {"type": "string"}
+                },{
                   "name": "x-credential",
                   "in": "header",
                   "required": true,
@@ -534,6 +599,56 @@ Resources:
                   },
                   "required": true
                 },
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Origin": {
+                        "schema": {"type": "string"}
+                      }
+                    },
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Empty"
+                        }
+                      }
+                    }
+                  }
+                },
+                "x-amazon-apigateway-request-validator": "Validate body, query string parameters, and headers",
+                "x-amazon-apigateway-integration": {
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Project}-${TargetEnvr}-api/invocations",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Origin": "'*'"
+                      }
+                    }
+                  },
+                  "passthroughBehavior": "when_no_match",
+                  "contentHandling": "CONVERT_TO_TEXT"
+                }
+              }
+            },
+            "/api/tarot-reader/question/{id}/start": {
+              "post": {
+                "parameters":[{
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {"type": "string"}
+                },{
+                  "name": "x-credential",
+                  "in": "header",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }],
                 "responses": {
                   "200": {
                     "description": "200 response",
@@ -946,6 +1061,26 @@ Resources:
             "postEcpayNotify": {
               "type": "string"
             },
+            "putTarotReaderId": {
+              "type": "object",
+              "properties": {
+                "nickname":{"type": "string"},
+                "bio":{"type": "string"},
+                "cost":{"type": "integer", "minimum":0},
+                "fee":{"type": "integer", "minimum":0},
+                "social": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "platform": {"type": "string"},
+                      "url": {"type": "string"}
+                    }
+                  }
+                }
+              },
+              "required": ["nickname","bio","cost","fee","social"]
+            }
           },
           "x-amazon-apigateway-request-validators": {
             "Validate body, query string parameters, and headers": {
@@ -963,7 +1098,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.api
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-api
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -997,7 +1132,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.aiAgent
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-ai-agent
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -1017,7 +1152,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.tarotDailyLoader
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-tarot-daily-loader
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -1045,7 +1180,7 @@ Resources:
     Properties:
       Architectures: [arm64]
       Handler: index.giftLoader
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       FunctionName: !Sub ${Project}-${TargetEnvr}-gift-loader
       Role: !GetAtt ExecutionRole.Arn
       CodeUri: ../../lib/src
@@ -1067,12 +1202,39 @@ Resources:
       Action: 'lambda:InvokeFunction'
       Principal: events.amazonaws.com
       SourceArn: !GetAtt EventBridgeGiftLoader.Arn
+  LambdaRemindLoader:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures: [arm64]
+      Handler: index.remindLoader
+      Runtime: nodejs22.x
+      FunctionName: !Sub ${Project}-${TargetEnvr}-remind-loader
+      Role: !GetAtt ExecutionRole.Arn
+      CodeUri: ../../lib/src
+      MemorySize: 200
+      Timeout: 30
+      Layers: [!Ref LambdaLayer]
+      Environment:
+        Variables:
+          PROJECT: !Sub ${Project}
+          ENVR: !Sub ${TargetEnvr}
+          DB_HOST:
+            Fn::ImportValue: !Sub celestial-studio-${TargetEnvr}-db-endpoint
+          DB_PWD: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-${Project}-pwd}}'
+  InvokePermissionRemindLoader:
+    Type: AWS::Lambda::Permission
+    DependsOn: [EventBridgeRemindLoader, LambdaRemindLoader]
+    Properties:
+      FunctionName: !Sub ${Project}-${TargetEnvr}-remind-loader
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt EventBridgeRemindLoader.Arn
   LambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: !Sub ${Project}-${TargetEnvr}-layer
       CompatibleArchitectures: [arm64]
-      CompatibleRuntimes: [nodejs20.x]
+      CompatibleRuntimes: [nodejs22.x]
       ContentUri: ../../dist
       RetentionPolicy: Delete
   #########################################
@@ -1188,6 +1350,16 @@ Resources:
       Targets:
         - Arn: !GetAtt LambdaGiftLoader.Arn
           Id: !Sub ${Project}-${TargetEnvr}-gift-loader
+  EventBridgeRemindLoader:
+    Type: AWS::Events::Rule
+    DependsOn: [LambdaRemindLoader]
+    Properties:
+      Name: !Sub ${Project}-${TargetEnvr}-remind-loader
+      ScheduleExpression: cron(5 0 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt LambdaRemindLoader.Arn
+          Id: !Sub ${Project}-${TargetEnvr}-remind-loader
   EventBridgeDailyLoader:
     Type: AWS::Events::Rule
     DependsOn: [LambdaTarotDailyLoader]

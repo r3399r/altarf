@@ -24,7 +24,7 @@ export class UserAccess {
 
     return await qr.manager.findOne<User>(UserEntity.name, {
       relations: {
-        reader: true,
+        reader: { social: true },
       },
       ...options,
     });

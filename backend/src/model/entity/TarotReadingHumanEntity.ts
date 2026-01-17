@@ -20,6 +20,8 @@ export type TarotReadingHuman = {
   status: ReadingHumanStatus;
   reading: string | null;
   rating: number | null;
+  viewedAt: string | null;
+  repliedAt: string | null;
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -52,6 +54,12 @@ export class TarotReadingHumanEntity implements TarotReadingHuman {
 
   @Column({ type: 'int', nullable: true })
   rating: number | null = null;
+
+  @Column({ type: 'datetime', name: 'viewed_at', default: null })
+  viewedAt: string | null = null;
+
+  @Column({ type: 'datetime', name: 'replied_at', default: null })
+  repliedAt: string | null = null;
 
   @Column({ type: 'datetime', name: 'created_at', default: null })
   createdAt!: string;

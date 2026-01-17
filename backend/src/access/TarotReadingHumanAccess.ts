@@ -29,7 +29,22 @@ export class TarotReadingHumanAccess {
       TarotReadingHumanEntity.name,
       {
         relations: {
-          question: { card: true },
+          question: { card: true, user: true },
+          reader: true,
+        },
+        ...options,
+      }
+    );
+  }
+
+  public async find(options?: FindManyOptions<TarotReadingHuman>) {
+    const qr = await this.database.getQueryRunner();
+
+    return await qr.manager.find<TarotReadingHuman>(
+      TarotReadingHumanEntity.name,
+      {
+        relations: {
+          question: true,
           reader: true,
         },
         ...options,

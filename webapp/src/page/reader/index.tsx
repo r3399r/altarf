@@ -1,89 +1,84 @@
-import { format } from 'date-fns';
-import { useState } from 'react';
-import Pagination from 'src/components/Pagination';
+import classNames from 'classnames';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Body from 'src/components/typography/Body';
-import { ReadingHumanStatus, TAROT_CARD_LIST, TAROT_SPREAD_LIST } from 'src/constant/backend/Tarot';
-import { Page } from 'src/constant/Page';
-import { compare } from 'src/utils/compare';
-import Form from './Form';
+import H2 from 'src/components/typography/H2';
+import { RootState } from 'src/redux/store';
+import TabInfo from './TabInfo';
+import TabSolved from './TabSolved';
+import TabUnsolved from './TabUnsolved';
 import useFetch from './useFetch';
 
 const Reader = () => {
-  const [page, setPage] = useState(1);
-  const { result, sendReading } = useFetch(page);
+  const [tab, setTab] = useState<1 | 2 | 3>(1);
+  const [isReady, setIsReady] = useState(false);
+  const { isReader } = useSelector((rootState: RootState) => rootState.ui);
+  const navigate = useNavigate();
+  const {
+    unsolvedQuestions,
+    unsolvedPage,
+    setUnsolvedPage,
+    solvedQuestions,
+    solvedPage,
+    setSolvedPage,
+    sendReading,
+  } = useFetch();
 
-  if (!result) return <div>Loading...</div>;
+  useEffect(() => {
+    if (isReader === false) navigate('/online');
+    else if (isReader === true) setIsReady(true);
+  }, [isReader]);
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case ReadingHumanStatus.OPEN:
-        return '開放中';
-      case ReadingHumanStatus.IN_PROGRESS:
-        return '等待解牌中';
-      case ReadingHumanStatus.DONE:
-        return '已完成';
-      default:
-        return '未知狀態';
-    }
-  };
+  if (!isReady) return <></>;
 
   return (
     <>
-      {result.data.map((v) => {
-        const spread = TAROT_SPREAD_LIST.find((s) => s.id === v.question.spreadId);
-
-        return (
-          <div key={v.id} className="border p-3">
-            <div className="flex gap-2">
-              <Body bold>ID</Body>
-              <Body className="cursor-pointer !text-beige-300" bold>
-                <a href={`${Page.Online}/${v.questionId}`}>{v.questionId}</a>
-              </Body>
-            </div>
-            <div className="flex gap-2">
-              <Body bold>狀態</Body>
-              <Body>{getStatusText(v.status)}</Body>
-            </div>
-            <div className="flex gap-2">
-              <Body bold>創建日期</Body>
-              <Body>{v.createdAt ? format(v.createdAt, 'yyyy/MM/dd HH:mm:ss') : '-'}</Body>
-            </div>
-            <div className="flex gap-2">
-              <Body bold>牌陣</Body>
-              <Body>{spread?.name}</Body>
-            </div>
-            <div>
-              <Body bold>抽牌</Body>
-              {v.question.card.sort(compare('sequence')).map((o, i) => (
-                <Body key={o.id}>
-                  ({i + 1}) {spread?.meaning[i]}-{o.reversal ? '逆位' : '正位'}-
-                  {TAROT_CARD_LIST.find((c) => c.id === o.cardId)?.name}
-                </Body>
-              ))}
-            </div>
-            <div>
-              <Body bold>問題</Body>
-              <Body>{v.question.question}</Body>
-            </div>
-            {v.status === ReadingHumanStatus.IN_PROGRESS && (
-              <Form id={v.id} sendReading={sendReading} />
-            )}
-            {v.status === ReadingHumanStatus.DONE && (
-              <div>
-                <Body bold>解牌</Body>
-                <Body>{v.reading}</Body>
-              </div>
-            )}
-          </div>
-        );
-      })}
-      <div className="mt-10">
-        <Pagination
-          page={page}
-          totalPages={result.paginate.totalPages}
-          onPageChange={(page) => setPage(page)}
-        />
+      <H2 className="mt-10 mb-4">塔羅師後台</H2>
+      <div className="mb-4 flex gap-1 rounded-sm bg-background-surface-list p-0.5 text-center text-text-segment">
+        <Body
+          bold
+          size="m"
+          className={classNames('flex-1 cursor-pointer px-6 py-1', {
+            'rounded-sm bg-background-surface-overlay-hover !text-text-primary': tab === 1,
+          })}
+          onClick={() => setTab(1)}
+        >
+          待解牌
+        </Body>
+        <Body
+          bold
+          size="m"
+          className={classNames('flex-1 cursor-pointer px-6 py-1', {
+            'rounded-sm bg-background-surface-overlay-hover !text-text-primary': tab === 2,
+          })}
+          onClick={() => setTab(2)}
+        >
+          已解牌
+        </Body>
+        <Body
+          bold
+          size="m"
+          className={classNames('flex-1 cursor-pointer px-6 py-1', {
+            'rounded-sm bg-background-surface-overlay-hover !text-text-primary': tab === 3,
+          })}
+          onClick={() => setTab(3)}
+        >
+          個人資訊
+        </Body>
       </div>
+      {tab === 1 && (
+        <TabUnsolved
+          questions={unsolvedQuestions}
+          page={unsolvedPage}
+          setPage={setUnsolvedPage}
+          sendReading={sendReading}
+        />
+      )}
+      {tab === 2 && (
+        <TabSolved questions={solvedQuestions} page={solvedPage} setPage={setSolvedPage} />
+      )}
+      {tab === 3 && <TabInfo />}
     </>
   );
 };

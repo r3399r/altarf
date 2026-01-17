@@ -38,7 +38,6 @@ import {
   TarotDailyRead,
   TarotSpread,
 } from 'src/model/Tarot';
-import { fee } from 'src/utils/calculator';
 import { compare } from 'src/utils/compare';
 import { genPagination } from 'src/utils/paginator';
 import { random } from 'src/utils/random';
@@ -249,7 +248,10 @@ export class TarotService {
   public async getTarotQuestionList(
     params: GetTarotQuestionParams | null
   ): Promise<GetTarotQuestionResponse> {
-    const user = await this.getUserInfo();
+    let user: User | null = null;
+    if (params?.email)
+      user = await this.userService.getUserEntityByEmail(params.email);
+    else user = await this.getUserInfo();
 
     const limit = params?.limit ? Number(params.limit) : LIMIT;
     const offset = params?.offset ? Number(params.offset) : OFFSET;
@@ -383,7 +385,7 @@ export class TarotService {
                     <p>瞭望塔 Lookout</p>
                 </div>
             </div>
-            <div class="org">© Celetial Studio 2022 - ${new Date().getFullYear()}</div>
+            <div class="org">© Celestial Studio 2022 - ${new Date().getFullYear()}</div>
         </body>
         </html>`,
     };
@@ -401,9 +403,9 @@ export class TarotService {
 
     const reader = await this.userService.getReader(data.readerId);
 
-    const cost = reader.costPerReading + fee(reader.costPerReading);
-    this.checkUserQuota(user, cost);
-    await this.userService.purchaseForUser(user, cost, '真人解牌');
+    const totalCost = reader.cost + reader.fee;
+    this.checkUserQuota(user, totalCost);
+    await this.userService.purchaseForUser(user, totalCost, '真人解牌');
 
     const existedTarotReading = await this.tarotReadingHumanAccess.findOne({
       where: { readerId: reader.id, questionId: tarotQuestion.id },
@@ -414,7 +416,7 @@ export class TarotService {
     const tarotReadingHuman = new TarotReadingHumanEntity();
     tarotReadingHuman.questionId = tarotQuestion.id;
     tarotReadingHuman.readerId = reader.id;
-    tarotReadingHuman.status = ReadingHumanStatus.IN_PROGRESS;
+    tarotReadingHuman.status = ReadingHumanStatus.OPEN;
 
     await this.ses
       .sendEmail({

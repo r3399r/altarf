@@ -3,4 +3,6 @@ export enum SocialMediaPlatform {
   INSTAGRAM = 'INSTAGRAM',
   YOUTUBE = 'YOUTUBE',
   THREADS = 'THREADS',
+  EMAIL = 'EMAIL',
+  WEBSITE = 'WEBSITE',
 }

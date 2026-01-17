@@ -17,9 +17,10 @@ import { TarotReading } from 'src/model/backend/Tarot';
 type Props = {
   tarotReading: TarotReading;
   doRating: (rating: number, readingId: string, isAi: boolean) => void;
+  isOwner: boolean;
 };
 
-const ResultItem = ({ tarotReading, doRating }: Props) => {
+const ResultItem = ({ tarotReading, doRating, isOwner }: Props) => {
   const navigate = useNavigate();
   const { id, reading, createdAt, isAi, rating } = tarotReading;
   const [expandRating, setExpandRating] = useState<boolean>(false);
@@ -84,7 +85,7 @@ const ResultItem = ({ tarotReading, doRating }: Props) => {
             : '塔羅師解牌中... 可能需要一段時間，請耐心等待，有結果時會寄 Email 通知您。')}
         {reading !== null && reading}
       </Body>
-      {reading !== null && (
+      {reading !== null && isOwner && (
         <div>
           {!expandRating && rating === null && (
             <div

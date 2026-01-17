@@ -5,6 +5,7 @@ import { DbAccess } from './access/DbAccess';
 import { ECPayTradeAccess } from './access/ECPayTradeAccess';
 import { ECPayTradeItemAccess } from './access/ECPayTradeItemAccess';
 import { ReaderAccess } from './access/ReaderAccess';
+import { ReaderSocialAccess } from './access/ReaderSocialAccess';
 import { TarotDailyAccess } from './access/TarotDailyAccess';
 import { TarotQuestionAccess } from './access/TarotQuestionAccess';
 import { TarotQuestionCardAccess } from './access/TarotQuestionCardAccess';
@@ -17,9 +18,9 @@ import { ECPayService } from './logic/ECPayService';
 import { GoogleService } from './logic/GoogleService';
 import { OpenAiService } from './logic/OpenAiService';
 import { TarotAgentService } from './logic/TarotAgentService';
+import { TarotLoaderService } from './logic/TarotLoaderService';
 import { TarotReaderService } from './logic/TarotReaderService';
 import { TarotService } from './logic/TarotService';
-import { TarotTimerService } from './logic/TarotTimerService';
 import { UserService } from './logic/UserService';
 import { ECPayTradeEntity } from './model/entity/ECPayTradeEntity';
 import { ECPayTradeItemEntity } from './model/entity/ECPayTradeItemEntity';
@@ -67,6 +68,7 @@ container.bind(TarotQuestionCardAccess).toSelf();
 container.bind(UserAccess).toSelf();
 container.bind(UserBalanceAccess).toSelf();
 container.bind(ReaderAccess).toSelf();
+container.bind(ReaderSocialAccess).toSelf();
 
 // service
 container.bind(AuthService).toSelf();
@@ -75,7 +77,7 @@ container.bind(OpenAiService).toSelf();
 container.bind(TarotService).toSelf();
 container.bind(TarotReaderService).toSelf();
 container.bind(TarotAgentService).toSelf();
-container.bind(TarotTimerService).toSelf();
+container.bind(TarotLoaderService).toSelf();
 container.bind(UserService).toSelf();
 container.bind(ECPayService).toSelf();
 

@@ -12,6 +12,7 @@ import Body from 'src/components/typography/Body';
 import { AI_COST } from 'src/constant/backend/Balance';
 import { SocialMediaPlatform } from 'src/constant/backend/Reader';
 import { Reader } from 'src/model/backend/entity/ReaderEntity';
+import { bn } from 'src/utils/bignumber';
 import { compare } from 'src/utils/compare';
 
 type ModalAskForReadingProps = {
@@ -38,7 +39,10 @@ const ModalAskForReading = ({
 
   const onConfirm = () => {
     if (selectedIsAi) askAi();
-    else if (selectedReader) askHuman(selectedReader.id, selectedReader.costPerReading);
+    else if (selectedReader) {
+      const cost = selectedReader.cost + selectedReader.fee;
+      askHuman(selectedReader.id, cost);
+    }
     onClose();
   };
 
@@ -93,7 +97,8 @@ const ModalAskForReading = ({
             <div className="flex justify-between">
               <Body bold>塔羅師-{r.nickname}</Body>
               <Body size="m">
-                每次需花費 <span className="text-text-primary">{r.costPerReading}</span> 點
+                每次需花費{' '}
+                <span className="text-text-primary">{bn(r.cost).plus(r.fee).toFormat()}</span> 點
               </Body>
             </div>
             <Body>{r.bio}</Body>
@@ -150,27 +155,29 @@ const ModalAskForReading = ({
     </div>
   );
 
-  const Step2 = () => (
-    <div>
+  const Step2 = () => {
+    let cost = AI_COST.toString();
+    if (selectedIsAi == false && selectedReader)
+      cost = bn(selectedReader.cost).plus(selectedReader.fee).toFormat();
+
+    return (
       <div>
-        選擇{' '}
-        <span className="text-text-primary">
-          {selectedIsAi ? 'AI' : `塔羅師-${selectedReader?.nickname}`}
-        </span>{' '}
-        解牌，花費{' '}
-        <span className="text-text-primary">
-          {selectedIsAi ? AI_COST : selectedReader?.costPerReading}
-        </span>{' '}
-        點，是否確認？
+        <div>
+          選擇{' '}
+          <span className="text-text-primary">
+            {selectedIsAi ? 'AI' : `塔羅師-${selectedReader?.nickname}`}
+          </span>{' '}
+          解牌，花費 <span className="text-text-primary">{cost}</span> 點，是否確認？
+        </div>
+        <div className="mt-3 flex justify-end gap-6">
+          <Button appearance="secondary" onClick={() => setStep(1)}>
+            回上一步
+          </Button>
+          <Button onClick={onConfirm}>確認</Button>
+        </div>
       </div>
-      <div className="mt-3 flex justify-end gap-6">
-        <Button appearance="secondary" onClick={() => setStep(1)}>
-          回上一步
-        </Button>
-        <Button onClick={onConfirm}>確認</Button>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <Modal open={open} handleClose={onClose} title="選擇解牌方式">

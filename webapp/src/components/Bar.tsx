@@ -16,6 +16,7 @@ import {
   setErrorMessage,
   setIsReader,
   setSnackbarMessage,
+  setUser,
   startWaiting,
 } from 'src/redux/uiSlice';
 import { login } from 'src/service/authService';
@@ -69,6 +70,7 @@ const Bar = () => {
           dispatch(setEmail(res.data.email));
           dispatch(setBalance(res.data.balance));
           dispatch(setIsReader(res.data.reader !== null));
+          dispatch(setUser(res.data));
         })
         .catch((e) => {
           dispatch(setErrorMessage(e));

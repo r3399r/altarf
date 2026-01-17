@@ -1,3 +1,4 @@
+import { SocialMediaPlatform } from 'src/constant/Reader';
 import { Reader } from 'src/model/entity/ReaderEntity';
 import { TarotDaily } from 'src/model/entity/TarotDailyEntity';
 import { TarotQuestion } from 'src/model/entity/TarotQuestionEntity';
@@ -40,7 +41,9 @@ export type GetTarotQuestionIdResponse = Omit<
   reading: TarotReading[];
 };
 
-export type GetTarotQuestionParams = PaginationParams;
+export type GetTarotQuestionParams = PaginationParams & {
+  email?: string;
+};
 
 export type GetTarotQuestionResponse = Paginate<
   Pick<TarotQuestion, 'id' | 'question' | 'createdAt'> & {
@@ -56,7 +59,22 @@ export type PostTarotQuestionIdHumanResponse = TarotReadingHuman;
 
 export type GetTarotReaderResponse = Reader[];
 
-export type GetTarotReaderQuestionParams = PaginationParams;
+export type PutTarotReaderRequest = {
+  nickname: string;
+  bio: string;
+  social: {
+    platform: SocialMediaPlatform;
+    url: string;
+  }[];
+  cost: number;
+  fee: number;
+};
+
+export type PutTarotReaderResponse = Reader;
+
+export type GetTarotReaderQuestionParams = PaginationParams & {
+  status?: string;
+};
 
 export type GetTarotReaderQuestionResponse = Paginate<TarotReadingHuman>;
 

@@ -1,6 +1,8 @@
 import { SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
+import { In, Not } from 'typeorm';
 import { ReaderAccess } from 'src/access/ReaderAccess';
+import { ReaderSocialAccess } from 'src/access/ReaderSocialAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
 import { LIMIT, OFFSET } from 'src/constant/Pagination';
 import { ReadingHumanStatus } from 'src/constant/Tarot';
@@ -10,8 +12,10 @@ import {
   GetTarotReaderResponse,
   PostTarotReaderQuestionIdRequest,
   PostTarotReaderQuestionIdResponse,
+  PutTarotReaderRequest,
+  PutTarotReaderResponse,
 } from 'src/model/api/Tarot';
-import { fee } from 'src/utils/calculator';
+import { ReaderSocialEntity } from 'src/model/entity/ReaderSocialEntity';
 import { genPagination } from 'src/utils/paginator';
 import { UserService } from './UserService';
 
@@ -26,6 +30,8 @@ export class TarotReaderService {
   private readonly userService!: UserService;
   @inject(ReaderAccess)
   private readonly readerAccess!: ReaderAccess;
+  @inject(ReaderSocialAccess)
+  private readonly readerSocialAccess!: ReaderSocialAccess;
   @inject(TarotReadingHumanAccess)
   private readonly tarotReadingHumanAccess!: TarotReadingHumanAccess;
 
@@ -34,12 +40,46 @@ export class TarotReaderService {
   }
 
   public async getAllReaders(): Promise<GetTarotReaderResponse> {
-    const readers = await this.readerAccess.find();
+    return await this.readerAccess.find();
+  }
 
-    return readers.map((r) => ({
-      ...r,
-      costPerReading: r.costPerReading + fee(r.costPerReading),
-    }));
+  public async updateReaderProfile(
+    id: string,
+    data: PutTarotReaderRequest
+  ): Promise<PutTarotReaderResponse> {
+    const user = await this.getUserInfo();
+    if (user.reader == null) throw new Error('User is not a reader');
+
+    const unansweredQuestions = await this.tarotReadingHumanAccess.find({
+      where: { status: Not(ReadingHumanStatus.DONE), readerId: user.reader.id },
+    });
+    if (unansweredQuestions.length > 0)
+      throw new Error(
+        'Please complete all pending questions before updating your profile.'
+      );
+
+    const reader = await this.readerAccess.findOneOrFail({
+      where: { id },
+    });
+
+    reader.nickname = data.nickname;
+    reader.bio = data.bio;
+    reader.cost = data.cost;
+    reader.fee = data.fee;
+    await this.readerAccess.save(reader);
+
+    for (const s of reader.social) await this.readerSocialAccess.delete(s.id);
+    for (const s of data.social) {
+      const social = new ReaderSocialEntity();
+      social.readerId = reader.id;
+      social.platform = s.platform;
+      social.url = s.url;
+      await this.readerSocialAccess.save(social);
+    }
+
+    return await this.readerAccess.findOneOrFail({
+      where: { id },
+    });
   }
 
   public async getQuestionListByReader(
@@ -52,7 +92,10 @@ export class TarotReaderService {
     if (user.reader == null) throw new Error('User is not a reader');
 
     const [data, total] = await this.tarotReadingHumanAccess.findAndCount({
-      where: { readerId: user.reader.id },
+      where: {
+        readerId: user.reader.id,
+        status: params?.status ? In(params.status.split(',')) : undefined,
+      },
       order: { createdAt: 'DESC' },
       take: limit,
       skip: offset,
@@ -130,7 +173,7 @@ export class TarotReaderService {
                     <p>瞭望塔 Lookout</p>
                 </div>
             </div>
-            <div class="org">© Celetial Studio 2022 - ${new Date().getFullYear()}</div>
+            <div class="org">© Celestial Studio 2022 - ${new Date().getFullYear()}</div>
         </body>
         </html>`,
     };
@@ -146,14 +189,17 @@ export class TarotReaderService {
     const tarotReading = await this.tarotReadingHumanAccess.findOneOrFail({
       where: {
         id,
-        status: ReadingHumanStatus.IN_PROGRESS,
         readerId: user.reader.id,
       },
     });
 
+    if (tarotReading.viewedAt === null)
+      tarotReading.viewedAt = tarotReading.createdAt;
+    tarotReading.repliedAt = new Date().toISOString();
     tarotReading.reading = data.reading;
     tarotReading.status = ReadingHumanStatus.DONE;
     await this.tarotReadingHumanAccess.save(tarotReading);
+    await this.userService.depositForUser(user, user.reader.cost, '解牌收益');
 
     await this.ses
       .sendEmail({
@@ -178,5 +224,23 @@ export class TarotReaderService {
       .promise();
 
     return tarotReading;
+  }
+
+  public async startTarotQuestion(id: string): Promise<void> {
+    const user = await this.getUserInfo();
+    if (user.reader == null) throw new Error('User is not a reader');
+
+    const tarotReading = await this.tarotReadingHumanAccess.findOneOrFail({
+      where: {
+        id,
+        readerId: user.reader.id,
+      },
+    });
+
+    if (tarotReading.status !== ReadingHumanStatus.OPEN) return;
+
+    tarotReading.viewedAt = new Date().toISOString();
+    tarotReading.status = ReadingHumanStatus.IN_PROGRESS;
+    await this.tarotReadingHumanAccess.save(tarotReading);
   }
 }
