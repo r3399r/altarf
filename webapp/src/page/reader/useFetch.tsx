@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import tarotReaderEndpoint from 'src/api/tarotReaderEndpoint';
 import { ReadingHumanStatus } from 'src/constant/backend/Tarot';
 import { GetTarotReaderQuestionResponse } from 'src/model/backend/api/Tarot';
-import { finishWaiting, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
+import { RootState } from 'src/redux/store';
+import { finishWaiting, setBalance, setErrorMessage, startWaiting } from 'src/redux/uiSlice';
 
 const LIMIT = 10;
 
@@ -14,6 +15,7 @@ const useFetch = () => {
   const [unsolvedQuestions, setUnsolvedQuestions] = useState<GetTarotReaderQuestionResponse>();
   const [solvedPage, setSolvedPage] = useState(1);
   const [solvedQuestions, setSolvedQuestions] = useState<GetTarotReaderQuestionResponse>();
+  const { balance, user } = useSelector((rootState: RootState) => rootState.ui);
 
   const sendReading = (id: string, reading: string) => {
     dispatch(startWaiting());
@@ -23,6 +25,7 @@ const useFetch = () => {
       })
       .then(() => {
         setRefresh(!refresh);
+        if (balance && user?.reader) dispatch(setBalance(balance + user.reader.cost));
       })
       .catch((e) => {
         dispatch(setErrorMessage(e));

@@ -1,6 +1,6 @@
 import { SES } from 'aws-sdk';
 import { inject, injectable } from 'inversify';
-import { In } from 'typeorm';
+import { In, Not } from 'typeorm';
 import { ReaderAccess } from 'src/access/ReaderAccess';
 import { ReaderSocialAccess } from 'src/access/ReaderSocialAccess';
 import { TarotReadingHumanAccess } from 'src/access/TarotReadingHumanAccess';
@@ -49,6 +49,14 @@ export class TarotReaderService {
   ): Promise<PutTarotReaderResponse> {
     const user = await this.getUserInfo();
     if (user.reader == null) throw new Error('User is not a reader');
+
+    const unansweredQuestions = await this.tarotReadingHumanAccess.find({
+      where: { status: Not(ReadingHumanStatus.DONE) },
+    });
+    if (unansweredQuestions.length > 0)
+      throw new Error(
+        'Please complete all pending questions before updating your profile.'
+      );
 
     const reader = await this.readerAccess.findOneOrFail({
       where: { id },
